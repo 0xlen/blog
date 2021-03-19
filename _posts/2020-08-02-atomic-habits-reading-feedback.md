@@ -1,17 +1,27 @@
 ---
 title: "[Book] 原子習慣：細微改變帶來巨大成就的實證法則 - 我的心得及實作"
 description: "Atomic Habits: An Easy & Proven Way to Build Good Habits & Break Bad Ones reading feedback"
-tags: ['book', 'reading', 'habit', 'atomic', 'kindle', 'amazon']
+tags: ['book', 'personal growth', 'reading', 'habit', 'atomic', 'kindle', 'amazon', '自我成長']
 classes: wide
+header:
+  og_image: "/assets/images/posts/2020/08/atomic-habits-reading-feedback/book-cover.jpg"
+  teaser: "/assets/images/posts/2020/08/atomic-habits-reading-feedback/book-cover.jpg"
 
 feature_row:
   - image_path: "//ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketPlace=US&ASIN=B07VRLS2LG&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL250_&tag=eason06b-20"
     alt: "原子習慣: 細微改變帶來巨大成就的實證法則 (Traditional Chinese Edition)"
-    title: "原子習慣: 細微改變帶來巨大成就的實證法則"
-    excerpt: "數位版售價 $7.84"
+    title: "原子習慣: 細微改變帶來巨大成就的實證法則 (Kindle)"
+    excerpt: "數位版優惠連結 - $7.84"
     url: "https://amzn.to/2ZmQL1S"
-    btn_label: "Buy on Amazon"
-    btn_class: "btn--inverse"
+    btn_label: "購買"
+    btn_class: "btn--warning"
+  - image_path: "https://im1.book.com.tw/image/getImage?i=https://www.books.com.tw/img/001/082/25/0010822522.jpg"
+    alt: "原子習慣：細微改變帶來巨大成就的實證法則"
+    title: "原子習慣: 細微改變帶來巨大成就的實證法則 (博客來)"
+    excerpt: "博客來 79折優惠連結"
+    url: "https://www.books.com.tw/exep/assp.php/easoncao/products/0010822522?utm_source=easoncao&utm_medium=ap-books&utm_content=recommend&utm_campaign=ap-202103"
+    btn_label: "購買"
+    btn_class: "btn--warning"
 
 marathon_newbie_records_in_2019_phase_1:
   - image_path: "/assets/images/posts/2020/08/atomic-habits-reading-feedback/run-record-in-2018.jpg"
@@ -63,7 +73,17 @@ marathon_records_in_2020:
 
 ## 前言
 
-{% include figure image_path="https://m.media-amazon.com/images/I/41dx7A1jFFL.jpg" caption="[原子習慣: 細微改變帶來巨大成就的實證法則 (Traditional Chinese Edition) - Buy kindle version on Amazon!](https://amzn.to/2ZmQL1S)" %}
+{% capture CallToAction %}
+#### 在這篇文章中你將知道
+
+- 如果你想知道如何正確培養習慣，我會與你分享本書的核心重點。以及，為什麼你該立即透過 [Kindle](https://amzn.to/2ZmQL1S) 或是 [博客來](https://www.books.com.tw/exep/assp.php/easoncao/products/0010822522?utm_source=easoncao&utm_medium=ap-books&utm_content=recommend&utm_campaign=ap-202103) 收藏本書 **(這本書已經成為 21 世紀熱銷排行的前幾名，沒有之一)**
+- 你在閱讀後將了解習慣的建立系統
+- 我將與你分享我自己的實作成果
+{% endcapture %}
+
+<div class="notice--warning">{{ CallToAction | markdownify }}</div>
+
+{% include figure image_path="https://im1.book.com.tw/image/getImage?i=https://www.books.com.tw/img/001/082/25/0010822522.jpg" caption="原子習慣: 細微改變帶來巨大成就的實證法則" %}
 
 ## 概覽
 
@@ -175,7 +195,11 @@ marathon_records_in_2020:
 
 ## 我的實作成果
 
-先說說我自己的心得，身為一名雲端工程師，工作性質不外乎就是長時間待在電腦前面弄得出神入化，可能一個小時內幫助很多很知名的品牌、線上服務提供非常實用的技術性建議，以處理很多系統故障的狀況、找出客戶開發團隊自己埋的坑，拯救全世界因為網路連結那些孤寂的靈魂和龐大的虛擬需求，但外人完全搞不懂你在衝啥。不管是軟體工程師、系統工程師、維運工程師、各種打雜工程師，總之，不論身在哪個職位、一般人對於工程師的印象，就是~~又宅又臭~~，並且讓人感覺除了自己專業上面的事情，其餘事情就是一竅不通。但我就是不甘願這種刻板印象 (沒錯，我就是要**打！破！它！**)，當然，這些習慣有一部分出於對自己所做事情的喜愛，因為不希望自己分享的內容又淪為空泛的談論，因此，本節以我自己為例，以自身的經驗分享我自己的實作成果，分為兩個部分：馬拉松跑者、大力士計畫
+先說說我自己的心得，身為一名雲端工程師，工作性質不外乎就是長時間待在電腦前面弄得出神入化，可能一個小時內幫助很多很知名的品牌、線上服務提供非常實用的技術性建議，以處理很多系統故障的狀況、找出客戶開發團隊自己埋的坑，拯救全世界因為網路連結那些孤寂的靈魂和龐大的虛擬需求，但外人完全搞不懂你在衝啥。
+
+不管是軟體工程師、系統工程師、維運工程師、各種打雜工程師，總之，不論身在哪個職位、一般人對於工程師的印象，就是~~又宅又臭~~，並且讓人感覺除了自己專業上面的事情，其餘事情就是一竅不通。
+
+但我就是不甘願這種刻板印象 (沒錯，我就是要**打！破！它！**)，當然，這些習慣有一部分出於對自己所做事情的喜愛，因為不希望自己分享的內容又淪為空泛的談論，因此，本節以我自己為例，以自身的經驗分享我自己的實作成果，分為兩個部分：馬拉松跑者、大力士計畫
 
 ### 馬拉松跑者之路
 
@@ -255,3 +279,8 @@ Note: 上述節錄自近期 (2020 Aug) 的限時動態，健身運動仍是一�
 如果你想獲得更多具體的習慣建立方式，可以透過下列連結取得相關的電子、實體書籍版本
 
 {% include feature_row %}
+
+## 看更多系列文章
+
+- [原子習慣：細微改變帶來巨大成就的實證法則 - 我的心得及實作](/atomic-habits-reading-feedback)
+- [3 項原則讓你變得更有生產力 - 最有生產力的一年 The Productivity Project](/the-productivity-project-reading-feedback)
