@@ -112,8 +112,16 @@ Once the Grafana is up and running, the next thing is that go to the AMP console
 
 {% include figure image_path="/assets/images/posts/2021/02/run-app-on-ec2-and-gather-metric-to-amazon-prometheus-amp/amp-endpoints.png" alt="Endpoints in AMP console" caption="Endpoints in AMP console" %}
 
-The Grafana requires to use **query URL** to read the metric, so go to the Grafana Dashboard and add a new Data Source. You can find the setting in the left navigation bar:
+Open `http://localhost:3000` (or `http://<Grafana Dashboard IP>:3000`), you should see the login page, use the following default username and password to enter the Dashboard:
 
+```
+Username: admin
+Password: admin
+```
+
+You can use same password if you are doing testing purpose. (Please change the password if you are running dashboard in production environment due to it will have security concern without changing it, any attacker can enter and view your metrics by using default passwords.)
+
+The Grafana requires to use **query URL** to read the metric, so go to the Grafana Dashboard and add a new Data Source. You can find the setting in the left navigation bar:
 
 {% include figure image_path="/assets/images/posts/2021/02/run-app-on-ec2-and-gather-metric-to-amazon-prometheus-amp/grafana-configuration.png" alt="Grafana Configurations" caption="Grafana Configurations" %}
 
