@@ -67,7 +67,7 @@ marathon_records_in_2020:
     excerpt: "2020 July - total 142.3 km / 16 runs"
 ---
 
-今年 5 月 (May, 2020) 我讀完 [安靜的力量](https://easoncao.com) 一書就在 Instagram (aka. IG) 上面問問有沒有人可以推薦書籍來一起交換心得，本書是在美國 UC 念研所的高材生 Chia-Tien 的真心推薦，一講完我就刷中文版進到我的 Kindle 書庫了 (Kindle 中文版竟然還比原文便宜！會中文真好 XD)。
+今年 5 月 (May, 2020) 我讀完 [安靜的力量](/quiet-power-the-secret-strengths-of-introverts-reading-feedback) 一書就在 Instagram (aka. IG) 上面問問有沒有人可以推薦書籍來一起交換心得，本書是在美國 UC 念研所的高材生 Chia-Tien 的真心推薦，一講完我就刷中文版進到我的 Kindle 書庫了 (Kindle 中文版竟然還比原文便宜！會中文真好 XD)。
 
 原本抱著對未來總有時間的期待能一次把它讀完，無奈生活、工作一被很多事情塞滿 (說白了應該是偷懶，耍廢的優先級總能比閱讀這種太營養的事情來的高 ...)，我其實閱讀這本書的時候都是用很碎片、零碎到不行的時間 (睡前讀個 5 分鐘、幾頁之類的 ....)，今天終於有時間一次完結 (算一算也已經八月了 XD)，順便把 Kindle 上面做的筆記、重點一次給它摘要起來。因此，本篇內容主要簡述我對原子習慣 (Atomic Habits) 的讀書心得及自己的實作分享。 
 
@@ -282,5 +282,6 @@ Note: 上述節錄自近期 (2020 Aug) 的限時動態，健身運動仍是一�
 
 ## 看更多系列文章
 
-- [原子習慣：細微改變帶來巨大成就的實證法則 - 我的心得及實作](/atomic-habits-reading-feedback)
+- [沈默並不代表軟弱：內向的你必須看的一本書 - 安靜的力量 Quiet Power: The Secret Strengths of Introverts](/quiet-power-the-secret-strengths-of-introverts-reading-feedback)
 - [3 項原則讓你變得更有生產力 - 最有生產力的一年 The Productivity Project](/the-productivity-project-reading-feedback)
+- [原子習慣：細微改變帶來巨大成就的實證法則 - 我的心得及實作](/atomic-habits-reading-feedback)
