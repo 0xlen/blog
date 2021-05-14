@@ -363,3 +363,8 @@ aws iam delete-policy --policy-arn arn:aws:iam::11122233344:policy/EMR-EKS-JobEx
 在這篇內容中，我展示了如何使用 Amazon EMR + Amazon EKS 快速部署一個範例的運行 EMR on EKS 的執行架構，運行大數據運算工作，能夠協助你在配置時具體了解其流程，幫助你在一小時內搭建好 Amazon EMR on EKS 運行 Spark on Kuberentes。
 
 在我實際搭建時，由於涉及不同服務，所以對於剛接觸相關服務的人來說可能十分陌生並且會花費大量時間在閱讀文件，希望上述的內容，同樣也能幫助你成功運行這樣的解決方案，如果你覺得這樣的內容有幫助，可以在底下按個 Like / 留言讓我知道，並且分享給有需要搭建環境的人，幫助他們快速上手這項功能。
+
+## 看更多系列文章
+
+- [一小時內搭建好 Amazon EMR on EKS 運行 Spark on Kuberentes](/run-spark-on-kubernetes-with-amazon-emr-on-eks-in-1-hour)
+- [在 Amazon EMR on EKS 使用 AWS Fargate 運行你的 Big Data 大數據 Map Reduce 運算](/run-spark-on-kubernetes-with-amazon-emr-on-eks-using-aws-fargate)
