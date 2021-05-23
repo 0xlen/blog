@@ -26,27 +26,28 @@ feature_row:
 
 Name: Yang-Xin Cao (Eason Cao) / 中文名字：曹暘鑫 (Name in Mandarin/Chinese)
 
-我是 Amazon 的一名雲端工程師 (Amazon Web Services)，目前主要服務全世界各地使用 AWS 的用戶。我熱愛解決問題，並且喜歡我所做的事情，同時樂於每天幫助人解決各式各樣困難的技術挑戰。自從我加入 AWS，便不斷的致力於探討實務上所遭遇的重大技術問題。我擁有 AWS 五大核心認證 (Certified All-5)：
+我是 Amazon 的一名雲端工程師 (Amazon Web Services)，目前主要服務全世界各地使用 AWS 的用戶。我熱愛解決問題，並且喜歡我所做的事情，同時，樂於每天幫助人解決各式各樣困難的技術挑戰。自從我加入 AWS，便不斷的致力於探討實務上所遭遇的重大技術問題。我擁有 AWS 五大核心認證 (Certified All-5, 詳見 [我是如何在一年內通過 AWS 五大核心認證](/how-i-pass-aws-all-five-certificate-within-one-year))：
 
-- [我是如何在一年內通過 AWS 五大核心認證](/how-i-pass-aws-all-five-certificate-within-one-year)
-  - [Certified Developer](/AWS-Developer-Associate-Preparation/)
-  - [Solution Architect Associate](/AWS-Certified-Solution-Architect-Associate-Preparation/)
-  - [SysOps administrator Associate](/AWS-SysOps-Administrtor-Associate-Preparation/)
-  - [DevOps Engineer Professional](/AWS-Certified-DevOps-Engineer-Professional-Preparation/)
-  - [Solution Architect Professional]()
+- [Certified Developer](/AWS-Developer-Associate-Preparation/)
+- [Solution Architect Associate](/AWS-Certified-Solution-Architect-Associate-Preparation/)
+- [SysOps administrator Associate](/AWS-SysOps-Administrtor-Associate-Preparation/)
+- [DevOps Engineer Professional](/AWS-Certified-DevOps-Engineer-Professional-Preparation/)
+- [Solution Architect Professional]()
 
-同時，我過去協助許多重大困難的技術問題在 AWS 內部得以認可為全球技術領域專家 (Subject Matter Expert - SME)，並受 Amazon 相關產品團隊的開發者認同，我同時被認證為以下 AWS 服務的技術領域專家：
+同時，我過去協助許多重大困難的技術問題，使得我在 AWS 內部得以認可為全球技術領域專家 (Subject Matter Expert - SME)，並受 Amazon 相關產品團隊開發者認同，目前，我同時被認證為以下 AWS 服務的技術領域專家：
 
 - Elastic Kubernetes Service (EKS)
 - Elastic Container Service (ECS)
 
-我是台灣團隊第一位獲得上述認可的工程師，同時也是大中華區唯一擁有 Container Service 雙 SME 的工程師。同時也在 Amazon 負責 Escalation Engineer 的角色，協助全球其他地區工程師處理棘手的技術問題，包含提供可用解決方案、遞送數個 Bug 分析及文件修改，以下是幾個我過去協助覺得比較有趣的問題：
+我是台灣團隊第一位獲得上述認可的工程師，同時也是大中華區唯一擁有 Container Service 雙 SME 的工程師。同時也在 Amazon 負責 Escalation Engineer 的角色，協助全球其他地區工程師處理棘手的技術問題，包含提供可用解決方案、遞送數個 Bug 分析及文件修改，以下是幾個我過去協助覺得比較有趣的問題 (有些有整理成文章分享)：
 
+- [CoreDNS(kube-dns) resolution truncation issue on Kubernetes (Amazon EKS)](/coredns-resolution-truncation-issue-on-kubernetes-kube-dns/)
+- [[AWS][EKS] Zero downtime deployment(RollingUpdate) when using ALB Ingress Controller on Amazon EKS](/zero-downtime-deployment-when-using-alb-ingress-controller-on-amazon-eks-and-prevent-502-error/)
 - EKS CNI Plugin: [#737](https://github.com/aws/amazon-vpc-cni-k8s/issues/737#issuecomment-569737716), [#1247](https://github.com/aws/amazon-vpc-cni-k8s/pull/1247)
 - Kubernetes: [#84214](https://github.com/kubernetes/kubernetes/issues/84214#issuecomment-552132512)
 - ECS: [ECS-CLI#523](https://github.com/aws/amazon-ecs-cli/pull/523)
 
-我協助非常多不同規模的客戶業務達到成功，其中包含 Fortune 500 內的公司及擁有上百萬用戶規模的企業，包含透過提供教育訓練以技術角度向客戶分享更艱澀的問題，協助他們解決許多現實生活中因大規模、或是業務需求等所遭遇的技術挑戰。此外，我同時也在 2019 年獲得台北團隊的 Support MVP 頭銜。
+我協助非常多不同規模的客戶業務達到成功，其中包含 Fortune 500 內的公司及擁有上百萬用戶規模的企業。我在我的工作中，也不乏透過提供教育訓練以技術角度向客戶分享更艱澀的問題，協助他們解決許多現實生活中因大規模、或是業務需求等所遭遇的技術挑戰。此外，我同時也在 2019 年獲得台北團隊的 Support MVP 頭銜。
 
 {% include feature_row id="feature_row" %}
 
