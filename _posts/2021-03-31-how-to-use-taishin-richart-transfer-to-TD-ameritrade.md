@@ -26,6 +26,47 @@ us_transfer_in_taishin:
     image_path: "/assets/images/posts/2021/03/how-to-use-taishin-richart-transfer-to-TD-ameritrade/us-transfer-confirmationn-in-taishin-app.png"
     alt: "台新網路銀行外幣約定轉帳確認"
     title: "台新網路銀行外幣約定轉帳確認"
+
+us_transfer_in_richart_invest_step_1:
+  - url: "/assets/images/posts/2021/03/how-to-use-taishin-richart-transfer-to-TD-ameritrade/foreign-currency-feature-in-richart-app.png"
+    image_path: "/assets/images/posts/2021/03/how-to-use-taishin-richart-transfer-to-TD-ameritrade/foreign-currency-feature-in-richart-app.png"
+    alt: "於 Richart App 外匯頁面中選擇轉帳"
+    title: "於 Richart App 外匯頁面中選擇轉帳"
+
+us_transfer_in_richart_invest_step_2:
+  - url: "/assets/images/posts/2021/03/how-to-use-taishin-richart-transfer-to-TD-ameritrade/us-transfer-in-richart-app-fill-td-account.jpg"
+    image_path: "/assets/images/posts/2021/03/how-to-use-taishin-richart-transfer-to-TD-ameritrade/us-transfer-in-richart-app-fill-td-account.jpg"
+    alt: "Richart App 轉到海外投資帳戶 (在轉入對象帳號、戶名填入 TD Ameritrade 提供的帳戶資訊)"
+    title: "Richart App 轉到海外投資帳戶 (在轉入對象帳號、戶名填入 TD Ameritrade 提供的帳戶資訊)"
+  - url: "/assets/images/posts/2021/03/how-to-use-taishin-richart-transfer-to-TD-ameritrade/us-transfer-in-richart-app-fill-address.jpg"
+    image_path: "/assets/images/posts/2021/03/how-to-use-taishin-richart-transfer-to-TD-ameritrade/us-transfer-in-richart-app-fill-address.jpg"
+    alt: "Richart App 轉到海外投資帳戶 (在轉入對象地址填入 TD Ameritrade 提供的資訊)"
+    title: "Richart App 轉到海外投資帳戶 (在轉入對象地址填入 TD Ameritrade 提供的資訊)"
+
+us_transfer_in_richart_invest_step_3:
+  - url: "/assets/images/posts/2021/03/how-to-use-taishin-richart-transfer-to-TD-ameritrade/us-transfer-in-richart-app-fill-remark.png"
+    image_path: "/assets/images/posts/2021/03/how-to-use-taishin-richart-transfer-to-TD-ameritrade/us-transfer-in-richart-app-fill-remark.png"
+    alt: "於 Richart App 外匯頁面中填入附言"
+    title: "於 Richart App 外匯頁面中填入附言"
+
+us_transfer_in_richart_invest_step_4:
+  - url: "/assets/images/posts/2021/03/how-to-use-taishin-richart-transfer-to-TD-ameritrade/us-transfer-in-richart-app-confirm-transfer.jpg"
+    image_path: "/assets/images/posts/2021/03/how-to-use-taishin-richart-transfer-to-TD-ameritrade/us-transfer-in-richart-app-confirm-transfer.jpg"
+    alt: "於 Richart App 外匯頁面中確認轉帳交易"
+    title: "於 Richart App 外匯頁面中確認轉帳交易"
+
+us_transfer_in_richart_invest_completed:
+  - url: "/assets/images/posts/2021/03/how-to-use-taishin-richart-transfer-to-TD-ameritrade/us-transfer-in-richart-app-success-page.png"
+    image_path: "/assets/images/posts/2021/03/how-to-use-taishin-richart-transfer-to-TD-ameritrade/us-transfer-in-richart-app-success-page.png"
+    alt: "於 Richart App 外匯功能執行轉帳交易並扣款成功"
+    title: "於 Richart App 外匯功能執行轉帳交易並扣款成功"
+
+us_transfer_in_richart_invest_exceeed_limit:
+  - url: "/assets/images/posts/2021/03/how-to-use-taishin-richart-transfer-to-TD-ameritrade/us-transfer-in-richart-app-exceed-limit.png"
+    image_path: "/assets/images/posts/2021/03/how-to-use-taishin-richart-transfer-to-TD-ameritrade/us-transfer-in-richart-app-exceed-limit.png"
+    alt: "Richart App 外幣轉帳單筆限制"
+    title: "Richart App 外幣轉帳單筆限制"
+
 ---
 
 台新 Richart 目前可以說是台灣數位網路銀行設計數一數二的應用 App，不管是轉帳、分離帳戶或是統計報表都一目瞭然，非常容易上手使用。而且開戶過程全程無需跑銀行，只需要下載手機 App 並且在數個工作天後即可完成。當時推出時，真的可以說是傳統保守的台灣銀行界裡的一大項創新。
@@ -50,18 +91,81 @@ us_transfer_in_taishin:
 
 ## 如果我想要轉到海外投資帳戶，能用 Richart App 內建的功能轉嗎？
 
-> 不能，期待未來有機會開放
+{% capture UpdateInfo %}
+**May 30, 2021 更新**
+- 使用 Richart App 轉帳到 TD Ameritrade 的具體步驟
+- Richart App 注資的部分限制
+- 使用 Richart App 轉帳的交易手續費
+{% endcapture %}
+
+<div class="notice--info">{{ UpdateInfo | markdownify }}</div>
+
+
+> ~~不能，期待未來有機會開放~~
+> 可以，但有部分限制，請參考以下資訊
 
 2021 年 2 月我注意到 Richart App 提供了外幣轉帳的功能，若你正在海外留學或是工作，這項功能十分方便能夠直接將外幣進行轉帳。
 
 {% include gallery id="us_transfer_in_richart" caption="Richart 提供的外幣轉帳功能" %}
 
-但若要轉到 TD Ameritrade 將資金轉出，該功能目前有兩個問題：
+2021 年 2 月之前，若要轉到 TD Ameritrade 將資金轉出，該功能有兩個問題：
 
 - 無法備註附言
 - 無申報項目 **262 - 投資國外股權證券** 項目 (未正確申報將資金轉出可能會衍生後續逃漏稅務責任)
 
-**因此，目前仍無法支持用於轉帳至海外投資帳戶 (比如 FisrtTrade, TD Ameritrade 這些需要備註附言的帳戶)，而需要依循以下流程進行設置。**
+但在近期 Richart App 改版後 (2021 年 5 月)，台新銀行已經釋出對應的改版，目前你可以嘗試在你的手機應用中檢視是否存在以下功能，並且遵循以下步驟轉帳：
+
+(**需要在台新線上外幣匯出匯款交易時間操作: [營業日 09:00 ~ 15:00](https://www.taishinbank.com.tw/TSB/customer-service-center/qa/index.html?nav1=type03&nav2=type0302)**)
+
+### 在 Richart App 使用外幣轉帳注資到 TD Ameritrade 步驟
+
+#### (Richart App) Step 1. 打開 Richart App，點擊「外匯」並選擇「轉帳」
+
+{% include gallery id="us_transfer_in_richart_invest_step_1" caption="於 Richart App 外匯頁面中選擇轉帳" layout="half" %}
+
+#### (Richart App) Step 2. 填入 TD Ameritrade 或是其他海外券商提供給你的帳戶資訊
+
+{% include gallery id="us_transfer_in_richart_invest_step_2" caption="在 Richart App 中填入對應的轉入對象帳戶資訊" %}
+
+#### (Richart App) Step 3. 選擇正確的匯款性質並填入附言
+
+這一步是最重要的動作，攸關你的錢是否能正確電匯到海外帳戶中。請確保你的交易正確填寫附言，附上 TD Ameritrade 或是其他海外券商提供給你的個人帳戶號碼：
+
+- 匯款性質請選擇：`投資國外股權證券`
+- 附言我使用的格式是：`<TD 帳戶號碼> / <姓名>`
+
+{% include gallery id="us_transfer_in_richart_invest_step_3" caption="於 Richart App 外匯頁面中填入附言" layout="half" %}
+
+#### (Richart App) Step 4. 確認外匯轉帳交易
+
+完成填寫後，點擊將會轉到確認頁面，請確認轉帳資訊無誤 (特別是附言)：
+
+{% include gallery id="us_transfer_in_richart_invest_step_4" caption="於 Richart App 外匯頁面中確認轉帳交易" layout="half" %}
+
+#### (Richart App) Step 5. 完成轉帳
+
+確認無誤後，如果一切正確操作，將會顯示扣款成功的畫面：
+
+{% include gallery id="us_transfer_in_richart_invest_completed" caption="於 Richart App 外匯頁面中確認轉帳交易" layout="half" %}
+
+一旦你的外匯交易成立，銀行將於交易時間結束後 (15:00 PM)，將發電報並且將款項電匯至對象帳戶。如果你真的不小心寫錯附言，請不要猶豫立即致電銀行，以嘗試了解是否能更改或是取消交易。
+
+### 使用 Richart App 轉入海外投資帳戶的手續費及注意事項：
+
+- 每筆外匯轉帳優惠手續費於 2021 年 6 月 30 日前為 **$10 USD**，費用會從你的外幣帳戶另外扣除 (不包含中間行或清算行扣取之相關費用 --- 請參考：[Richart外幣轉帳手續費收費標準](https://richart.tw/TSDIB_RichartWeb/RC02/RC020201?announceNo=16788))
+- **目前單筆最大上限為 $1,500 USD**，我已經幫大家試過了，如果超出這個金額，會在轉帳前跳出提示把你擋下來
+
+{% include gallery id="us_transfer_in_richart_invest_exceeed_limit" caption="Richart App 外幣轉帳單筆限制" layout="half" %}
+
+我在 May 28, 2021 執行這筆交易，款項到 TD Ameritrade 後，中轉行仍然會收走 20 USD 的手續費，我從帳戶轉出了 $ 1, 500 USD，實際到帳金額為 $ 1, 480 USD：
+
+{% include figure image_path="/assets/images/posts/2021/03/how-to-use-taishin-richart-transfer-to-TD-ameritrade/td-ameritrade-check-deposit-from-richart-app.png" alt="使用 Richart App 將資金正確轉到 TD Ameritrade 帳戶" caption="使用 Richart App 將資金正確轉到 TD Ameritrade 帳戶" %}
+
+因此，你可以試算該功能外幣轉帳費用如下：
+
+> 10 USD (Richart App 優惠外幣手續費) + 20 USD (中轉行手續費) = 30 USD
+
+由於在我撰文時，使用 Richart App 進行外幣轉帳的單筆交易限制為 $1, 500 USD，這會在當你有大筆資金拆分注入時，產生頻繁的交易手續費。**因此，如果你偏好大筆金額定期轉入，用於降低手續費的交易成本。並且仍然想使用 Richart App 提供的換匯功能累積資金轉帳至海外投資帳戶 (比如 FisrtTrade, TD Ameritrade 這些需要備註附言的帳戶)，你仍可以依循以下流程進行設置，開啟更進階的外匯交易功能。**
 
 ## 如何開啟台新 Richart 轉帳至 TD Ameritrade 或是 Firstrade？
 
@@ -80,7 +184,7 @@ us_transfer_in_taishin:
 
 #### TD Ameritrade 約定帳戶資訊
 
-TD Ameritrade 約定帳戶都是使用以下固定帳戶轉戶，並涵蓋附言將你的資金轉入：
+如果你是屬於台灣電匯的投資者，TD Ameritrade 約定帳戶都是使用以下固定帳戶轉戶，並涵蓋附言將你的資金轉入：
 
 ```
 Beneficiary Bank (銀行): First National Bank of Omaha
@@ -166,3 +270,8 @@ Richart 的用戶可以先至台新網銀註冊一般網路銀行的查詢權限
 由於我部分內容可能涉及到台新銀行和相關券商的業務變動，更多資訊，請洽您的相應銀行窗口以幫助你釐清相關的問題。
 
 希望上述的內容同樣也能幫助你成功申請該功能，如果你覺得這樣的內容有幫助，可以在底下按個 Like 讓我知道。
+
+## 看更多系列文章
+
+- [在 25 歲至少擁有 100 萬 - 5 個適合年輕人的理財建議](/financial-management-tips-for-young-people)
+- [台新 Richart 到底能不能轉到 TD Ameritrade (海外轉帳)？答案是 Yes - 3 個步驟開啟 Richart 海外約定轉帳](/how-to-use-taishin-richart-transfer-to-TD-ameritrade)
