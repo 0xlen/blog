@@ -144,6 +144,22 @@ assets_at_25:
 
 他們難道就不會犯錯嗎？我想，人終究不是完美的，巴菲特也曾經公開承認他錯誤的投資，並選擇清空航空股，仍虛心受教且不斷學習優化自己，並從這些經驗中不斷提高自己所擁有的知識水平。這些 Forbes 排行榜、影響世界的強人都深知學習的重要性，所以我真的不認為，**自己有理由可以極度自信的說，自己無需不斷閱讀及學習**。
 
+{% capture JoinBOS %}
+![BOS-logo](/assets/images/posts/2021/06/value-investing-and-buffett-online-school/bos-logo.png){: .align-right}
+### BOS 巴菲特線上學院 - 適合新手的 3 小時投資學習分享會 (線上)
+
+教你用合理的價格買到好公司，並且學會如何用美股每個月賺 2~3% 的現金流
+
+分享會原價 NT $100，透過下方連結報名可免教材費
+
+(每個月還有免費的小課程陪著你繼續學習)
+
+<a href="http://bit.ly/EasonStockClass" class="btn btn--inverse btn--x-large">點我免費獲取價值投資課程</a>
+<a href="/value-investing-and-buffett-online-school" class="btn btn--x-large">課程簡介</a>
+{% endcapture %}
+
+<div class="notice--warning">{{ JoinBOS | markdownify }}</div>
+
 #### Tips - 認知達到目標需要時間及不斷的投入
 
 Jeff Bezos (Amazon 創辦人兼前 CEO) 曾經問過股神巴菲特 (Warren Buffett) 一句話，得到了淺而易見的回答：
@@ -340,6 +356,7 @@ Dcard 上有含著金湯匙出生的台大富家子弟喊著這個世界的百�
 
 ## 看更多系列文章
 
+- [學會揭開投資騙局 - 如果你想快速賺大錢，千萬不要去 BOS 巴菲特線上學院](/value-investing-and-buffett-online-school)
 - [在 25 歲至少擁有 100 萬 - 5 個適合年輕人的理財建議](/financial-management-tips-for-young-people)
 - [台新 Richart 到底能不能轉到 TD Ameritrade (海外轉帳)？答案是 Yes - 3 個步驟開啟 Richart 海外約定轉帳](/how-to-use-taishin-richart-transfer-to-TD-ameritrade)
 

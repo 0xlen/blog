@@ -273,5 +273,6 @@ Richart 的用戶可以先至台新網銀註冊一般網路銀行的查詢權限
 
 ## 看更多系列文章
 
+- [學會揭開投資騙局 - 如果你想快速賺大錢，千萬不要去 BOS 巴菲特線上學院](/value-investing-and-buffett-online-school)
 - [在 25 歲至少擁有 100 萬 - 5 個適合年輕人的理財建議](/financial-management-tips-for-young-people)
 - [台新 Richart 到底能不能轉到 TD Ameritrade (海外轉帳)？答案是 Yes - 3 個步驟開啟 Richart 海外約定轉帳](/how-to-use-taishin-richart-transfer-to-TD-ameritrade)
