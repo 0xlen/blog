@@ -72,7 +72,7 @@ header:
 
 {% include figure image_path="/assets/images/posts/2021/02/how-i-pass-aws-all-five-certificate-within-one-year/aws-certificate-blueprint-devops-engineer-professional.png" alt="AWS DevOps Engineer Professional Blueprint" caption="AWS DevOps Engineer Professional 考試指南 (2021 年)" %}
 
-從裡面你可以確實注意到 CI/CD 相關的項目佔了不小的成分。如此一來，我就會知道需要努力學習 AWS 上能夠滿足 DevOps 相關的解決方案及 Stack，並且透過 Whitepapaer、re:Invent 等影音，知道如何實踐 CI/CD 等策略。例如：CloudFormation、Beanstalk、CodeSuite (CodeCommit, CodeBuild, CodePipeline) 等等。
+從裡面你可以確實注意到 CI/CD 相關的項目佔了不小的成分。如此一來，我就會知道需要努力學習 AWS 上能夠滿足 DevOps 相關的解決方案及 Stack，並且透過 Whitepaper、re:Invent 等影音，知道如何實踐 CI/CD 等策略。例如：CloudFormation、Beanstalk、CodeSuite (CodeCommit, CodeBuild, CodePipeline) 等等。
 
 但如果你看了 Solution Architect Professional，你會發現就幾乎是什麼都要沾一點邊：
 
@@ -82,7 +82,7 @@ header:
 
 #### Associate 類型的考試
 
-- 閱讀 Whitepapaer 並且針對你有興趣學習的服務打開[AWS 文件](https://docs.aws.amazon.com/index.html)閱讀你感興趣的章節。
+- 閱讀 Whitepaper 並且針對你有興趣學習的服務打開[AWS 文件](https://docs.aws.amazon.com/index.html)閱讀你感興趣的章節。
 - 由於 AWS 服務非常多，有些教育單位會提供模擬試題，盡可能了解回答及錯誤的 AWS 服務，並且再回頭看看文件或是做做 Lab，幫助你加深印象。
 
 #### Professional 類型的考試

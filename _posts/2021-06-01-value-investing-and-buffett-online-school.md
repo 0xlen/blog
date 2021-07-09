@@ -251,7 +251,7 @@ performance:
 > - 美國金融監管局([FINRA](https://www.finra.org/about/firms-we-regulate/firms-we-regulate-e) ETORO USA SECURITIES INC.)
 > - 證券投資者保護公司([SIPC](https://www.sipc.org/search?query=etoro&fbclid=IwAR3CYnXxNqb4LABmVI2nyqUomrFuh8E_4Odsrnf5K6yY8mIQm5L83hKRiks))
 >
-> 在 2021 年 3 月 16 日更與 FinTech Acquisition Corp V 合併 並且在 NASDAQ 上市 (NASDAQ: FTCV)。在 eotro investor relations 更可以看到提交給[美國 SEC 的相關文件、財報](https://www.etoro.com/about/investors)
+> 在 2021 年 3 月 16 日更與 FinTech Acquisition Corp V 合併 並且在 NASDAQ 上市 (NASDAQ: FTCV)。在 etoro investor relations 更可以看到提交給[美國 SEC 的相關文件、財報](https://www.etoro.com/about/investors)
 >
 > etoro 包含可以簡單的交易很多不同的產品，包含虛擬指數、複製倉位和加密比特幣 (合約)。
 >
