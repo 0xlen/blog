@@ -96,14 +96,14 @@ author:
   name             : "Yang-Xin Cao (Eason Cao)"
   avatar           : "https://www.gravatar.com/avatar/fe7378c666bdc7da319af36e512d669b?s=200" # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
   bio              : "Engineer@Amazon <br>- <a href='https://www.awshof.com/allstarscertifiedlist.html'>AWS All-5 certified</a> / ECS & EKS SME / Marathon Runner / PADI Open Water Diver"
-  location         : "Amazon / Taipei, Taiwan"
+  location         : "Amazon / Dublin, Ireland"
   email            :
   links:
     - label: "Email"
       icon: "fas fa-fw fa-envelope-square"
       url: "eason@easoncao.com"
     - label: "LinkedIn"
-      icon: "fas fa-fw fa-linkedin"
+      icon: "fas fa-fw fa-id-badge"
       url: "https://linkedin.com/in/easoncao"
     - label: "Twitter"
       icon: "fab fa-fw fa-twitter-square"
