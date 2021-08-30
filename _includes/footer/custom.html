@@ -1,3 +1,20 @@
 <!-- start custom footer snippets -->
 
+<script type="text/javascript">
+    let mainBlock = document.getElementById("page-title");
+    let mainBlockParent = mainBlock.parentNode
+    let div = document.createElement("div");
+    let p = document.createElement("p");
+    let span = document.createElement("span");
+
+    p.innerHTML = '<strong>近期有熱心的網友通報身份被冒用進行詐騙，請注意本人並不會透過私訊主動推銷投資產品，如有相關情事，請具體蒐證並透過<a href="https://165.npa.gov.tw/#/">警政署線上報案檢舉 (165 專線)</a>。</strong>';
+
+    span.innerHTML = 'Recently I got the imposter report and using my identity for fraudulent purposes. Please note that I will not proactively reach out to you with investment suggestions offline. Be aware suspicious sources who you are contacting with.';
+
+    div.className = 'notice--danger';
+    div.append(p);
+    div.append(span);
+    mainBlockParent.insertBefore(div, mainBlock);
+</script>
+
 <!-- end custom footer snippets -->
