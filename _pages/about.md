@@ -26,13 +26,14 @@ feature_row:
 
 Name: Yang-Xin Cao (Eason Cao) / 中文名字：曹暘鑫 (Name in Mandarin/Chinese)
 
-我是 Amazon 的一名雲端工程師 (Amazon Web Services)，目前主要服務全世界各地使用 AWS 的用戶。我熱愛解決問題，並且喜歡我所做的事情，同時，樂於每天幫助人解決各式各樣困難的技術挑戰。自從我加入 AWS，便不斷的致力於探討實務上所遭遇的重大技術問題。我擁有 AWS 五大核心認證 (Certified All-5, 詳見 [我是如何在一年內通過 AWS 五大核心認證](/how-i-pass-aws-all-five-certificate-within-one-year))：
+我是 Amazon 的一名雲端工程師 (Amazon Web Services)，目前主要服務全世界各地使用 AWS 的用戶。我熱愛解決問題，並且喜歡我所做的事情，同時，樂於每天幫助人解決各式各樣困難的技術挑戰。自從我加入 AWS，便不斷的致力於探討實務上所遭遇的重大技術問題。我擁有 AWS 五大核心認證 (Certified All-5, 詳見 [我是如何在一年內通過 AWS 五大核心認證](/how-i-pass-aws-all-five-certificate-within-one-year))，也是 Kubernetes 官方認證專家：
 
 - [Certified Developer](/AWS-Developer-Associate-Preparation/)
 - [Solution Architect Associate](/AWS-Certified-Solution-Architect-Associate-Preparation/)
 - [SysOps administrator Associate](/AWS-SysOps-Administrtor-Associate-Preparation/)
 - [DevOps Engineer Professional](/AWS-Certified-DevOps-Engineer-Professional-Preparation/)
 - [Solution Architect Professional]()
+- [(CNCF) Certified Kubernetes Administrator](/cka-cncf-certified-kubernetes-administrator-study-guide/)
 
 同時，我過去協助許多重大困難的技術問題，使得我在 AWS 內部得以認可為全球技術領域專家 (Subject Matter Expert - SME)，並受 Amazon 相關產品團隊開發者認同，目前，我同時被認證為以下 AWS 服務的技術領域專家：
 
