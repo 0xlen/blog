@@ -23,11 +23,11 @@ classes: wide
 
 Certified Kubernetes Administrator 是屬於上機類型的考試，也就是會有一定數量的情境題需要在時間內完成，並且需要透過操作實際的 Linux server 設定 Kubernetes Cluster 的一些細節。總結來說，我個人覺得比起工作會遇到的問題，Certified Kubernetes Administrator 上機題目不是說很難且複雜，但也不太容易。
 
-我的做題過程系統還斷了幾次線，不過還是在時間內完成所有題目提早十分鐘交卷，但最後應該是掉了一題 7 分跟一題 4 分的題目，出來的成績總分是 89 分。趁現在還有一些記憶，簡短的透過一個篇幅分享有關考試的細節。
+我的做題過程真的是令人緊張，做題階段系統還斷了幾次線，不過，所幸還是在時間內完成所有題目，並且提早十分鐘交卷。出來的成績總分是 89 分 (應該是掉了一題 7 分跟一題 4 分的題目)，因此趁現在還有一些記憶，簡短的透過一個篇幅分享有關考試的細節。
 
 ## 什麼是 Certified Kubernetes Administrator (CKA)
 
-Certified Kubernetes Administrator (簡稱 CKA) 是 Cloud Native Computing Foundation (CNCF)，是唯一 Kubernetes 官方唯一認可的技術能力評鑑認證，CKA 認證旨在針對考核成為業界的 Kubernetes 管理員所需的技能。
+Certified Kubernetes Administrator (簡稱 CKA) 是 Cloud Native Computing Foundation (CNCF) 所提供的一項 Kubernetes 技術認證，是唯一 Kubernetes 官方唯一認可的技術能力評鑑認證，CKA 認證旨在針對考核成為業界的 Kubernetes 管理員所需的技能。
 
 如果企業想要申請 Kubernetes Certified Service Provider (KCSP, Kubernetes 認證服務提供商)，條件之一是至少需要三名員工擁有 CKA 認證。
 
@@ -270,7 +270,7 @@ curl --cacert ${CACERT} --header "Authorization: Bearer ${TOKEN}" -X GET ${APISE
 
 ### 4. 熟讀文件
 
-我會推薦除了練習命令和做題，剩下的時間就是熟讀 Kubernetes 官方文件 ([https://kubernetes.io/docs](https://kubernetes.io/docs))。熟悉文件提供的搜尋功能，可以仔細的閱讀常見的問題並且參考相關的 yaml 文件、描述，並且知道可以用哪些關鍵字把文件掉出來。
+我會推薦除了練習命令和做題，剩下的時間就是熟讀 Kubernetes 官方文件 ([https://kubernetes.io/docs](https://kubernetes.io/docs))。熟悉文件提供的搜尋功能，可以仔細的閱讀常見的問題並且參考相關的 yaml 文件、描述，並且知道可以用哪些關鍵字把文件調閱出來。
 
 我自己的經驗是這是一個很有效的一個準備方式，在考試過程中可以很快速的透過關鍵字搜尋直接找到我要的答案。如果你習慣透過書籤 (Bookmark) 儲存紀錄，也可以在考試前建立對應的書籤資料夾，在考試過程中於另開的一個分頁中直接從書籤中調閱。
 
