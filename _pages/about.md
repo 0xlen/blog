@@ -3,6 +3,7 @@ title: "關於 About"
 permalink: /about/
 layout: splash
 excerpt: "Hi, this is Eason."
+no_invest_warning_notice: true
 header:
   overlay_color: "#333"
   og_image: /assets/images/support-mvp.jpg
