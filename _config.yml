@@ -101,7 +101,7 @@ author:
   links:
     - label: "Email"
       icon: "fas fa-fw fa-envelope-square"
-      url: "eason@easoncao.com"
+      url: "mailto:eason@easoncao.com"
     - label: "LinkedIn"
       icon: "fas fa-fw fa-id-badge"
       url: "https://linkedin.com/in/easoncao"
