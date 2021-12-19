@@ -431,7 +431,7 @@ BOS 學院其實有很多學習資源和豐富的知識庫，這是我覺得含�
 
 如同我於 [在 25 歲至少擁有 100 萬 - 5 個適合年輕人的理財建議](/financial-management-tips-for-young-people) 裡面提到 [學習妥善規劃預算及存錢理財自動化](/financial-management-tips-for-young-people/#4-學習妥善規劃預算及存錢理財自動化) 的重要性。
 
-有我在學習財務管理之後，便開始認真的打造自動化理財的系統，幫助我有效率的管理財務和預算分配，有興趣可以參考[我常用的自動化理財工具及策略]()。
+有我在學習財務管理之後，便開始認真的打造自動化理財的系統，幫助我有效率的管理財務和預算分配，有興趣可以參考[我常用的自動化理財工具及策略](/money-management-automation)。
 
 ### 我的部分投資績效
 
@@ -512,9 +512,7 @@ BOS 學院非常像是一個門派，信仰著「價值投資」這個哲學，�
 
 ## 看更多系列文章
 
-- [學會揭開投資騙局 - 如果你想快速賺大錢，千萬不要去 BOS 巴菲特線上學院](/value-investing-and-buffett-online-school)
-- [在 25 歲至少擁有 100 萬 - 5 個適合年輕人的理財建議](/financial-management-tips-for-young-people)
-- [台新 Richart 到底能不能轉到 TD Ameritrade (海外轉帳)？答案是 Yes - 3 個步驟開啟 Richart 海外約定轉帳](/how-to-use-taishin-richart-transfer-to-TD-ameritrade)
+{% include_relative related-post/finance.md %}
 
 ## Reference
 
