@@ -282,6 +282,4 @@ Note: 上述節錄自近期 (2020 Aug) 的限時動態，健身運動仍是一�
 
 ## 看更多系列文章
 
-- [沈默並不代表軟弱：內向的你必須看的一本書 - 安靜的力量 Quiet Power: The Secret Strengths of Introverts](/quiet-power-the-secret-strengths-of-introverts-reading-feedback)
-- [3 項原則讓你變得更有生產力 - 最有生產力的一年 The Productivity Project](/the-productivity-project-reading-feedback)
-- [原子習慣：細微改變帶來巨大成就的實證法則 - 我的心得及實作](/atomic-habits-reading-feedback)
+{% include_relative related-post/book.md %}
