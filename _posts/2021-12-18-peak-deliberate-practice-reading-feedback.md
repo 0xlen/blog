@@ -13,14 +13,14 @@ feature_row:
     title: "刻意練習: 原創者全面解析，比天賦更關鍵的學習法 (Kindle)"
     excerpt: "Kindle 數位版售價 $7.99 優惠連結"
     url: "https://www.amazon.com/gp/product/B07KJDVP1Z/?tag=eason06b-20"
-    btn_label: "購買"
+    btn_label: "獲取優惠"
     btn_class: "btn--info"
   - image_path: "https://im1.book.com.tw/image/getImage?i=https://www.books.com.tw/img/001/075/27/0010752714.jpg"
     alt: "刻意練習：原創者全面解析，比天賦更關鍵的學習法 (博客來)"
     title: "刻意練習：原創者全面解析，比天賦更關鍵的學習法 (博客來)"
     excerpt: "博客來 79 折優惠連結"
     url: "https://www.books.com.tw/exep/assp.php/easoncao/products/0010752714?utm_source=easoncao&utm_medium=ap-books&utm_content=recommend&utm_campaign=ap-202103"
-    btn_label: "購買"
+    btn_label: "獲取優惠"
     btn_class: "btn--info"
 
 ---
@@ -269,7 +269,7 @@ feature_row:
 
 刻意練習需要有定義清楚明確的目標，涉及改進想要達到的表現、或是改善某個面向的弱點 (不能設定模糊的整體改善目標)。並且只有在跨出舒適圈後才能奏效，需要不斷嘗試突破現階段的技能水準。這意味著幾乎得傾盡全力，過程往往不會太有樂趣。
 
-本書提及了許多活生生的案例以幫助讀者建立刻意練習和頂尖高手之間的關聯性。並且提出許多實務上實踐刻意練習的原則和實際案例，搭配 原子習慣[^atomic-habits-book]
+因此，也本書提及了許多活生生的案例，以幫助讀者了解長期刻意練習和頂尖高手之間的關聯性。並且提出許多實務上的例子，學習實踐刻意練習的原則，並指出許多實際案例。我個人認為搭配 原子習慣[^atomic-habits-book] 中所提及的原則並應用習慣建立系統，持續的實踐刻意練習，將能同時為你累積習慣的複利效應。
 
 由於細節眾多，並且囊括作者多年研究的精華，無法一一列舉。如果你也期待自已能在自己的領域中成為頂尖，並想學習更多具體刻意練習的方法，你可以透過下列連結取得相關的電子、實體書籍版本直接收藏至你的書單：
 
