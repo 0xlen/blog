@@ -8,19 +8,19 @@ header:
   teaser: /assets/images/posts/2021/03/the-productivity-project-reading-feedback/book-cover.jpg
 
 feature_row:
-  - image_path: "//ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&MarketPlace=US&ASIN=B07PB23MFV&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=_SL250_&tag=easoncao-20"
+  - image_path: "https://im1.book.com.tw/image/getImage?i=https://www.books.com.tw/img/001/082/89/0010828904.jpg"
     alt: "最有生產力的一年: The Productivity Project (Traditional Chinese Edition) "
     title: "最有生產力的一年: The Productivity Project (Kindle)"
     excerpt: "Kindle 數位版售價 $9.50 優惠連結"
     url: "https://www.amazon.com/gp/product/B07VRLS2LG/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=B07VRLS2LG&linkCode=as2&tag=eason06b-20&linkId=0fbf9627bb07b21ea1e12c813a1b89d3"
-    btn_label: "購買"
+    btn_label: "獲取優惠"
     btn_class: "btn--info"
   - image_path: "https://im1.book.com.tw/image/getImage?i=https://www.books.com.tw/img/001/082/89/0010828904.jpg"
     alt: "最有生產力的一年 (博客來)"
     title: "最有生產力的一年 (博客來)"
     excerpt: "博客來 79 折優惠連結"
     url: "https://www.books.com.tw/exep/assp.php/easoncao/products/0010828904?utm_source=easoncao&utm_medium=ap-books&utm_content=recommend&utm_campaign=ap-202103"
-    btn_label: "購買"
+    btn_label: "獲取優惠"
     btn_class: "btn--info"
 
 instagram_time_log:

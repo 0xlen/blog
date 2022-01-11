@@ -13,14 +13,14 @@ feature_row:
     title: "原子習慣: 細微改變帶來巨大成就的實證法則 (Kindle)"
     excerpt: "數位版優惠連結 - $7.84"
     url: "https://amzn.to/2ZmQL1S"
-    btn_label: "購買"
+    btn_label: "獲取優惠"
     btn_class: "btn--warning"
   - image_path: "https://im1.book.com.tw/image/getImage?i=https://www.books.com.tw/img/001/082/25/0010822522.jpg"
     alt: "原子習慣：細微改變帶來巨大成就的實證法則"
     title: "原子習慣: 細微改變帶來巨大成就的實證法則 (博客來)"
     excerpt: "博客來 79折優惠連結"
     url: "https://www.books.com.tw/exep/assp.php/easoncao/products/0010822522?utm_source=easoncao&utm_medium=ap-books&utm_content=recommend&utm_campaign=ap-202103"
-    btn_label: "購買"
+    btn_label: "獲取優惠"
     btn_class: "btn--warning"
 
 marathon_newbie_records_in_2019_phase_1:

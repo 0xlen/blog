@@ -13,14 +13,14 @@ feature_row:
     title: "安靜的力量，從小就看得見 (Kindle)"
     excerpt: "Kindle 數位版售價 $5.50 優惠連結"
     url: "https://amzn.to/312nBGb"
-    btn_label: "購買"
+    btn_label: "獲取優惠"
     btn_class: "btn--info"
   - image_path: "https://www.books.com.tw/img/001/074/01/0010740183.jpg"
     alt: "安靜的力量，從小就看得見 (博客來)"
     title: "安靜的力量，從小就看得見 (博客來)"
     excerpt: "博客來 79 折優惠連結"
     url: "https://www.books.com.tw/exep/assp.php/easoncao/products/0010740183?utm_source=easoncao&utm_medium=ap-books&utm_content=recommend&utm_campaign=ap-202103"
-    btn_label: "購買"
+    btn_label: "獲取優惠"
     btn_class: "btn--info"
 ---
 

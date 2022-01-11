@@ -138,6 +138,21 @@ Money Book 實際上使用了 Google Cloud Platform (GCP) 作為主要的服務�
 
 <div class="notice--primary">{{ JoinHSBCreditCard | markdownify }}</div>
 
+{% capture JoinHSBCreditCardTitanium %}
+
+![HSBC-credit-card-logo](https://cdn.hsbc.com.tw/content/dam/hsbc/tw/images/credit-cards/hsbc-titanium-business-pwsimg1116.jpg){: .align-right}
+
+### 滙豐匯鑽卡
+
+- 指定通路筆筆 3% 現金回饋 (**現金回饋最高可達 6%**)
+- 高回饋合作消費通路：Disney+、Netflix、agoda.com, Booking.com、街口支付、Uber Eats ... 等
+- 使用電子/行動帳單終身免年費
+
+<a href="https://card.apply.hsbc.com.tw/hsbcoa/oaadd?BannerID=MGMplatform&mgmCode=14v4X523&openExternalBrowser=1" class="btn btn--inverse btn--x-large align-center">點我立即申辦</a>
+{% endcapture %}
+
+<div class="notice--primary">{{ JoinHSBCreditCardTitanium | markdownify }}</div>
+
 ### ShopBack
 
 ShopBack 大概是我知道最強的現金回饋服務，支持許多台灣常用的網購商家，包含博客來、Pchome、家樂福線上購物、UberEats、Booking.com 等等。你不需要改變你原本的消費模式，你只需要在購物前使用 ShopBack 的平台導向到對應的購物網站進行購物，就能享有現金回饋，並且在累積到一定金額後就能提領到銀行帳戶。
