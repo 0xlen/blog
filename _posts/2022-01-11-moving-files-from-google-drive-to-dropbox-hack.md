@@ -18,6 +18,16 @@ header:
 
 如果你正在尋找非手動檔案搬家的解決方式，這篇內容我將會與你分享一些簡單的步驟，幫助你不必從 Google Drive 下載檔案，並將檔案轉移備份。
 
+{% capture Notes  %}
+**在這篇文章中你將知道**
+
+- 了解不用下載檔案從 Google Drive 直接備份到 Dropbox 的另一個方法 ([點擊這裡以新用戶身份註冊 Dropbox 立即取得免費的額外空間](https://www.dropbox.com/referrals/AADNvoU8p9INJLaRJM0B_ZE1M2xRY33OD2U?src=global9))
+- 學習應用 Dropbox SDK for Python 的功能轉移檔案和了解相關範例的演示
+- 了解可能的使用限制
+{% endcapture %}
+
+<div class="notice--info">{{ Notes | markdownify }}</div>
+
 ## 概覽
 
 為了達到不必從 Google Drive 下載檔案，並將檔案轉移備份的目的，這個步驟分為幾個階段：
@@ -121,13 +131,35 @@ drive.mount('/gdrive')
 !pip install dropbox
 ```
 
+https://gist.github.com/Keshava11/d14db1e22765e8de2670b8976f3c7efb
+
 點擊運行就能將 Google Drive 掛載 (`/gdrive/MyDrive`)：
 
 {% include figure image_path="/assets/images/posts/2022/01/moving-files-from-google-drive-to-dropbox-hack/colab-mount-example.png" alt="在 Colab 掛載 Google Drive" caption="在 Colab 掛載 Google Drive" %}
 
-掛載後就能透過 Dropbox 提供的 API 直接執行檔案上傳，並且透過 Colaboratory 的執行環境可以跑在雲端的背景中執行，完全不需要下載檔案並且將檔案從 Google Drive 搬家到 Dropbox。
+掛載後就能透過 Dropbox 提供的 API 直接執行檔案上傳，並且透過 Colaboratory 的執行環境可以跑在雲端的背景中執行，最簡單的方式是使用 [files_upload()][^files_upload] 方法直接上傳：
+
+> files_upload(f, path, mode=WriteMode(u'add', None), autorename=False, client_modified=None, mute=False, property_groups=None, strict_conflict=False)
+
+如此一來，完全不需要下載檔案並且將檔案從 Google Drive 搬家到 Dropbox。
 
 {% include figure image_path="/assets/images/posts/2022/01/moving-files-from-google-drive-to-dropbox-hack/execution-example.png" alt="執行範例" caption="執行範例" %}
+
+Dropbox 提供的 Python 操作十分直覺，但唯一要注意的是，如果單檔大於 **150 MB**，就不太適用 files_upload() 直接上傳。會需要根據檔案大小建立上傳的 session 以解決這項問題。
+
+{% capture CallToAction %}
+
+如果你有興趣想了解實作的內容
+
+你可以透過以下的方法填入自定義的金額 Buy Me A Coffee
+
+{% include buy-coffee type="ecpay" item="GDriveDropboxSampleCode" %}
+
+你會獲得贈送的簡單範例程式並且寄送到你的 Email，了解如何直接上傳整個目錄底下的資源，並幫助你快速的瞭解如何使用
+
+{% endcapture %}
+
+<div class="notice--primary">{{ CallToAction | markdownify }}</div>
 
 ## 總結
 
@@ -137,7 +169,6 @@ drive.mount('/gdrive')
 
 ## References
 
-- [1] [Dropbox for Python](https://dropbox-sdk-python.readthedocs.io/en/latest/api/dropbox.html?highlight=upload)
-- [2] [Data transport limit](https://www.dropbox.com/developers/reference/data-transport-limit)
-
-
+[^files_upload]: [files_upload()](https://dropbox-sdk-python.readthedocs.io/en/latest/api/dropbox.html?highlight=files_upload#dropbox.dropbox_client.Dropbox.files_upload)
+- [Dropbox for Python](https://dropbox-sdk-python.readthedocs.io/en/latest/api/dropbox.html?highlight=upload)
+- [Data transport limit](https://www.dropbox.com/developers/reference/data-transport-limit)
