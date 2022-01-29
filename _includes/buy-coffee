@@ -1,0 +1,26 @@
+{% if include.type == "ecpay" %}
+  {% if include.item %}
+  <form onSubmit="coffeeMove(event)">
+    <input id="coffee-price" type="number" value="50" min="30" step="5" class="text-center" required>
+    <input type="email" id="email" placeholder="輸入你的 Email (Enter Your Email)" class="text-center" required>
+    <button type="submit" class="btn btn--x-large btn--success align-center">一次性支持 (ECPay)</button>
+  </form>
+
+  <script type="text/javascript">
+  function coffeeMove(e)
+  {
+      var price = document.getElementById("coffee-price").value;
+      var email = document.getElementById("email").value;
+      var payEndpoint = "https://ecpay.easoncao.com/create-payment?";
+      var product = "product={{ include.item }}";
+      var url = payEndpoint + product + '&' + 'amount=' + price + '&' + 'email=' + email;
+
+      window.location.href = url;
+
+      e.preventDefault();
+      return false;
+
+  }
+  </script>
+  {% endif %}
+{% endif %}
