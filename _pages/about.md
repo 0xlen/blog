@@ -118,9 +118,9 @@ Name: Yang-Xin Cao (Eason Cao) / 中文名字：曹暘鑫 (Name in Mandarin/Chin
 ### 2019
 
 - 1 月受國家徵召被抓去當兵，當完繼續回 Amazon 上班
-- 我在當兵時硬擠放假，與美國的同事完成部落格文章的校稿：[Using AWS Lambda and Amazon SNS to Get File Change Notifications from AWS CodeCommit](https://aws.amazon.com/blogs/devops/using-aws-lambda-and-amazon-sns-to-get-file-change-notifications-from-aws-codecommit/)
+- 在當兵期間放假與美國的同事完成部落格文章的校稿並完成公開：[Using AWS Lambda and Amazon SNS to Get File Change Notifications from AWS CodeCommit](https://aws.amazon.com/blogs/devops/using-aws-lambda-and-amazon-sns-to-get-file-change-notifications-from-aws-codecommit/)
 
 ### 2020
 
-- 在 Amazon 升職為 Level 5 工程師，並且以領導角色協助團隊成長
+- 在 Amazon 升職為 Level 5 工程師，繼續學習以領導角色協助團隊成長
 - Accredited as one of AWS Subject Matter Expert(SME) of Elastic Kubernetes Service (EKS) in the global AWS organization.
