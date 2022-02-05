@@ -187,7 +187,4 @@ Amazon 真的是道道地地的美國企業。你完全可以在這裡感受到�
 
 ## 看更多系列文章
 
-- [我在 Amazon 學到的 10 件事](/ten-thing-I-learned-in-amazon)
-- [我是如何在還沒畢業就錄取並進入到 Amazon 工作](/how-am-I-get-into-amazon-before-graduate)
-- [Amazon Cloud Support Engineer 到底是在做什麼 (Amazon Web Services / AWS)](/what-is-cloud-support-engineer-doing-in-amazon)
-- [我是如何在一年內通過 AWS 五大核心認證](/how-i-pass-aws-all-five-certificate-within-one-year)
+{% include_relative related-post/aws-career.md %}

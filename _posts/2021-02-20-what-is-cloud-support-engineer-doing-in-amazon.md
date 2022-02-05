@@ -150,11 +150,12 @@ Cloud Support Engineer 如果成為某個領域的專家，通常也會想辦法
 
 如果你正在疑惑 Cloud Support Engineer 是什麼樣的工作，希望這篇的內容能夠有助於你了解我們的工作日常。
 
-若你對於這樣的工作環境及內容有所興趣並躍躍欲試，我們仍在持續招聘優秀的人才加入我們，你可以附上 CV 並透過我的 LinkedIn 與我聯繫。
+若你對於這樣的工作環境及內容有所興趣並躍躍欲試，我們仍在持續招聘優秀的人才加入我們。我同時也在 NEX Foundation 為串連台灣人才於國際舞台上的職涯發展貢獻己力，你可以透過 NEX Work 附上 CV 提交內推申請 (需註冊登入) 以引薦更多像你這樣的優秀人才，或是透過我的 LinkedIn 與我聯繫。
+
+- [NEX Work：申請內推 (需登入)](https://work.nexf.org/companies/Amazon/referrers/tdG7zR9knf8XnpHzrpTw)
+
+如果你覺得這樣的內容有幫助，可以在底下按個 Like / 留言讓我知道。
 
 ## 看更多系列文章
 
-- [我在 Amazon 學到的 10 件事](/ten-thing-I-learned-in-amazon)
-- [我是如何在還沒畢業就錄取並進入到 Amazon 工作](/how-am-I-get-into-amazon-before-graduate)
-- [Amazon Cloud Support Engineer 到底是在做什麼 (Amazon Web Services / AWS)](/what-is-cloud-support-engineer-doing-in-amazon)
-- [我是如何在一年內通過 AWS 五大核心認證](/how-i-pass-aws-all-five-certificate-within-one-year)
+{% include_relative related-post/aws-career.md %}
