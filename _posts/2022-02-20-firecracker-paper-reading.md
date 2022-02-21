@@ -11,7 +11,7 @@ toc_label: "Table of Contents"
 toc_icon: "cog"
 ---
 
-AWS 公開 Firecracker 專案已經至少 1-2 年的時間，也許你多少都聽過這項技術。然而，究竟 Firecracker 是什麼，我想可能你也仍然一知半解。有鑒於我認為學術類型的內容有時不容易讓人理解，因此，我希望可以透過以下的篇幅，分享我自己對於閱讀 Firecracker 設計論文的一些理解。
+AWS 公開 Firecracker 專案已經至少 1-2 年的時間，也許你多少都聽過這項技術。然而，究竟 Firecracker 是什麼，我想可能你也仍然一知半解。有鑒於我認為學術類型的內容有時不容易讓人明白，因此，我希望可以透過以下的篇幅，分享我自己對於閱讀 Firecracker 設計論文的一些理解。
 
 由於我個人沒有受過正式的學術訓練，因此，如果有專家願意提供任何見解，也請不吝給予指正及建議。
 
@@ -25,7 +25,7 @@ AWS 公開 Firecracker 專案已經至少 1-2 年的時間，也許你多少都�
 
 > Implementors of serverless and container services can choose between hypervisor-based virtualization (and the potentially unacceptable overhead related to it), and Linux containers (and the related compatibility vs. security tradeoffs). **We built Firecracker because we didn’t want to choose.**
 
-目前 AWS 已經將 Firecracker 導入至兩個公開的無伺服器 (Serverless) 服務：[AWS Lambda](https://aws.amazon.com/lambda/) 及 [AWS Fargate](https://aws.amazon.com/fargate/)，並且支援數百萬的用戶和單月萬億級別 (trillions) 的請求需要，以下將具體描述更多 Firecracker 相關的細節。
+目前 AWS 已經將 Firecracker 導入至兩個公開的無伺服器 (Serverless) 服務：[AWS Lambda](https://aws.amazon.com/lambda/) 及 [AWS Fargate](https://aws.amazon.com/fargate/)，並且支援數百萬的用戶和單月萬億級別 (trillions) 的請求，以下將具體描述更多 Firecracker 相關的細節。
 
 (相關的 Paper 原文和我自己畫的重點請參考[^firecracker-paper-note])
 
@@ -101,7 +101,7 @@ seccomp 是 Linux Kernel 支持的一項功能，用來限制在容器中運行�
 - Language-Specific Isolation：例如 JVM 透過劃分 Heap size 和虛擬執行環境，於記憶體空間分配支持的虛擬執行環境
 - 硬體和 Kernel 支持的主流虛擬化技術：Intel VT-x、KVM、QEMU。在論文中提到常見的 KVM 和 QEMU 組合通常增加了執行虛擬化上的複雜度，由於 QEMU 專案本身包含了大於 140 萬 (1.4 million) 的程式碼，並且至少需要 270 個系統呼叫操作 (syscall)，若使用這項基礎再疊加使用 KVM，則會再另外增加了 120,000 行程式碼。
 
-因此，在評估和主流虛擬化技術比較的背景，同時，基於 AWS 許多團隊維運都採用 Linux 系統，並且，Firecracker 遵循使用 Linux 本身決定沿用原本 Kernel 就支持的技術，而不是重新實作替代它，因為這些功能行之有年，並且具備高質量、成熟的設計 (例如：scheduler、TUN/TAP network interface)，也能讓原本的團隊使用熟悉的工具和流程執行除錯。例如：採用 `ps` 即可列舉機器上運行的 microVM，其他 Linux 本身支持的工具 (`top`、`vmstat` 甚至是 `kill`) 均可以在預期的操作下管理 Firecracker。
+因此，在評估和主流虛擬化技術比較這樣的背景下，AWS Firecracker 借鑒了許多解決方案而在眾多項目中選擇一個適當的平和。同時，基於 AWS 內部許多團隊，維運基礎架構都採用 Linux 系統，促使 Firecracker 在設計的哲學上的這項決定。更重要的是，Firecracker 更之所以遵循沿用 Linux Kernel 本身就支持的技術，而不是重新實作替代它，正是因為這些功能行之有年，並且具備高質量、成熟的設計 (例如：scheduler、TUN/TAP network interface)，也能讓 AWS 原本的團隊使用熟悉的 Linux 工具和維運流程執行除錯。例如：採用 `ps` 即可列舉機器上運行的 microVM，其他 Linux 本身支持的工具 (`top`、`vmstat` 甚至是 `kill`) 均可以在預期的操作下管理 Firecracker。
 
 基於這項原因，Firecracker 使用了 KVM 作為主要的虛擬化執行基礎，並且實作 VMM (Virtual Machine Monitor) 元件以滿足管理 KVM 執行環境的需要。
 
@@ -117,7 +117,7 @@ seccomp 是 Linux Kernel 支持的一項功能，用來限制在容器中運行�
 
 {% include figure image_path="/assets/images/posts/2022/02/firecracker-paper-reading/firecracker-layers.png" alt="Firecracker 架構" caption="Firecracker 架構" %}
 
-Firecracker 同時模擬了有限的一些 I/O 裝置，例如：網路卡、磁碟、序列端口 (serial ports)、i8042 支持 (PS/2 鍵盤的控制器)；與 QEMU 相比，QEMU 相對複雜許多，其支持多餘 40 種不同的裝置，包含 USD、影像和音訊裝置。
+Firecracker 同時模擬了有限的一些 I/O 裝置，例如：網路卡、磁碟、序列端口 (serial ports)、i8042 支持 (PS/2 鍵盤的控制器)；與 QEMU 相比，QEMU 相對複雜許多，其支持多餘 40 種不同的裝置，包含 USB、影像和音訊裝置。
 
 更細部的設計架構如下：
 
