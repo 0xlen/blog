@@ -27,7 +27,13 @@ feature_row:
 
 Name: Yang-Xin Cao (Eason Cao) / 中文名字：曹暘鑫 (Name in Mandarin/Chinese)
 
-我是 Amazon 的一名雲端工程師 (Amazon Web Services)，目前主要服務全世界各地使用 AWS 的用戶。我熱愛解決問題，並且喜歡我所做的事情，同時，樂於每天幫助人解決各式各樣困難的技術挑戰。自從我加入 AWS，便不斷的致力於探討實務上所遭遇的重大技術問題。我擁有 AWS 五大核心認證 (Certified All-5, 詳見 [我是如何在一年內通過 AWS 五大核心認證](/how-i-pass-aws-all-five-certificate-within-one-year))，也是 Kubernetes 官方認證專家：
+我是 Amazon 的一名雲端工程師 (Amazon Web Services, AWS)，目前主要服務全世界各地使用 AWS 的用戶。我熱愛解決問題，並且喜歡我所做的事情，同時，樂於每天幫助人解決各式各樣困難的技術挑戰。你可以點擊以下連結了解更多我在 AWS EMEA (歐洲) 官方頁面上分享的訪談，了解我及我目前所在的團隊：
+
+- [Meet Eason, Cloud Support Engineer](https://emea-resources.awscloud.com/write-your-own-story/meet-eason-cloud-support-engineer)
+
+(如果你有興趣了解我每天的工作內容可以參考 - [Amazon 的 Cloud Support Engineer 到底是在做什麼](/what-is-cloud-support-engineer-doing-in-amazon/))
+
+自從我加入 AWS，便不斷的致力於探討實務上所遭遇的重大技術問題。我擁有 AWS 五大核心認證 (Certified All-5, 詳見 [我是如何在一年內通過 AWS 五大核心認證](/how-i-pass-aws-all-five-certificate-within-one-year))，也是 Kubernetes 官方認證專家：
 
 - [Certified Developer](/AWS-Developer-Associate-Preparation/)
 - [Solution Architect Associate](/AWS-Certified-Solution-Architect-Associate-Preparation/)
@@ -124,3 +130,8 @@ Name: Yang-Xin Cao (Eason Cao) / 中文名字：曹暘鑫 (Name in Mandarin/Chin
 
 - 在 Amazon 升職為 Level 5 工程師，繼續學習以領導角色協助團隊成長
 - Accredited as one of AWS Subject Matter Expert(SME) of Elastic Kubernetes Service (EKS) in the global AWS organization.
+
+### 2021
+
+- Relocated to Dublin, Ireland
+- 加入 [NEX Foundation](https://www.nexf.org/team/) 工程團隊志工 (Engineering team) 為串連台灣人才於國際舞台上的職涯發展貢獻己力 (參考：[如果流浪是為了找回家的路，我們有責任把回家的路變得更美好](/nex-work))
