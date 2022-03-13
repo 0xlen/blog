@@ -8,3 +8,22 @@ main:
     url: /posts/
   - title: "關於 About"
     url: /about/
+top-posts:
+  - title: "Amazon"
+    children:
+    - title: "我如何在還沒畢業錄取進入到 Amazon 工作"
+      url: /how-am-I-get-into-amazon-before-graduate
+    - title: "我在 Amazon 學到的 10 件事"
+      url: /ten-thing-I-learned-in-amazon
+    - title: "我如何在一年內通過 AWS 五大核心認證"
+      url: /how-i-pass-aws-all-five-certificate-within-one-year
+  - title: "AWS"
+    children:
+    - title: "Zero downtime deployment on EKS"
+      url: /zero-downtime-deployment-when-using-alb-ingress-controller-on-amazon-eks-and-prevent-502-error
+    - title: "CoreDNS truncation issue on Kubernetes (Amazon EKS)"
+      url: /coredns-resolution-truncation-issue-on-kubernetes-kube-dns
+  - title: "Financial"
+    children:
+    - title: "在 25 歲至少擁有 100 萬 - 5 個適合年輕人的理財建議"
+      url: /
