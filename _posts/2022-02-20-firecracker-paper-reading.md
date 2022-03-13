@@ -2,11 +2,11 @@
 title: "AWS Firecracker 論文導讀：一個小孩才做選擇，我兩個全部都要的 VMM"
 description: "AWS Firecracker 是一款由 AWS 開源的輕量級虛擬化運行環境。這項技術使得運行的執行環境具備傳統虛擬機的安全性，提供優化的執行效能和資源利用。在這篇內容中，我將與你分享在閱讀完 Firecracker 論文後具體的導讀細節。"
 tags: ['amazon', 'aws', 'amazon web services', 'firecracker', 'virtualization', 'Lambda', 'severless', 'AWS Fargate']
-classes: wide
 header:
   og_image: /assets/images/posts/2022/02/firecracker-paper-reading/cover.png
   teaser: /assets/images/posts/2022/02/firecracker-paper-reading/cover.png
 toc: true
+toc_sticky: true
 toc_label: "Table of Contents"
 toc_icon: "cog"
 ---
