@@ -77,7 +77,7 @@ So why to choose Nginx Ingress controller? It probably can be the reason why as 
 
 ### AWS Load Balancer Controller
 
-AWS Load Balancer Controller is similar to the in-tree Kubernetes controller and use native AWS APIs to provision and manage Elastic Load Balancers. The controller was an open-source project originally named **ALB Ingress Controller** because it was only provides capability to manage Application Load Balancer at the intial stage, lately, it officially renamed as ** AWS Load Balancer Controller** [^intro-aws-load-balancer-controller], which is maintaining by AWS product team and open-source community.
+AWS Load Balancer Controller is similar to the in-tree Kubernetes controller and use native AWS APIs to provision and manage Elastic Load Balancers. The controller was an open-source project originally named **ALB Ingress Controller** because it was only provides capability to manage Application Load Balancer at the intial stage, lately, it officially renamed as **AWS Load Balancer Controller** [^intro-aws-load-balancer-controller], which is maintaining by AWS product team and open-source community.
 
 Unlike in-tree Kubernetes controller needs to wait the upstream code to be updated and requires you to upgrade Kubernetes control plane version if the controller has any bug or any new ELB features need to be supported. Using AWS Load Balancer Controller, it can gracefully to be replaced in this scenario because it will be running as Kubernetes deployment instead of integrating in the Kubernetes upstream source code.
 
