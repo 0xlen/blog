@@ -33,6 +33,12 @@ Name: Yang-Xin Cao (Eason Cao) / 中文名字：曹暘鑫 (Name in Mandarin/Chin
 
 (如果你有興趣了解我每天的工作內容可以參考 - [Amazon 的 Cloud Support Engineer 到底是在做什麼](/what-is-cloud-support-engineer-doing-in-amazon/))
 
+我相信比完美更重要的是持續的進步，這也是之所以我會在工作之餘透過不同形式分享內容的原因；此外，由於我會收到來自各個不同背景的學生寫信諮詢我有關職涯發展、旅居歐洲或是人生價值或是其他相關的議題，若您為在學學生，我很樂於與學生們分享我的個人經驗，並且建立深度的對話。若你對以下的機會感興趣，**我十分樂意無償與您進行的一對一線上 30 分鐘左右的談話**，歡迎參考以下連結獲取更多資訊：
+
+- [課程與諮詢](/courses)
+
+*(請注意，部分 1:1 僅供在學學生以及 NEX 相應平台的台灣人才預約，以為串連台灣人才於國際舞台上的職涯發展貢獻己力。由於其屬於公益性質，為個人自發性的項目，非學校信箱或查核到非上述身份濫用，將直接取消會議，不另行通知。)*
+
 自從我加入 AWS，便不斷的致力於探討實務上所遭遇的重大技術問題。我擁有 AWS 五大核心認證 (Certified All-5, 詳見 [我是如何在一年內通過 AWS 五大核心認證](/how-i-pass-aws-all-five-certificate-within-one-year))，也是 Kubernetes 官方認證專家：
 
 - [Certified Developer](/AWS-Developer-Associate-Preparation/)

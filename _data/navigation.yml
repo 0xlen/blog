@@ -6,6 +6,8 @@ main:
   #   url: https://mmistakes.github.io/minimal-mistakes/about/
   - title: "所有文章 All Posts"
     url: /posts/
+  - title: "學習資源 Learning"
+    url: /courses/
   - title: "關於 About"
     url: /about/
 top-posts:
