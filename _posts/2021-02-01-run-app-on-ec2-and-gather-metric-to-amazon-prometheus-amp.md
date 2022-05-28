@@ -352,6 +352,10 @@ $ curl http://localhost:8005/workspaces/ws-XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX/
 
 In this article, it shows a example to use Amazon Managed Service for Prometheus (AMP) to gather metrics when running standalone application on EC2 instance, rather than having Kubernetes to deploy. As it might be difficult to understand what things need to be noticed, so I shared configuration and steps. Giving the overview and share some tips you have to know if you are trying to push metrics to AMP.
 
+If you are interested to learn more, I also try to summarize a couple of things you may want to know as an [online learning material](https://bit.ly/LearnAMP), feel free to click the link to get more detail:
+
+- [Learn Amazon Prometheus in 1 day](https://bit.ly/LearnAMP)
+
 ## References
 
 - [Demo Video - Amazon Managed Service for Prometheus (AMP) & Amazon Managed Service for Grafana (AMG)](https://www.youtube.com/watch?v=fW2LOqHDUNM)
