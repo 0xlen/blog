@@ -38,7 +38,7 @@ feature_row:
     alt: "打造 Serverless (無伺服器) 雲端金流"
     title: "打造 Serverless (無伺服器) 雲端金流"
     excerpt: "學習在一天內於 AWS 雲端搭建 Serverless 架構的金流服務，以綠界支付為例 (ECPay)"
-    url: "https://eason.teachable.com/p/serverless-ecpay"
+    url: "https://bit.ly/ECPaySAM?utm_source=easoncao.com&utm_medium=courses-page&utm_campaign=course_sale"
     btn_label: "開始學習"
     btn_class: "btn--danger"
 ---
