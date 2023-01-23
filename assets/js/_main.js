@@ -133,4 +133,35 @@ $(document).ready(function() {
       $(this).append(anchor);
     }
   });
+
+  // Footer email subscription action
+  $('#footer-subscribe-email-list form').on("submit", function(e) {
+      var email = $("#footer-subscribe-email-list input#email");
+      $.ajax({
+          url: "https://docs.google.com/forms/d/e/1FAIpQLSfuofCYvu2cV614aDt6SO5ua_5trT0EC5yeSJObLY0KGjFtvQ/formResponse",
+          type: "POST",
+          data: {
+              // 'entry.205499253': name,
+              'entry.1288273007': email.val()
+          },
+          cache: false,
+          crossDomain: true,
+          complete: function(jqXHR, textStatus) {
+              switch (jqXHR.status) {
+                  case 0:
+                  case 200:
+                      // Success message
+                      alert('你已經加入至訂閱清單 You are in the mailing list!')
+                      email.val('') // clear the input
+                      break;
+
+                  default:
+                      // Fail message
+                      alert('訂閱失敗，請重試 Error occur! Please try again.')
+                  }
+          }
+      })
+
+      e.preventDefault();
+  });
 });
