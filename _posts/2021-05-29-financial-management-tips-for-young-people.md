@@ -3,6 +3,7 @@ title: "在 25 歲至少擁有 100 萬 - 5 個適合年輕人的理財建議"
 description: "如果你沒有富爸爸得全部靠自己，讓我與你分享在 25 歲前擁有至少百萬資產的財務管理建議"
 tags: ['finance', 'investment', 'money', 'personal growth', '投資理財']
 classes: wide
+show_invest_warning_notice: true
 header:
   og_image: /assets/images/posts/2021/05/financial-management-tips-for-young-people/cover.png
   teaser: /assets/images/posts/2021/05/financial-management-tips-for-young-people/cover.png

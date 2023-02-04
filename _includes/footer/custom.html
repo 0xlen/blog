@@ -1,6 +1,6 @@
 <!-- start custom footer snippets -->
 
-{% if page.no_invest_warning_notice != true %}
+{% if page.no_invest_warning_notice != true and page.show_invest_warning_notice == true %}
 <script type="text/javascript">
     let mainBlock = document.getElementById("page-title");
     let mainBlockParent = mainBlock.parentNode

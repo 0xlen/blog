@@ -3,6 +3,7 @@ title: "我常用的自動化理財工具及策略 - 適合理財新手的操作
 description: "讓我與你分享我常用的自動化理財工具及策略，並且透過一些現有的資源，與你分享幾點適合理財新手的概略指南"
 tags: ['finance', 'investment', 'money', 'personal growth', 'cash back', '投資理財', '現金回饋']
 classes: wide
+show_invest_warning_notice: true
 header:
   og_image: /assets/images/posts/2021/12/money-management-automation/cover.jpg
   teaser: /assets/images/posts/2021/12/money-management-automation/cover.jpg

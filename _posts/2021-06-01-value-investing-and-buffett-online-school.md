@@ -3,6 +3,7 @@ title: "學會揭開投資騙局 - 如果你想快速賺大錢，千萬不要去
 description: "讓我帶你揭開幾種常見的投資騙局，並且告訴你，BOS 巴菲特線上學院到底適不適合你"
 tags: ['finance', 'investment', 'money', 'personal growth', '投資理財']
 classes: wide
+show_invest_warning_notice: true
 header:
   og_image: /assets/images/posts/2021/06/value-investing-and-buffett-online-school/cover.jpg
   teaser: /assets/images/posts/2021/06/value-investing-and-buffett-online-school/cover.jpg
