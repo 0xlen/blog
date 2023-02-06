@@ -68,14 +68,6 @@ layout: default
         {% include page__date.html %}
       </footer>
 
-      <!-- Buy me a coffee -->
-      <section class="page__share">
-        <h4 class="page__share-title">Is that useful? Let me know or buy me a coffee</h4>
-        <p class="page__meta">這篇內容對你有幫助嗎？你可以透過以下方式讓我知道</p>
-        <a href="https://paypal.me/e4son"><img src="https://cdn.jsdelivr.net/gh/twolfson/paypal-github-button@1.0.0/dist/button.svg" alt="Support via PayPal"></a>
-        <a href="https://p.ecpay.com.tw/17C964C" class="btn btn--success">一次性支持 (ECPay)</a>
-      </section>
-
       {% if page.share %}{% include social-share.html %}{% endif %}
 
       {% if site.liker_id %}
@@ -84,6 +76,15 @@ layout: default
         src="https://button.like.co/in/embed/{{site.liker_id}}/button?referrer={{ page.url | absolute_url | cgi_escape }}" frameBorder="0">
       </iframe>
       {% endif %}
+
+      <!-- Buy me a coffee -->
+      <section class="page__share">
+        <h4 class="page__share-title">Is that useful? Let me know or buy me a coffee</h4>
+        <p class="page__meta">這篇內容對你有幫助嗎？</p>
+        <a href="https://paypal.me/e4son"><img src="https://cdn.jsdelivr.net/gh/twolfson/paypal-github-button@1.0.0/dist/button.svg" alt="Support via PayPal"></a>
+        <a href="https://p.ecpay.com.tw/17C964C" class="btn btn--success">一次性支持 (ECPay)</a>
+      </section>
+
 
       {% include post_pagination.html %}
     </div>
