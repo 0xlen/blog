@@ -3,3 +3,4 @@
 - [我是如何在一年內通過 AWS 五大核心認證](/how-i-pass-aws-all-five-certificate-within-one-year)
 - [Amazon Cloud Support Engineer 到底是在做什麼 (Amazon Web Services / AWS)](/what-is-cloud-support-engineer-doing-in-amazon)
 - [關於 Cloud Support Engineer 職位的常見問題 (Amazon Web Services / AWS) - AWS Cloud Support Engineer FAQs](/aws-cloud-support-engineer-faq)
+- [在 AWS Cloud Support Engineer 面試中脫穎而出：必備的技術能力和重要特質](/aws-cloud-support-engineer-interview-tips-and-required-skills)
