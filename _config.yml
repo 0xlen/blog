@@ -110,7 +110,7 @@ author:
       # url: "https://twitter.com/"
     - label: "Facebook"
       icon: "fab fa-fw fa-facebook-square"
-      # url: "https://facebook.com/"
+      url: "https://facebook.com/EasonTechTalk"
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
       url: "https://github.com/0xlen"
@@ -126,7 +126,7 @@ footer:
       # url:
     - label: "Facebook"
       icon: "fab fa-fw fa-facebook-square"
-      # url:
+      url: "https://facebook.com/EasonTechTalk"
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
       # url:
