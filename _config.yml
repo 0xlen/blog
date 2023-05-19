@@ -94,7 +94,7 @@ analytics:
 # Site Author
 author:
   name             : "Yang-Xin Cao (Eason Cao)"
-  avatar           : "https://www.gravatar.com/avatar/fe7378c666bdc7da319af36e512d669b?s=200" # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
+  avatar           : "https://www.gravatar.com/avatar/0d33994eec9eddc67415e07a7fcafc9d?s=200" # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
   bio              : "Engineer@Amazon <br>- <a href='https://www.awshof.com/allstarscertifiedlist.html'>AWS All-5 certified</a> / ECS & EKS SME / Marathon Runner / PADI Open Water Diver"
   location         : "Amazon / Dublin, Ireland"
   email            :
