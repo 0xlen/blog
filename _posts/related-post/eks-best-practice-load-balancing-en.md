@@ -1,3 +1,0 @@
-- [Best practice for load balancing - 1. Let's start with an example from Kubernetes document](/eks-best-practice-load-balancing-1-en)
-- [Best practice for load balancing - 2. imbalanced problem](/eks-best-practice-load-balancing-2-en)
-- [Best practice for load balancing - 3. what controller should I use](/eks-best-practice-load-balancing-3-en)

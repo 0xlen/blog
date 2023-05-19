@@ -1,0 +1,1157 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.19.3 by Michael Rose
+  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>CoreDNS(kube-dns) resolution truncation issue on Kubernetes (Amazon EKS) - Continuous Improvement</title>
+<meta name="description" content="This article is describing the thing you need to aware for DNS resolution issue can occur on Kubernetes.">
+
+
+  <meta name="author" content="Yang-Xin Cao (Eason Cao)">
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Continuous Improvement">
+<meta property="og:title" content="CoreDNS(kube-dns) resolution truncation issue on Kubernetes (Amazon EKS)">
+<meta property="og:url" content="https://easoncao.com/coredns-resolution-truncation-issue-on-kubernetes-kube-dns/">
+
+
+  <meta property="og:description" content="This article is describing the thing you need to aware for DNS resolution issue can occur on Kubernetes.">
+
+
+
+  <meta property="og:image" content="https://easoncao.com/assets/images/posts/2020/10/coredns-resolution-truncation-issue-on-kubernetes-kube-dns/eks-dns-resolution-flow.png">
+
+
+
+
+
+  <meta property="article:published_time" content="2020-10-26T00:00:00-05:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://easoncao.com/coredns-resolution-truncation-issue-on-kubernetes-kube-dns/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Continuous Improvement",
+      "url": "https://easoncao.com/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Continuous Improvement Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- Google adsense -->
+<script data-ad-client="ca-pub-1852752964062281" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<link rel="shortcut icon" type="image/jpg" href="/assets/apple-touch-icon.png"/>
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+          <a class="site-logo" href="/"><img src="/assets/apple-touch-icon.png" alt=""></a>
+        
+        <a class="site-title" href="/">
+          Continuous Improvement
+          <span class="site-subtitle"></span>
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/posts/">所有文章 All Posts</a>
+            </li><li class="masthead__menu-item">
+              <a href="/courses/">學習資源 Learning</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">關於 About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="https://www.gravatar.com/avatar/0d33994eec9eddc67415e07a7fcafc9d?s=200" alt="Yang-Xin Cao (Eason Cao)" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Yang-Xin Cao (Eason Cao)</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>Engineer@Amazon <br />- <a href="https://www.awshof.com/allstarscertifiedlist.html">AWS All-5 certified</a> / ECS &amp; EKS SME / Marathon Runner / PADI Open Water Diver</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Amazon / Dublin, Ireland</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:eason@easoncao.com" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+            <li><a href="https://linkedin.com/in/easoncao" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-id-badge" aria-hidden="true"></i><span class="label">LinkedIn</span></a></li>
+          
+        
+          
+        
+          
+            <li><a href="https://facebook.com/EasonTechTalk" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i><span class="label">Facebook</span></a></li>
+          
+        
+          
+            <li><a href="https://github.com/0xlen" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="CoreDNS(kube-dns) resolution truncation issue on Kubernetes (Amazon EKS)">
+    <meta itemprop="description" content="This article is describing the thing you need to aware for DNS resolution issue can occur on Kubernetes. Especially when your Pod is relying on CoreDNS(kube-dns) to resolve DNS record when connecting to Amazon ElastiCache or target with large response payload, the issue potentially can happen.">
+    <meta itemprop="datePublished" content="2020-10-26T00:00:00-05:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">CoreDNS(kube-dns) resolution truncation issue on Kubernetes (Amazon EKS)
+</h1>
+          
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  13 minute read
+
+</p>
+          
+        </header>
+      
+
+      <!-- Google ads in article -->
+      <div>
+          <ins class="adsbygoogle"
+               style="display:block; text-align:center;"
+               data-ad-layout="in-article"
+               data-ad-format="fluid"
+               data-ad-client="ca-pub-1852752964062281"
+               data-ad-slot="8435469231"></ins>
+          <script>
+               (adsbygoogle = window.adsbygoogle || []).push({});
+          </script>
+      </div>
+      <hr>
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right ">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-cog"></i> Table of Contents</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#whats-the-problem">What’s the problem</a>
+    <ul>
+      <li><a href="#symptom">Symptom</a></li>
+      <li><a href="#how-to-reproduce">How to reproduce</a></li>
+    </ul>
+  </li>
+  <li><a href="#deep-dive-into-the-root-cause">Deep dive into the root cause</a></li>
+  <li><a href="#why-the-dns-response-message-was-truncated">Why the DNS response (message) was truncated?</a></li>
+  <li><a href="#how-to-remedy-the-issue">How to remedy the issue?</a>
+    <ul>
+      <li><a href="#solution-1-using-edns0">Solution 1: Using EDNS0</a></li>
+      <li><a href="#solution-2-having-tcp-retransmit-when-the-dns-query-was-truncated-recommended">Solution 2: Having TCP retransmit when the DNS query was truncated (Recommended)</a></li>
+    </ul>
+  </li>
+  <li><a href="#conclusion">Conclusion</a></li>
+  <li><a href="#references">References</a></li>
+</ul>
+
+            </nav>
+          </aside>
+        
+        <p>This article is describing the thing you need to aware for DNS resolution issue can occur on Kubernetes. Especially when your Pod is relying on CoreDNS(kube-dns) to resolve DNS record when connecting to Amazon ElastiCache or target with large response payload, the issue potentially can happen.</p>
+
+<p>Note: To help you understand the detail, I was using Amazon EKS with Kubernetes version 1.5 and CoreDNS (v1.6.6-eksbuild.1) as example.</p>
+
+<h2 id="whats-the-problem">What’s the problem</h2>
+
+<p>In Kubernetes, it provides an extra layer of the DNS resolution so containerized applications running on Kubernetes cluster basically heavily relying on using own DNS service to provide extra beneficial of service discovery by default, which is <code class="language-plaintext highlighter-rouge">kube-dns</code> add-ons.</p>
+
+<p>And most common use cases are usually using CoreDNS as the default DNS resolution provider by deploying and running CoreDNS Pods within the cluster.</p>
+
+<p>Containerized applications running as Pod can use autogenerated service name that map to Kubernetes service’s IP(Cluster-IP), such as <code class="language-plaintext highlighter-rouge">my-svc.default.cluster.local</code>. It provides more flexibility to Pods to do internal service discovery as they can use the hostname to resolve the record without remembering the private IP address within the application when deploying to other environment. The kube-dns add-ons usually have ability to resolve external DNS record so Pods can also access service on Internet.</p>
+
+<figure class="">
+  <img src="/assets/images/posts/2020/10/coredns-resolution-truncation-issue-on-kubernetes-kube-dns/kube-dns-overview.png" alt="An overview of kube-dns running on Kubernetes" />
+  
+    <figcaption>
+      An overview of kube-dns running on Kubernetes - <a href="https://cloud.google.com/kubernetes-engine/docs/concepts/service-discovery">source / Service discovery and DNS (Google Cloud)</a>
+
+    </figcaption>
+  
+</figure>
+
+<h3 id="symptom">Symptom</h3>
+
+<p>Basically, everything runs good for general use case and you propely won’t see any issue when running your production workload. But if your application need to resolve some DNS record with large DNS response payload(like sometimes your endpoint of ElastiCache response larger payload), you might notice the issue happen and your application never correctly resolve them.</p>
+
+<p>You can use some simple method by installing <code class="language-plaintext highlighter-rouge">dig</code> in your Pod to test and debug if you can see the difference from the result:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Get it a try to see if the external DNS provider</span>
+<span class="c">#</span>
+<span class="c"># Please make sure your Pod should have accessibility to reach out to Internet</span>
+<span class="c"># Otherwise you have to change 8.8.8.8 as your own private DNS server that Pod can reach out</span>
+<span class="nv">$ </span>dig example.com @8.8.8.8
+
+
+<span class="c"># Get it a try to see if CoreDNS can correctly resolve the record</span>
+<span class="nv">$ </span>dig example.com @&lt;YOUR_COREDNS_SERVICE_IP&gt;
+<span class="nv">$ </span>dig example.com @&lt;YOUR_COREDNS_PRIVATE_IP&gt;
+
+<span class="c"># Get it a try to see other record is having this issue or not</span>
+<span class="nv">$ </span>dig helloworld.com @&lt;YOUR_COREDNS_PRIVATE_IP&gt;
+</code></pre></div></div>
+
+<p>For example if I have running <code class="language-plaintext highlighter-rouge">CoreDNS</code> Pods and <code class="language-plaintext highlighter-rouge">kube-dns</code> service in my Kubernetes cluster</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NAMESPACE     NAME                                          READY   STATUS    RESTARTS   AGE     IP              NODE                                              NOMINATED NODE   READINESS GATES
+kube-system   pod/coredns-9b6bd4456-97l97                   1/1     Running   0          5d3h    192.168.19.7    XXXXXXXXXXXXXXX.compute.internal   &lt;none&gt;           &lt;none&gt;
+kube-system   pod/coredns-9b6bd4456-btqpz                   1/1     Running   0          5d3h    192.168.1.115   XXXXXXXXXXXXXXX.compute.internal   &lt;none&gt;           &lt;none&gt;
+
+NAMESPACE     NAME                 TYPE        CLUSTER-IP       EXTERNAL-IP   PORT<span class="o">(</span>S<span class="o">)</span>         AGE    SELECTOR
+kube-system   service/kube-dns     ClusterIP   10.100.0.10      &lt;none&gt;        53/UDP,53/TCP   5d3h   k8s-app<span class="o">=</span>kube-dns
+</code></pre></div></div>
+
+<p>I can use commands like below to check which point can cause failure:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dig example.com @10.100.0.10
+dig example.com @192.168.19.7
+dig example.com @192.168.1.115
+
+dig helloworld.com @10.100.0.10
+dig helloworld.com @192.168.19.7
+dig helloworld.com @192.168.1.115
+</code></pre></div></div>
+
+<p><strong>If you are getting result which is both are getting failed but other DNS record is working even using CoreDNS as name server. As a DNS resolver(CoreDNS), we can identify something went wrong when CoreDNS is trying to help you forward the DNS quries for some specific target, and this is the issue we would like to discuss</strong>. However, If the Private IP of CoreDNS is working but Service IP (Cluster IP) is getting failure, or none of one are successful, you should pilot your investigation target on checking the Kubernetes networking encapsulation, such as: CNI plugin, kube-proxy, cloud provider’s setting or else that can break your Pod-Pod communication or host networking translation.</p>
+
+<h3 id="how-to-reproduce">How to reproduce</h3>
+
+<p>In my testing, I was running Kubernetes cluster with Amazon EKS (1.5) with default deployments (such as CoreDNS, AWS CNI Plugin and kube-proxy). The issue can be reproduced when following steps with commands below:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>kubectl create svc externalname quote-redis-cluster <span class="nt">--external-name</span> &lt;MY_DOMAIN&gt;
+<span class="nv">$ </span>kubectl create deployment nginx <span class="nt">--image</span><span class="o">=</span>nginx
+<span class="nv">$ </span>kubectl <span class="nb">exec</span> &lt;nginx&gt;
+<span class="nv">$ </span>apt-get update <span class="o">&amp;&amp;</span> apt-get <span class="nb">install </span>dnsutils <span class="o">&amp;&amp;</span> nslookup quote-redis-cluster
+</code></pre></div></div>
+
+<p>My deployment with one nginx Pod and two CoreDNS Pods already running within my EKS cluster:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NAMESPACE     NAME                          READY   STATUS    RESTARTS   AGE    IP               NODE                                                NOMINATED NODE   READINESS GATES
+default       pod/nginx-554b9c67f9-w9bb4    1/1     Running   0          40s    192.168.70.172   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.compute.internal   &lt;none&gt;           &lt;none&gt;
+...
+kube-system   pod/coredns-9b6bd4456-6q9b5   1/1     Running   0          3d3h   192.168.39.186   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.compute.internal   &lt;none&gt;           &lt;none&gt;
+kube-system   pod/coredns-9b6bd4456-8qgs8   1/1     Running   0          3d3h   192.168.69.216   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.compute.internal   &lt;none&gt;           &lt;none&gt;
+</code></pre></div></div>
+
+<p>And here is the problem: when using <code class="language-plaintext highlighter-rouge">nslookup</code> to resolve the domain (set the DNS resolver as CoreDNS Pod <code class="language-plaintext highlighter-rouge">192.168.39.186</code> instead of using Cluster IP of <code class="language-plaintext highlighter-rouge">kube-dns</code>, this can exclude any issue can caused by Kubernetes networking based on iptables).</p>
+
+<p>The test result only return the canonical name (CNAME), without IP address (example.com):</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>kubectl <span class="nb">exec</span> <span class="nt">-it</span> nginx-554b9c67f9-w9bb4 bash
+root@nginx-554b9c67f9-w9bb4:/# nslookup quote-redis-cluster 192.168.39.186
+Server:         192.168.39.186
+Address:        192.168.39.186#53
+
+quote-redis-cluster.default.svc.cluster.local   canonical name <span class="o">=</span> example.com.
+</code></pre></div></div>
+
+<p>Note: The domain name <code class="language-plaintext highlighter-rouge">example.com</code> basically has normal A record with many IP address. (The real case is that the <code class="language-plaintext highlighter-rouge">example.com</code> was an Amazon ElastiCache endpoint, with returning IP addresses of ElastiCache nodes)</p>
+
+<p>However, when testing other domain, basically can successfully return the IP address even using <code class="language-plaintext highlighter-rouge">nslookup</code>, in the same container, with same DNS resolver (<code class="language-plaintext highlighter-rouge">192.168.39.186</code>):</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>kubectl create svc externalname quote-redis-cluster <span class="nt">--external-name</span> success-domain.com
+
+<span class="nv">$ </span>kubectl <span class="nb">exec</span> <span class="nt">-it</span> nginx-554b9c67f9-w9bb4 bash
+root@nginx-554b9c67f9-w9bb4:/# nslookup my-endpoint 192.168.39.186
+Server:         192.168.39.186
+Address:        192.168.39.186#53
+
+my-endpoint.default.svc.cluster.local     canonical name <span class="o">=</span> success-domain.com.
+Name:   success-domain.com.
+Address: 11.11.11.11
+Name:   success-domain.com.
+Address: 22.22.22.22
+</code></pre></div></div>
+
+<p>And this is the issue I would like to talk about. Let’s break down and understand why having difference in the result.</p>
+
+<h2 id="deep-dive-into-the-root-cause">Deep dive into the root cause</h2>
+
+<p>Let’s start to break down what happen inside. To better help you understand what’s going on, it is required to know:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">192.168.70.172</code> (Client - nslookup): The nginx Pod, in this Pod I was running <code class="language-plaintext highlighter-rouge">nslookup</code> to test the DNS resolution ability.</li>
+  <li><code class="language-plaintext highlighter-rouge">192.168.39.186</code> (CoreDNS): The real private IP of CoreDNS Pod, play as DNS resolver for <code class="language-plaintext highlighter-rouge">kube-dns</code> service.</li>
+  <li><code class="language-plaintext highlighter-rouge">192.168.69.216</code> (CoreDNS): The real private IP of CoreDNS Pod, play as DNS resolver for <code class="language-plaintext highlighter-rouge">kube-dns</code> service.</li>
+  <li><code class="language-plaintext highlighter-rouge">192.168.0.2</code> (AmazonProvidedDNS): The default DNS resolver in VPC and can be used by EC2 instances.</li>
+</ul>
+
+<p>On EKS, the DNS resolution flow can be looked like:</p>
+
+<figure class="">
+  <img src="/assets/images/posts/2020/10/coredns-resolution-truncation-issue-on-kubernetes-kube-dns/eks-dns-resolution-flow.png" alt="The DNS resolution flow on EKS" />
+  
+    <figcaption>
+      The DNS resolution flow on EKS
+
+    </figcaption>
+  
+</figure>
+
+<p>First, the Pod will issue a DNS query to CoreDNS. Once the CoreDNS receives the query, it will check if have any cache DNS record exists, otherwise, it would follow the setting mentioning in the configuration to forward the reqeust to upstream DNS resolver.</p>
+
+<p>The following is that CoreDNS will look up the DNS resolver according to the configuration <code class="language-plaintext highlighter-rouge">/etc/resolv.conf</code> of CoreDNS node(In my environment it was using <code class="language-plaintext highlighter-rouge">AmazonProvidedDNS</code>):</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<span class="na">data</span><span class="pi">:</span>
+  <span class="na">Corefile</span><span class="pi">:</span> <span class="pi">|</span>
+    <span class="s">.:53 {</span>
+        <span class="s">forward . /etc/resolv.conf</span>
+        <span class="s">...</span>
+    <span class="s">}</span>
+</code></pre></div></div>
+
+<p>Based on the model, responses will follow the flow and send back to the client. The normal case(happy case) is that we always can query DNS <code class="language-plaintext highlighter-rouge">A</code> records and can correctly have addresses in every response:</p>
+
+<figure class="">
+  <img src="/assets/images/posts/2020/10/coredns-resolution-truncation-issue-on-kubernetes-kube-dns/coredns-issue-normal.png" alt="Normal DNS resolution packet" />
+  
+    <figcaption>
+      Normal DNS resolution packet, can see A record responsed(Using nslookup)
+
+    </figcaption>
+  
+</figure>
+
+<p>Right now, let’s move on taking a look what’s going on regarding the issue:</p>
+
+<p>1) On the client side, I was collecting packet and only can see the response with <code class="language-plaintext highlighter-rouge">CNAME</code> record, as we expected on nslookup output:</p>
+
+<figure class="">
+  <img src="/assets/images/posts/2020/10/coredns-resolution-truncation-issue-on-kubernetes-kube-dns/coredns-issue-failed-in-client-nslookup.png" alt="The network packet collected from client" />
+  
+    <figcaption>
+      The network packet collected from client - only get the response with CNAME even asking for <strong>A record</strong>.
+
+    </figcaption>
+  
+</figure>
+
+<p>2) On the CoreDNS node, I also collected the packet and can see:</p>
+
+<ul>
+  <li>The CoreDNS Pod was asking the record with AmazonProvidedDNS</li>
+  <li>In the response, it only have CNAME record</li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>192.168.70.172 -&gt; 192.168.39.186 (Client query A quote-redis-cluster.default.svc.cluster.local to CoreDNS)
+192.168.39.186 -&gt; 192.168.0.2    (CoreDNS query A quote-redis-cluster.default.svc.cluster.local to AmazonProvidedDNS)
+192.168.0.2    -&gt; 192.168.39.186 (AmazonProvidedDNS response the record, with CNAME)
+192.168.39.186 -&gt; 192.168.70.172 (CoreDNS Pod response the CNAME record)
+</code></pre></div></div>
+
+<figure class="">
+  <img src="/assets/images/posts/2020/10/coredns-resolution-truncation-issue-on-kubernetes-kube-dns/coredns-issue-failed-on-coredns-node.png" alt="The network packet collected from client" />
+  
+    <figcaption>
+      The network packet collected from client - only get the response with CNAME even asking for <strong>A record</strong>.
+
+    </figcaption>
+  
+</figure>
+
+<p>And if look the packet closer collected on CoreDNS node, here is they key point: <strong>The truncated flag (TC flag) was true, which means the DNS response is truncated.</strong></p>
+
+<figure class="">
+  <img src="/assets/images/posts/2020/10/coredns-resolution-truncation-issue-on-kubernetes-kube-dns/coredns-issue-failed-truncated-flag.png" alt="The message is truncated in the DNS query response" />
+  
+    <figcaption>
+      The message is truncated in the DNS query response (CoreDNS Node)
+
+    </figcaption>
+  
+</figure>
+
+<p>At this stage, the issue can be identified the DNS response was truncated.</p>
+
+<h2 id="why-the-dns-response-message-was-truncated">Why the DNS response (message) was truncated?</h2>
+
+<p>When you see the message truncation, you probably will say: “Holy … sh*t, DNS response is missing, upstream DNS resolver must eat the payload and did not working properly! “. However, the truth is, this is expected behavior according to the design of DNS when it initially comes to first 19s.</p>
+
+<blockquote>
+  <p>DNS primarily uses the User Datagram Protocol (UDP) on port number 53 to serve requests. Queries generally consist of a single UDP request from the client followed by a single UDP reply from the server. — <a href="https://en.wikipedia.org/wiki/Domain_Name_System">wikipeida</a></p>
+</blockquote>
+
+<p>The basic payload can be allowed in DNS query generally won’t 512 bytes. It basically can perfectly work in first 19s, however, lately 20s, with the scale of Internet was growing, people start to aware the original design unable to fully satisfy the requirement and they would like to include more information in DNS query(like the usage of IPv4). According to <a href="https://tools.ietf.org/html/rfc1123">RFC#1123</a>, it initiated the standard in case if a single DNS payload contain over 512 bytes limit for UDP:</p>
+
+<blockquote>
+  <p>It is also clear that some new DNS record types defined in the future will contain information exceeding the 512 byte limit that applies to UDP, and hence will require TCP. Thus, resolvers and name servers should implement TCP services as a backup to UDP today, with the knowledge that they will require the TCP service in the future.</p>
+</blockquote>
+
+<p>Therefore, in <a href="https://tools.ietf.org/html/rfc5596">RFC#5596</a> basically mentioning the behavior of “DNS Transport over TCP”. Solutions can be: use EDNS or retransmit the DNS query over TCP if truncation flag has been set (TC Flag):</p>
+
+<blockquote>
+  <p>In the absence of EDNS0 (Extension Mechanisms for DNS 0), the normal behaviour of any DNS server needing to send a UDP response that would exceed the 512-byte limit is for the server to truncate the response so that it fits within that limit and then set the TC flag in the response header.</p>
+</blockquote>
+
+<blockquote>
+  <p>When the client receives such a response, it takes the TC flag as an indication that it should retry over TCP instead.</p>
+</blockquote>
+
+<p>Therefore, when the length of the answer exceeds <code class="language-plaintext highlighter-rouge">512 bytes</code>(The upstream server should set <code class="language-plaintext highlighter-rouge">TC flag</code> to tell the downstream the message is truncated), when both client and server support EDNS, larger UDP packets are used including in additional UDP packet. Otherwise, the query is sent again using the Transmission Control Protocol (TCP). TCP is also used for tasks such as zone transfers. Some resolver implementations use TCP for all queries.</p>
+
+<h2 id="how-to-remedy-the-issue">How to remedy the issue?</h2>
+
+<p>The symptom generally happen when Pods was trying to resolve the DNS record in UDP through CoreDNS. If the domain name contains payload exceeds <code class="language-plaintext highlighter-rouge">512 bytes</code>, it can hit the default limit of UDP DNS query. When the payload over <code class="language-plaintext highlighter-rouge">512 bytes</code>, it is expected to get the response with truncation has been set (TC flag).</p>
+
+<p>However, when receiving payload with <code class="language-plaintext highlighter-rouge">TC flag</code> set up and can think of the response is truncated, by default(on Amazon EKS), CoreDNS doesn’t apply the retransmit behavior by using TCP, instead, CoreDNS only response the truncated message and sent it back to the client. This workflow cause the client can aware the DNS query message was missing.</p>
+
+<p><strong>Therefore, to remedy the issue, here are possible solutions can be adopted:</strong></p>
+
+<h3 id="solution-1-using-edns0">Solution 1: Using EDNS0</h3>
+
+<p>In common use case, the default <code class="language-plaintext highlighter-rouge">512 bytes</code> generally can satisfy most usage because we will not expect that our DNS shouldn’t contain too much IP addresses information. However, in some cases, such as:</p>
+
+<ul>
+  <li>To balance my workload, I have the resolution will response many targets, because I am using DNS to do round-robin.</li>
+  <li>It is an endpoint of ElastiCache with many nodes.</li>
+  <li>Other use case can include long message in DNS response.</li>
+</ul>
+
+<p>If you can expect the DNS response will have larger payload, basically, client still able to send additional EDNS information to increase the buffer size in single UDP response. This still able to ask CoreDNS to forward the additional section using <code class="language-plaintext highlighter-rouge">EDNS0</code>.</p>
+
+<p>The workflow can be:</p>
+
+<ul>
+  <li>1) Resolve the domain by querying <code class="language-plaintext highlighter-rouge">CNAME</code></li>
+  <li>2) Once get the mapping domain name, can send another <code class="language-plaintext highlighter-rouge">A</code> record query with <code class="language-plaintext highlighter-rouge">EDNS</code> option</li>
+</ul>
+
+<p>(You can implement the logic in your own application. Because it has many different way to enable <code class="language-plaintext highlighter-rouge">EDNS</code> option, please refer to the documentation provided by your programming language or relevant library.)</p>
+
+<p>Here is an example regarding the output can see when using <code class="language-plaintext highlighter-rouge">dig</code></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>dig <span class="nt">-t</span> CNAME my-svc.default.cluster.local
+... <span class="o">(</span>Getting canonical name of the record, e.g. example.com<span class="o">)</span> ...
+
+<span class="nv">$ </span>dig example.com
+<span class="p">;;</span> Got answer:
+<span class="p">;;</span> -&gt;&gt;HEADER<span class="o">&lt;&lt;-</span> <span class="no">opcode</span><span class="sh">: QUERY, status: NOERROR, id: 51739
+;; flags: qr rd ra; QUERY: 1, ANSWER: 22, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 4096
+; COOKIE: 7fb5776972bf2aa4 (echoed)
+;; QUESTION SECTION:
+; example.com. IN A
+
+;; ANSWER SECTION:
+example.com. 15 IN A 10.4.85.47
+example.com. 15 IN A 10.4.83.252
+example.com. 15 IN A 10.4.82.121
+...
+example.com. 15 IN A 10.4.82.186
+</span></code></pre></div></div>
+
+<p>In the output, we can see that, by default, the <code class="language-plaintext highlighter-rouge">dig</code> will add optional setting to increase allowed payload size in UDP query, in this case it was using <code class="language-plaintext highlighter-rouge">4096 bytes</code>:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 4096
+</code></pre></div></div>
+
+<p>Below is a sample packet using <code class="language-plaintext highlighter-rouge">dig</code> with EDNS:</p>
+
+<figure class="">
+  <img src="/assets/images/posts/2020/10/coredns-resolution-truncation-issue-on-kubernetes-kube-dns/dns-with-edns-query.png" alt="Request with EDNS0 (Query)" />
+  
+    <figcaption>
+      Request with EDNS0 (Query) - Can see the payload size has been set up as <strong>4096 bytes</strong> in additional section
+
+    </figcaption>
+  
+</figure>
+
+<figure class="">
+  <img src="/assets/images/posts/2020/10/coredns-resolution-truncation-issue-on-kubernetes-kube-dns/dns-with-edns-response.png" alt="Request with EDNS0 (Response)" />
+  
+    <figcaption>
+      Request with EDNS0 (Response) - Can see the total DNS response size is up to <strong>3296 bytes</strong>, which exceeds default 512 bytes limit
+
+    </figcaption>
+  
+</figure>
+
+<p>As the method generally need to implement in the application. If you would like to increase the default buffer size for every UDP quries sent by CoreDNS, you can use <a href="https://coredns.io/plugins/bufsize/">bufsize plugin</a> to limits a requester’s UDP payload size.</p>
+
+<p>Here is an example to enable limiting the buffer size of outgoing query to the resolver (172.31.0.10):</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s">. {</span>
+    <span class="s">bufsize </span><span class="m">512</span>
+    <span class="s">forward . 172.31.0.10</span>
+<span class="err">}</span>
+</code></pre></div></div>
+
+<p>However, it would ask CoreDNS to allow larger payload size in every DNS queries, it may cause DNS vulnerabilities potentially with performance degraded. Please refer to the CoreDNS documentation to get more detail.</p>
+
+<h3 id="solution-2-having-tcp-retransmit-when-the-dns-query-was-truncated-recommended">Solution 2: Having TCP retransmit when the DNS query was truncated (Recommended)</h3>
+
+<p>As mentioned, <strong>the normal behaviour of any DNS server needing to send a UDP response that would exceed the 512-byte limit is for the server to truncate the response so that it fits within that limit and then set the TC flag in the response header. When the client receives such a response, it takes the TC flag as an indication that it should retry over TCP instead.</strong></p>
+
+<p>So far, by analyzing the network flow with packets, we can certainly sure CoreDNS doesn’t help us to perform the retransmit over TCP if getting message truncation. So the question is, <strong>can we ask the CoreDNS should retry with TCP if getting message is truncated?</strong></p>
+
+<ul>
+  <li>And the answer is … <strong>YES!</strong>.</li>
+</ul>
+
+<p>Since <code class="language-plaintext highlighter-rouge">1.6.2</code>, CoreDNS should support syntax <strong><a href="https://coredns.io/plugins/forward/">prefer_udp</a></strong> to handle the truncated responses when forwarding DNS queries:</p>
+
+<p>The explanation of the option <code class="language-plaintext highlighter-rouge">prefer_udp</code>:</p>
+<blockquote>
+  <p>Try first using UDP even when the request comes in over TCP. If response is truncated (TC flag set in response) then do another attempt over TCP. In case if both force_tcp and prefer_udp options specified the force_tcp takes precedence.</p>
+</blockquote>
+
+<p>Here is an example to add the option for <code class="language-plaintext highlighter-rouge">forward</code> plugin:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s">forward . /etc/resolv.conf {</span>
+    <span class="s">prefer_udp</span>
+<span class="err">}</span>
+</code></pre></div></div>
+
+<p>This option generally can be added in your configuration if you can aware a truncated response is received but CoreDNS doesn’t handle it. However, it is still recommended to get it a try and see any performance issue can cause. Consider scale out your CoreDNS Pods in your environment would be helpful if having large scale cluster.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>In this article, it dive deep into an DNS resolution issue regarding CoreDNS when running workload on Amazon EKS and break down the detail by inspecting network packet. The root cause relates to the message was truncated due to the response payload size exceeds <code class="language-plaintext highlighter-rouge">512 bytes</code>, which result in the client (Pod) was unable to get the correct result with IP addresses. The response payload will return detail with <code class="language-plaintext highlighter-rouge">TC flag</code> set up.</p>
+
+<p>This issue generally related to the design of DNS in UDP and it is expected to get the message truncation if having larger payload. In addition, as mentioned in <a href="https://tools.ietf.org/html/rfc1123">RFC#1123</a>, the requester should have responsibility for handling the situation if aware that <code class="language-plaintext highlighter-rouge">TC flag</code> has been set up. This article was mentioning the detail and the flow according to packet analyzing.</p>
+
+<p>To remedy the problem, this article also mentioned several methods can be applied on client side or CoreDNS, by using <code class="language-plaintext highlighter-rouge">EDNS</code> or apply TCP retransmit, both are able to be applied in CoreDNS.</p>
+
+<h2 id="references">References</h2>
+
+<ul>
+  <li><a href="https://github.com/coredns/coredns/pull/3110">CoreDNS Pull Request#3110</a></li>
+</ul>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/#amazon-web-services" class="page__taxonomy-item" rel="tag">amazon web services</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#amazon" class="page__taxonomy-item" rel="tag">amazon</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#aws" class="page__taxonomy-item" rel="tag">aws</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#coredns" class="page__taxonomy-item" rel="tag">CoreDNS</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#dns" class="page__taxonomy-item" rel="tag">DNS</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#edns" class="page__taxonomy-item" rel="tag">EDNS</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#eks" class="page__taxonomy-item" rel="tag">EKS</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#elastic-kubernetes-service" class="page__taxonomy-item" rel="tag">Elastic Kubernetes Service</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#k8s" class="page__taxonomy-item" rel="tag">k8s</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#kube-dns" class="page__taxonomy-item" rel="tag">kube-dns</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#kubernetes" class="page__taxonomy-item" rel="tag">Kubernetes</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#rfc" class="page__taxonomy-item" rel="tag">RFC</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2020-10-26T00:00:00-05:00">October 26, 2020</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=CoreDNS%28kube-dns%29+resolution+truncation+issue+on+Kubernetes+%28Amazon+EKS%29%20https%3A%2F%2Feasoncao.com%2Fcoredns-resolution-truncation-issue-on-kubernetes-kube-dns%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Feasoncao.com%2Fcoredns-resolution-truncation-issue-on-kubernetes-kube-dns%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Feasoncao.com%2Fcoredns-resolution-truncation-issue-on-kubernetes-kube-dns%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+      <iframe
+        style="width: 100%; max-width: 485px; height: 170px; margin: auto; overflow: hidden; display: block;"
+        src="https://button.like.co/in/embed/easoncao/button?referrer=https%3A%2F%2Feasoncao.com%2Fcoredns-resolution-truncation-issue-on-kubernetes-kube-dns%2F" frameBorder="0">
+      </iframe>
+      
+
+      <!-- Buy me a coffee -->
+      <section class="page__share">
+        <h4 class="page__share-title">Is that useful? Let me know or buy me a coffee</h4>
+        <p class="page__meta">這篇內容對你有幫助嗎？</p>
+        <a href="https://paypal.me/e4son"><img src="https://cdn.jsdelivr.net/gh/twolfson/paypal-github-button@1.0.0/dist/button.svg" alt="Support via PayPal"></a>
+        <a href="https://p.ecpay.com.tw/17C964C" class="btn btn--success">一次性支持 (ECPay)</a>
+      </section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/security-group-manager-alexa-skill/" class="pagination--pager" title="[Alexa] 靠一張嘴巴維運，我是如何成為出一張嘴的雲端工程師 - 使用 Alexa skill 管理 AWS EC2 防火牆 (Security Group) 規則
+">Previous</a>
+    
+    
+      <a href="/run-app-on-ec2-and-gather-metric-to-amazon-prometheus-amp/" class="pagination--pager" title="Run application on EC2 and gather metric to Amazon Managed Service for Prometheus (Amazon Prometheus / AMP)
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+      <div class="page__comments">
+  
+  
+      <h4 class="page__comments-title">Leave a comment</h4>
+      <section id="disqus_thread"></section>
+    
+</div>
+
+    
+  </article>
+
+  
+
+  <!-- Google Adsense -->
+  <div class="page__related">
+    <h4 class="page__related-title">You May Also Have Interest</h4>
+    <div>
+        <!-- responsive ad -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-1852752964062281"
+             data-ad-slot="2849626059"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+  </div>
+
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/2023/04/five-years-at-amazon-as-cloud-support-engineer-in-aws/cover.jpg" alt="">
+      </div>
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/five-years-at-amazon-as-cloud-support-engineer-in-aws/" rel="permalink">身處 Amazon 工作 5 年學到的事：在 AWS 擔任 Cloud Support Engineer 是什麼樣的體驗
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">2023 是我在 AWS 擔任 Cloud Support Engineer 的第六年，這份工作對我來說某種程度上是又愛又恨。作為見證 AWS 中文技術支援團隊的一員，五年時間說長不長，說短也不短，卻有非常多學習和體悟。
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/2023/03/aws-cloud-support-engineer-interview-tips-and-required-skills/cover.jpg" alt="">
+      </div>
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/aws-cloud-support-engineer-interview-tips-and-required-skills/" rel="permalink">在 AWS Cloud Support Engineer 面試中脫穎而出：必備的技術能力和重要特質
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">如果你正準備面試 AWS Cloud Support Engineer 的職位，在這篇文章中，我將與你分享我對於 AWS Cloud Support Engineer 所需的必備技能和特質，幫助你更好地了解這份職位且思考自己目前所具備的能力是與該團隊所交集，讓你在面試中脫穎而出。
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/eks-aws-load-balancer-controller-v1-to-v2-migration-behavior/" rel="permalink">[AWS] 那些沒寫在文件上的事 - AWS Load Balancer Controller v1 升級至 v2
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  3 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">隨著 Amazon EKS 對於 Kubernetes 1.22 的推出，1.21 也預計於 February 15, 2023 在 Amazon EKS 終止支援 1，對於 AWS Load Balancer Controller 仍然使用舊版本的用戶來說，勢必面臨需要升級 AWS Load Balancer ...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/2020/10/zero-downtime-deployment-when-using-alb-ingress-controller/deployment-workflow-alb-ingress-controller-4-side-note-of-deregister.png" alt="">
+      </div>
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/zero-downtime-deployment-when-using-alb-ingress-controller-on-amazon-eks-and-prevent-502-error/" rel="permalink">[AWS][EKS] Zero downtime deployment(RollingUpdate) when using AWS Load Balancer Controller on Amazon EKS
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  22 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">This article is describing the thing you need to aware when using ALB Ingress Controller (AWS Load Balancer Controller) to do deployment and prevent 502 erro...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+
+
+<div id="footer-subscribe-email-list">
+    <h3>Get the updates </h3>
+    <form action="https://docs.google.com/forms/d/e/1FAIpQLSfuofCYvu2cV614aDt6SO5ua_5trT0EC5yeSJObLY0KGjFtvQ/formResponse" method="POST">
+        <div style="display: flex;">
+            <!-- input name="entry.205499253" type="text" id="Name" class="form-control" placeholder="Name" -->
+            <input name="entry.1288273007" type="email" id="email" class="form-control" placeholder="Email" required="required" style="margin-top: 2px; margin-right: 5px; width: 50%;">
+            <input class="btn btn--primary" id="subscribe" type="submit" value="訂閱 (Sign Up)" style="width: 30%;">
+        </div>
+    </form>
+</div>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8GPCXJPGFZ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-8GPCXJPGFZ');
+</script>
+<!-- end custom footer snippets -->
+
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+          <li><a href="https://facebook.com/EasonTechTalk" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i> Facebook</a></li>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    <li><a href="/sitemap.xml"><i class="fas fa-fw fa-sitemap" aria-hidden="true"></i> SiteMap</a></li>
+    <li><a href="/tags"><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags</a></li>
+    <li><a href="https://toolbox.easoncao.com/"><i class="fas fa-fw fa-toolbox" aria-hidden="true"></i> ToolBox</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2023 Continuous Improvement. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+  <script>
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-80058083-2']);
+  
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "https://easoncao.com/coredns-resolution-truncation-issue-on-kubernetes-kube-dns/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/coredns-resolution-truncation-issue-on-kubernetes-kube-dns"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://lenlabs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

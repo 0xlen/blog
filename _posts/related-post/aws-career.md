@@ -1,7 +1,0 @@
-- [我在 Amazon 學到的 10 件事](/ten-thing-I-learned-in-amazon)
-- [我是如何在還沒畢業就錄取並進入到 Amazon 工作](/how-am-I-get-into-amazon-before-graduate)
-- [我是如何在一年內通過 AWS 五大核心認證](/how-i-pass-aws-all-five-certificate-within-one-year)
-- [Amazon Cloud Support Engineer 到底是在做什麼 (Amazon Web Services / AWS)](/what-is-cloud-support-engineer-doing-in-amazon)
-- [關於 Cloud Support Engineer 職位的常見問題 (Amazon Web Services / AWS) - AWS Cloud Support Engineer FAQs](/aws-cloud-support-engineer-faq)
-- [在 AWS Cloud Support Engineer 面試中脫穎而出：必備的技術能力和重要特質](/aws-cloud-support-engineer-interview-tips-and-required-skills)
-- [身處 Amazon 工作 5 年學到的事：在 AWS 擔任 Cloud Support Engineer 是什麼樣的體驗](/five-years-at-amazon-as-cloud-support-engineer-in-aws)

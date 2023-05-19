@@ -1,0 +1,969 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.19.3 by Michael Rose
+  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>身處 Amazon 工作 5 年學到的事：在 AWS 擔任 Cloud Support Engineer 是什麼樣的體驗 - Continuous Improvement</title>
+<meta name="description" content="如果您對 AWS 技術支援和客戶服務感興趣，且想了解更多有關 AWS Cloud Support Engineer 的訊息。這篇文章深入探討了在 Amazon Web Services (AWS) 擔任 Cloud Support Engineer 的工作體驗，並分享了作者在過去五年中學到的寶貴技能和豐富經驗。透過這篇文章，您可以了解到 AWS Cloud Support Engineer 的日常工作內容、挑戰和回報，並探究一些工作秘密。">
+
+
+  <meta name="author" content="Yang-Xin Cao (Eason Cao)">
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Continuous Improvement">
+<meta property="og:title" content="身處 Amazon 工作 5 年學到的事：在 AWS 擔任 Cloud Support Engineer 是什麼樣的體驗">
+<meta property="og:url" content="https://easoncao.com/five-years-at-amazon-as-cloud-support-engineer-in-aws/">
+
+
+  <meta property="og:description" content="如果您對 AWS 技術支援和客戶服務感興趣，且想了解更多有關 AWS Cloud Support Engineer 的訊息。這篇文章深入探討了在 Amazon Web Services (AWS) 擔任 Cloud Support Engineer 的工作體驗，並分享了作者在過去五年中學到的寶貴技能和豐富經驗。透過這篇文章，您可以了解到 AWS Cloud Support Engineer 的日常工作內容、挑戰和回報，並探究一些工作秘密。">
+
+
+
+  <meta property="og:image" content="https://easoncao.com/assets/images/posts/2023/04/five-years-at-amazon-as-cloud-support-engineer-in-aws/cover.jpg">
+
+
+
+
+
+  <meta property="article:published_time" content="2023-04-01T00:00:00-05:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://easoncao.com/five-years-at-amazon-as-cloud-support-engineer-in-aws/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Continuous Improvement",
+      "url": "https://easoncao.com/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Continuous Improvement Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- Google adsense -->
+<script data-ad-client="ca-pub-1852752964062281" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<link rel="shortcut icon" type="image/jpg" href="/assets/apple-touch-icon.png"/>
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+          <a class="site-logo" href="/"><img src="/assets/apple-touch-icon.png" alt=""></a>
+        
+        <a class="site-title" href="/">
+          Continuous Improvement
+          <span class="site-subtitle"></span>
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/posts/">所有文章 All Posts</a>
+            </li><li class="masthead__menu-item">
+              <a href="/courses/">學習資源 Learning</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">關於 About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="https://www.gravatar.com/avatar/0d33994eec9eddc67415e07a7fcafc9d?s=200" alt="Yang-Xin Cao (Eason Cao)" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Yang-Xin Cao (Eason Cao)</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>Engineer@Amazon <br />- <a href="https://www.awshof.com/allstarscertifiedlist.html">AWS All-5 certified</a> / ECS &amp; EKS SME / Marathon Runner / PADI Open Water Diver</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Amazon / Dublin, Ireland</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:eason@easoncao.com" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+            <li><a href="https://linkedin.com/in/easoncao" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-id-badge" aria-hidden="true"></i><span class="label">LinkedIn</span></a></li>
+          
+        
+          
+        
+          
+            <li><a href="https://facebook.com/EasonTechTalk" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i><span class="label">Facebook</span></a></li>
+          
+        
+          
+            <li><a href="https://github.com/0xlen" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="身處 Amazon 工作 5 年學到的事：在 AWS 擔任 Cloud Support Engineer 是什麼樣的體驗">
+    <meta itemprop="description" content="2023 是我在 AWS 擔任 Cloud Support Engineer 的第六年，這份工作對我來說某種程度上是又愛又恨。作為見證 AWS 中文技術支援團隊的一員，五年時間說長不長，說短也不短，卻有非常多學習和體悟。">
+    <meta itemprop="datePublished" content="2023-04-01T00:00:00-05:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">身處 Amazon 工作 5 年學到的事：在 AWS 擔任 Cloud Support Engineer 是什麼樣的體驗
+</h1>
+          
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+
+</p>
+          
+        </header>
+      
+
+      <!-- Google ads in article -->
+      <div>
+          <ins class="adsbygoogle"
+               style="display:block; text-align:center;"
+               data-ad-layout="in-article"
+               data-ad-format="fluid"
+               data-ad-client="ca-pub-1852752964062281"
+               data-ad-slot="8435469231"></ins>
+          <script>
+               (adsbygoogle = window.adsbygoogle || []).push({});
+          </script>
+      </div>
+      <hr>
+
+      <section class="page__content" itemprop="text">
+        
+        <p>2023 是我在 AWS 擔任 Cloud Support Engineer 的第六年，這份工作對我來說某種程度上是又愛又恨。作為見證 AWS 中文技術支援團隊的一員，五年時間說長不長，說短也不短，卻有非常多學習和體悟。</p>
+
+<figure class="">
+  <img src="/assets/images/posts/2023/04/five-years-at-amazon-as-cloud-support-engineer-in-aws/cover.jpg" alt="身處 Amazon 工作 5 年學到的事：在 AWS 擔任 Cloud Support Engineer 是什麼樣的體驗" />
+  
+    <figcaption>
+      身處 Amazon 工作 5 年學到的事：在 AWS 擔任 Cloud Support Engineer 是什麼樣的體驗 (source: <a href="https://unsplash.com/photos/LJ9KY8pIH3E">Unsplash</a>)
+
+    </figcaption>
+  
+</figure>
+
+<p>一轉眼五年過去，除了見證團隊的成長，也看過各種人來來去去。在 Amazon 待超過五年的員工不正確估算在全球大概佔 PR 90，在同一個團隊待超過五年的人更是稀缺。一滿五年，你就能夠晉身橘色識別證的一員<sup id="fnref:amazon-badge-color" role="doc-noteref"><a href="#fn:amazon-badge-color" class="footnote" rel="footnote">1</a></sup>。作為團隊少數幾個拿橘牌的員工，不免有一些勵志或是辛苦的工作歷程可以分享，可惜忙碌跟快速的工作步調讓很多想法稍縱即逝。尤其是回顧自己過去寫下的內容 (<a href="/ten-thing-I-learned-in-amazon">我在 Amazon 學到的 10 件事</a>)，驚覺這些改變其實無時無刻都在發生，我確實明白自己有些模樣在這五年前已經有所改變，慶幸的是我沒有因為環境而變得事故。</p>
+
+<p>我想或多或少是因為能夠透過回顧這些內容，甚至是因為協助面試的緣故，很多來面試的候選人甚至主動提及曾經讀過我的內容並且因此受到一些啟發 (不論是否最終有進入我們團隊工作)。這些文字跟反饋都讓我時刻刻提醒自己要永保初心，也要求自己用更成熟的方法處理事情。有些文章甚至獲得很多各方高手的迴響，但一直遲遲沒有安排時間再繼續寫更多。因此寫下這篇內容，也算是我個人對自己在用五年後的視角，來總結我對這個團隊喜歡和認為有待加強的地方。</p>
+
+<p>在這裡先提個免責申明，AWS 雖然作為 Amazon 整個集團重要的一個業務，但有許多管理的方式可能也因不同組織和角色而有所差異。畢竟 Amazon 在全球有數十萬名員工分佈在世界各地，工作時遇到一堆奇奇怪怪的部門早已屢見不鮮，用 AWS Support 不能以偏概全所有團隊的樣貌。</p>
+
+<p>此外，這篇內容僅為個人的觀察，不代表任何官方立場，本篇內容更不期待帶有任何批判色彩。在團隊裡身為一個獨立貢獻者 (Individual Contributor)，大部分時間我也是站在第一線解決各式各樣的工程問題，而非討論管理維運議題。因為不是站在管理層的角度用宏觀的面向關注團隊維運，工程師關注的議題跟管理者的議題多少都有些不同，我僅分享我對於身為工程師及親身經歷的相關感受，不意味著任何一方不好。</p>
+
+<p>畢竟我的角度為「工程師」而非「管理者」，因此可能部分觀察的角度也會有所侷限，但會盡可能用客觀的角度寫下我個人的觀察，還請閱讀者自行評判。</p>
+
+<h2 id="認識不同年齡層工作者的機會間接拓展更廣的人際網路">認識不同年齡層工作者的機會間接拓展更廣的人際網路</h2>
+
+<p>我在中文技術團隊觀察一直沒變的事情是，團隊中充滿了各式各樣優秀的同事，許多不乏都是在業界工作數年的工程師並且擁有豐富的經歷。有趣的是，時下的招聘政策也鼓勵許多剛畢業的學生加入 AWS Support 技術團隊，不時為團隊注入心血，使得整個團隊的組成十分多元。常常也有許多不同的新進同事從其他公司帶來不一樣的經驗和想法，甚至從原本使用 AWS 產品的客戶端變成解決問題的角色，都促使團隊中因為不同背景的工作者加入彼此交流而建立強大的人脈網路。</p>
+
+<h2 id="與全世界交流">與全世界交流</h2>
+
+<p>Cloud Support Engineer 是一個全球化的團隊，工程師遍佈世界各地。當你身肩的責任和任務越多，自然越有更多機會與全世界的同事交流和執行專案。我個人曾經主持過跨三個時區的技術講座和訓練，不僅讓我實際應用專案管理的思維、訓練教學技能，更讓我進一步增加自己的能見度，並且實質提升團隊的技術職能，為團隊作出貢獻。</p>
+
+<p>能進一步打開自己的視野並與全世界交流，是我個人最喜歡的部分。尤其身處 Dublin，多得是不同語言和背景的工程師，充滿了不同國家、語言、背景交流的機會，除了專注在技術上的交流，工作之餘也可以聊聊不同背景之間的特色和學習彼此的文化。</p>
+
+<p>但如果人為在台灣的技術團隊，實際上可能因為時區的緣故，部分交流多少會有一些受限。但與世界各地的同事交流仍只是使用通訊軟體這種觸手可及的事情，壞處就是你可能要額外安排其他時間 (比如你必須要早起、晚上回訊息或參加會議)。</p>
+
+<h2 id="增強抗壓能力">增強抗壓能力</h2>
+
+<p>我認為這份工作與一般軟體開發最大不同的是，由於面對的是客戶的生產環境，Cloud Support Engineer 不時會有面對高壓的情境，例如功能故障、應用程式不工作的事件、系統崩潰等等。有時候客戶甚至會不斷的催促你盡快給予資訊，在這種情況下，你需要學會保持冷靜和集中注意力，同時，不能因客戶的情緒引領你往不正確的調查方向。</p>
+
+<p>我還記得第一次面對客戶環境故障時，我還得請求資深工程師一同指導解決客戶所遭遇的技術問題。但在從中觀摩學習後，並且檢討學習排查問題的方法不斷練習，慢慢將這種壓力視為對客戶的理解，學會用冷靜的態度處理棘手的狀況，正確的釐清和排除。可能有些人認為是缺點 (例如：客戶很難搞)，但實際在走過一遭後，一旦你跨過那個不舒服的過程，將成為無懈可擊且帶得走的軟實力，就看你是否願意視這些挑戰為成長的機會。</p>
+
+<p>這樣的經驗和訓練不自覺在生活中產生一些幫助，尤其是面對系統故障或是一些非預期的狀況發生時，第一直覺反應是釐清問題並且如何找出解決問題的方式，而不是受情緒或環境影響不斷焦慮。</p>
+
+<h2 id="磨練跨團隊的溝通技巧">磨練跨團隊的溝通技巧</h2>
+
+<p>Cloud Support Engineer 與軟體開發不同的是，這是一個大量需要溝通的工作角色，並且將技術問題用淺顯易懂的方式與客戶分享相關的調查結果、提及可執行且理解的步驟供客戶採納 (不論是書信、Chat 或是電話形式)。由於面向的客戶端存在各式各樣的角色，你除了要學會用開發者能理解的方式解釋問題和解決方案，不免遇到客戶端主管級別的角色想釐清問題的相應狀況；同時，AWS 也會有不同面向的客戶端角色一同協助客戶的問題，身為技術工程師也讓我多了很多必須要學會與這些不同角色溝通的技能。</p>
+
+<p>某種程度上學會站在他人角度、同理他人。在產品開發團隊前面，我會需要了解客戶遭遇的問題是什麼、如何複製、點出產品當前的問題、建議如何修正。除了要讓產品團隊理解當前問題要排查的方向，更需要對產品整體的核心運作有一定的認識，才能使用開發團隊所能理解的語言有效的將問題修正；在客戶前面，我需要了解客戶所遭遇的問題、客戶的痛點，並且提出可參考的實務建議，以幫助他們在業務上透過產品的功能和方法，滿足他們業務上所期待的目標，甚至有時候需要引導客戶改正問題以爲他們帶來長遠的效益 (因為有時候客戶有自己的想法並且多急於解決當下的短期問題)。</p>
+
+<h2 id="提升書信寫作能力">提升書信寫作能力</h2>
+
+<p>除了 Amazon 組織文化本身就具備寫文件的精神外，技術支持工程師會有大量的時間會投入在將複雜的問題調查報告轉譯成客戶或是產品團隊能理解的語言，並且寫出能夠讓客戶理解的書信內容。</p>
+
+<figure class="">
+  <img src="/assets/images/posts/2023/04/five-years-at-amazon-as-cloud-support-engineer-in-aws/support-case-example.png" alt="一個 AWS Support Center 的通訊範例 (非技術相關)" />
+  
+    <figcaption>
+      一個 AWS Support Center 的通訊範例 (非技術相關)
+
+    </figcaption>
+  
+</figure>
+
+<h2 id="各種曝光和成長的機會">各種曝光和成長的機會</h2>
+
+<p>AWS Support 除了是一個跨國組成的團隊外，AWS 本身就提供了一個能夠讓你成長和曝光的平台。</p>
+
+<p>身處中文 DevOps/Container 領域的技術團隊，我特別喜歡的一點是週遭的同事都非常支持且互相幫忙，並且在自己的職涯規劃上都很積極，不會只侷限在日常協助客戶解決單一 Support Case 的問題上。</p>
+
+<p>即使每天日常解決多少個 Support Case (Ticket) 很重要，但更多得是其他面向的工作幫助你成長不同面向的技能。由於 AWS Support 密切的與不同產業的客戶合作，一個顯著的例子是透過客戶端面向的教育訓練機會幫助你成長，為不同規模的企業客戶分享有關 AWS 產品的使用建議和最佳實踐。</p>
+
+<p>此外，為了協助更多客戶解決技術問題，內部不時充斥各種專案和計畫。不論是藉由影片、技術文章或是教育訓練，團隊成員們都會透過不同的方式提升自己的技能。除了使中文的客戶受益，更多時候貢獻己力讓全球的客戶受益，並且在全球打開能見度。例如，以下都是我或是同事們貢獻的各種內容：</p>
+
+<p><strong>AWS Knowledge Center</strong></p>
+<ul>
+  <li><a href="https://repost.aws/knowledge-center/ecs-unable-to-assume-role">How do I troubleshoot the error “ECS was unable to assume the role” when running the Amazon ECS tasks?</a> - Joyce Kuo</li>
+  <li><a href="https://repost.aws/knowledge-center/ecs-task-container-health-check-failures">How do I troubleshoot the container health check failures for Amazon ECS tasks?</a> - Shih-ting Yuan</li>
+</ul>
+
+<!-- Courtesy of embedresponsively.com //-->
+
+<div class="responsive-video-container">
+    <iframe src="https://www.youtube-nocookie.com/embed/BxEFqTv-icU" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe>
+  </div>
+
+<!-- Courtesy of embedresponsively.com //-->
+
+<div class="responsive-video-container">
+    <iframe src="https://www.youtube-nocookie.com/embed/JANKxp728dg" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe>
+  </div>
+
+<!-- Courtesy of embedresponsively.com //-->
+
+<div class="responsive-video-container">
+    <iframe src="https://www.youtube-nocookie.com/embed/sHup_xwwZx0" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe>
+  </div>
+
+<!-- Courtesy of embedresponsively.com //-->
+
+<div class="responsive-video-container">
+    <iframe src="https://www.youtube-nocookie.com/embed/X3wPRrVeSqo" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe>
+  </div>
+
+<p>更甚者，我厲害的同事們多是路見不平拿 Pull Request 來填，甚至會提交對應的修補程式，或開發對應的工具讓更多客戶從中受益，例如：</p>
+
+<ul>
+  <li><a href="https://github.com/aws/aws-cdk/pull/21185">(aws-cdk) fix(eks): cannot disable cluster logging once it has been enabled #21185</a> - Kuo-Le Mei</li>
+  <li><a href="https://github.com/awsdocs/aws-cloudformation-user-guide/pull/1225">AWS::RDS::DBInstance replacement update notice #1225</a> - Yu-Chi Chen</li>
+  <li><a href="https://github.com/guessi/cloudtrail-cli">cloudtrail-cli</a> - Kuo-Le Mei</li>
+</ul>
+
+<h2 id="彈性的職涯規劃路徑">彈性的職涯規劃路徑</h2>
+
+<p>作為開啟 AWS 職涯的敲門磚，Cloud Support Engineer 著實是一個充滿學習廣度機會的工作，這也是我個人覺得這份工作十分有趣的地方，例如：</p>
+
+<ul>
+  <li>處理客戶案例所累積對於 AWS 服務的技術知識和高可用架構設計思維、在客戶端大量的提供教育訓練或最佳實踐建議，轉職成為解決方案架構師 (Solution Architect)</li>
+  <li>針對特定客戶所遭遇的問題提供協助而逐步轉職成為技術經理 (Technical Account Manager)</li>
+  <li>協助客戶執行教育訓練或是訓練內部工程師，培養成為講者的能力 (Trainer)</li>
+  <li>設計內部工具和相關專案計畫累積系統設計相關的開發技能 (Software Development Engineer)</li>
+  <li>大量的書信寫作訓練和開源文件貢獻機會，轉職成為技術寫手 (Technical Writer)</li>
+  <li>整合內部資源執行跨區域或是全球的計畫，逐步成為主管 (Operation Manager) 或是資深工程師</li>
+</ul>
+
+<h2 id="還算可接受的-work-life-balance">還算可接受的 Work-life balance</h2>
+
+<p>雖然每個人對於 Work-life balance 的定義不同 (就我的觀點，這是一種相對感受)，但比起很多公司的 IT Support 或是工程師職位，「相對來說」，AWS Cloud Support Engineer 可能不會是一個非常輕鬆的工作。</p>
+
+<p>以目前團隊的工作型態，為了提供客戶 24 x 7 x 365 天不間斷的支持，除了意味著國定假日或是週末會是你的工作時間外，團隊成員彼此之間通常工作時間會有部分不重疊的輪班制度。</p>
+
+<p>但之所以我認為這還算可接受，主要有以下幾點觀察：</p>
+
+<ul>
+  <li>
+    <p>(1) 在過去，在台灣的中文團隊值班時間需覆蓋整整 16 小時，直到晚上 11 點左右才轉移至北美時區 (這意味著當時有部分同事需要工作到晚上 11 點)。由於值晚班這件事情對很多人來說並不是一個很健康的工作型態，管理層也在台灣團隊成立不久後，不斷地尋求可能的解決方案。隨著歐洲團隊的建立，這樣的現象也趨於改善，使得台灣能從值晚班的噩夢中解放，將工作時間往前推移 (能下班的時間越來越早)。</p>
+  </li>
+  <li>
+    <p>(2) 即使 Cloud Support Engineer 同樣會有 Oncall 的機制，團隊的 Oncall 會以工作時間為主。由於是全球化的團隊，工作時間結束後的 Oncall 班次將會由其他時區輪值。</p>
+  </li>
+</ul>
+
+<p>大部分情況下，新進人員在 Work-life balance 這件事情上面通常能有很好的控制。但隨著想做的事情越多，可能在你身上肩負的責任也越多，使得工作與生活上不見得能夠充分平衡。例如：我觀察到資深的工程師，有時候也得必須配合美洲時區在晚上時間 (21:00) 之後開會。<strong>但「相對來說」，比起傳聞有些 Amazon 的開發團隊需要半夜 Oncall 起床處理問題，確實種程度上是還可接受的 Work-life balance。</strong></p>
+
+<p>雖然難以置信，但在提供客戶 24 小時不間斷服務的背後，仍有 AWS 開發團隊需要負擔全天候的 Oncall 工作，不得不得在半夜時間起床。尤其你身為 AWS 技術支持工程師並具備一定資歷後，多少會接觸到客戶生產環境故障的問題，多的是把北美時區的開發者叫起床的機會。</p>
+
+<p>作為曾經在半夜被叫醒的工作者，我個人十分認同半夜起床值 Oncall 是一個很不健康的工作型態。雖然團隊對於工作型態的設計不是我很喜歡的一點，但在方面團隊整體確實有在以緩慢的節奏進步。隨著加入的人才越多，整個團隊的工作安排會趨於理想值。</p>
+
+<h2 id="客戶無法區分清楚真正的問題緊急程度客戶預期和實際環境的衝突導致工作時間碎片化">客戶無法區分清楚真正的問題緊急程度：客戶預期和實際環境的衝突導致工作時間碎片化</h2>
+
+<p>日常工作時間的碎片化是我個人很不喜歡的一點。要討論這點之前，需要先理解整體環境的影響佔這個問題的關鍵性因素。取決於市場型態不同，客戶的行為也會有所不同；對於中文的客戶，由於客戶習慣即時通訊方法和立刻響應速度，這往往造就了客戶使用技術支持服務時，產生很多非預期的行為。</p>
+
+<p>即使在文件和產品頁面中明確定義了嚴重性的不同 <sup id="fnref:case-sev-product-page" role="doc-noteref"><a href="#fn:case-sev-product-page" class="footnote" rel="footnote">2</a></sup> <sup id="fnref:case-sev-doc" role="doc-noteref"><a href="#fn:case-sev-doc" class="footnote" rel="footnote">3</a></sup>，客戶習慣仍傾向選擇最少的時間來開啟案例 (能選多短就選多短)，而非真正的問題嚴重性影響 (例如：客戶有一個專案趕著下週上線所以選擇最短的響應時間 15 分鐘，而非系統正在當機)：</p>
+
+<figure class="">
+  <img src="/assets/images/posts/2023/04/five-years-at-amazon-as-cloud-support-engineer-in-aws/case-sev-product-page.png" alt="在產品頁面明確定義的案例嚴重性" />
+  
+    <figcaption>
+      在產品頁面明確定義的案例嚴重性
+
+    </figcaption>
+  
+</figure>
+
+<figure class="">
+  <img src="/assets/images/posts/2023/04/five-years-at-amazon-as-cloud-support-engineer-in-aws/case-sev-doc.png" alt="在文件頁面明確定義的案例嚴重性" />
+  
+    <figcaption>
+      在文件頁面明確定義的案例嚴重性
+
+    </figcaption>
+  
+</figure>
+
+<p>即使明白客戶常常不正確的選擇案例嚴重性，AWS Support 仍提供客戶最大的決定權。然而，這樣的現象某種程度上確實也導致工程資源被濫用。這就好比家喻戶曉的伊索寓言「狼來了」中描述的故事，當假警報一多，除了使得團隊無法正確區分真正受到生產環境影響的故障，更嚴重的是由於工程師都被一堆非故障影響的問題佔用，使得團隊工程師無法很好平衡不同問題之間的嚴重性，即時協助真正有環境受損影響的故障。</p>
+
+<p>這個現象所帶來的影響更使得中文技術團隊必須大量的應付客戶這種短而快的回覆，而往往喪失能夠專注在技術問題上的時間。我看過許多新進人員因此無所適從，迫使被拉去處理大量需要短時間回應的案例，而無法真正的在單一案例中投入太多充分的時間進行調查：一下忙 A 案例，一下被抽去做 B 案例，或是手邊正在忙碌的事情、正在開的會不得不中斷去協助客戶，導致工作時間的碎片化。如果間接犧牲的是客戶長遠的服務品質，我相信整個市場型態有很多有待改進的空間。</p>
+
+<p>相對來說，日文客戶就慣用「一般指導」、「系統效能不佳/系統受損」等這類真正反應其事實狀況的案例嚴重性，進行問題指導和事件後的相關問題調查。這樣的市場型態讓我從日文團隊同事中間接受益，從他們每個人身上提供給客戶的回覆我學習到非常多。我常常可以觀察到他們提供給客戶的訊息都十分詳細且完整，在回覆前不僅做了非常多詳細的測試，更提出各種可參考的方案或是 PoC，甚至在內部已經討論過一圈 (但缺點是客戶需要有足夠的耐心)。</p>
+
+<p>當然這並不是要比較哪種客戶比較好，畢竟，從親身體驗過印度客戶的型態，也覺得支持上充滿挑戰，就明白這並不是單一語系客戶的問題，每種客戶都有各自的特性。而是從實際經驗中，讓我對文化和市場差異有更深的體悟。</p>
+
+<p>同時，團隊也在針對這項問題做了很多不同面向的嘗試，以試圖優化工程師在工作上的痛點，讓客戶學習如何更好且正確的使用 AWS 技術資源，以幫助他們解決真正重要的問題。</p>
+
+<h2 id="快速迭代的流程有時讓人無所適從">快速迭代的流程有時讓人無所適從</h2>
+
+<p>由於團隊快速成長且存在多時區的問題，為了適應不同問題的情境，流程的修訂和快速迭代有時往往讓人跟不上。例如：有時候今天建議的工作流程 A，可能明天會變成 A-1 版本，再過幾週可能變成 A-10。由於流程常因客戶需求和問題不斷迭代，有時候不見得能夠即時的在各區域中套用，或是特定區域根本是獨立的系統，有自己的一套系統運作。</p>
+
+<p>除了「朝令夕改」大概是最適合用來形容團隊一些流程上的現況，很多時候團隊會不斷嘗試導入一些新的方法或是流程。我自己有時候都會覺得無所適從。必須要不時回去翻翻內部的文件，或是回到一些原則性的討論，以了解是否有任何理解錯誤。</p>
+
+<p>雖然有時候感到混亂，但這種迭代的過程在團隊中會一直不斷的進行，你得學會適應快節奏和不斷變化的文化。</p>
+
+<h2 id="學會如何成為一名更好的客戶">學會如何成為一名更好的客戶</h2>
+
+<p>最後，<strong>「學會如何成為一名更好的客戶」</strong>絕對是我任職客戶面向技術支持工程師角色這幾年收穫最大的體悟，絕對可以列為最重要的一點。由於日常工作中實際就是在做類似客戶服務性質的工作，工作中不免看盡客戶百態，了解不同客戶的型態，並且了解到什麼是好的、什麼是不好的。</p>
+
+<p>身為一名技術支持工程師，隨著協助客戶經驗的累積，漸漸地學會如何站在客戶服務人員的角度思考，並且同理身為客戶服務角色的辛苦。</p>
+
+<p>當你了解到客戶並未尊重專業時，那份挫折感絕對是深深擊潰你對於技術的自信。甚至很多時候即使你的建議正確，並且成功解決客戶問題後，客戶可能就只把你當做一名 AWS 的後台人員，也不見得會獲得客戶的肯定。</p>
+
+<p>在開始工作的頭幾年我很不能理解，往往覺得在工作上付出了努力但仍得不到任何客戶的反饋；但轉頭一看，其實還是有非常多的客戶展現充分的專業並且在工作上有很好的合作體驗，更加學會心平氣和的理解不同性質的客戶。<strong>也因此學習到如何成為一名「好客戶」，更懂得如何在日常的生活中，向不同產業、工作的客戶服務人員展示尊重</strong>，可以是餐廳服務生、是銀行電話客戶服務人員，或是任何一種客戶面向的工作者。在我所處的團隊中，團隊成員也都不吝分享自己的經驗，並且分享如何針對不同客戶提供適當的處理方式，藉由這些經驗成長。</p>
+
+<p>自從成為客戶服務角色後，能更同理不同行業類別的客服工作，更加重視第一線的服務人員背後所付出的辛勞。並且在未獲得預期的服務水平時，能提出實質的建議、想法而不是純抱怨。有趣的是，這樣做往往讓我獲得更為滿意的結果 (不是更快的退費效率或是獲得更多的補償)，一同促使產品和服務進步。</p>
+
+<h2 id="總結">總結</h2>
+
+<p>在這篇內容中，深入探討了在 Amazon Web Services (AWS) 擔任 Cloud Support Engineer 的工作體驗，並分享了個人在過去五年中學到的寶貴技能和體驗。以上幾點完全屬於個人的觀察，不代表任何官方立場。</p>
+
+<p>如果你正對 AWS Cloud Support Engineer 職位感興趣，希望以上的內容對您有所幫助，也可以透過參考其他系列文章以幫助你了解更多資訊。</p>
+
+<h2 id="看更多系列文章">看更多系列文章</h2>
+
+<ul>
+  <li><a href="/ten-thing-I-learned-in-amazon">我在 Amazon 學到的 10 件事</a></li>
+  <li><a href="/how-am-I-get-into-amazon-before-graduate">我是如何在還沒畢業就錄取並進入到 Amazon 工作</a></li>
+  <li><a href="/how-i-pass-aws-all-five-certificate-within-one-year">我是如何在一年內通過 AWS 五大核心認證</a></li>
+  <li><a href="/what-is-cloud-support-engineer-doing-in-amazon">Amazon Cloud Support Engineer 到底是在做什麼 (Amazon Web Services / AWS)</a></li>
+  <li><a href="/aws-cloud-support-engineer-faq">關於 Cloud Support Engineer 職位的常見問題 (Amazon Web Services / AWS) - AWS Cloud Support Engineer FAQs</a></li>
+  <li><a href="/aws-cloud-support-engineer-interview-tips-and-required-skills">在 AWS Cloud Support Engineer 面試中脫穎而出：必備的技術能力和重要特質</a></li>
+  <li><a href="/five-years-at-amazon-as-cloud-support-engineer-in-aws">身處 Amazon 工作 5 年學到的事：在 AWS 擔任 Cloud Support Engineer 是什麼樣的體驗</a></li>
+</ul>
+
+<h2 id="references">References</h2>
+
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:amazon-badge-color" role="doc-endnote">
+      <p><a href="https://www.aboutamazon.eu/news/working-at-amazon/discover-whats-behind-the-amazon-id-badges">Discover what’s behind the Amazon ID badges</a> <a href="#fnref:amazon-badge-color" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:case-sev-product-page" role="doc-endnote">
+      <p><a href="https://aws.amazon.com/tw/premiumsupport/plans">比較 AWS Support 計畫</a> <a href="#fnref:case-sev-product-page" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:case-sev-doc" role="doc-endnote">
+      <p><a href="https://docs.aws.amazon.com/zh_tw/awssupport/latest/user/case-management.html#choosing-severity">建立支援案例和案例管理 - 選擇嚴重性</a> <a href="#fnref:case-sev-doc" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/#amazon-web-services" class="page__taxonomy-item" rel="tag">amazon web services</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#amazon" class="page__taxonomy-item" rel="tag">amazon</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#aws" class="page__taxonomy-item" rel="tag">aws</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#cloud-support-engineer" class="page__taxonomy-item" rel="tag">Cloud Support Engineer</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#cloud-support" class="page__taxonomy-item" rel="tag">Cloud Support</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#work" class="page__taxonomy-item" rel="tag">work</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2023-04-01T00:00:00-05:00">April 1, 2023</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=%E8%BA%AB%E8%99%95+Amazon+%E5%B7%A5%E4%BD%9C+5+%E5%B9%B4%E5%AD%B8%E5%88%B0%E7%9A%84%E4%BA%8B%EF%BC%9A%E5%9C%A8+AWS+%E6%93%94%E4%BB%BB+Cloud+Support+Engineer+%E6%98%AF%E4%BB%80%E9%BA%BC%E6%A8%A3%E7%9A%84%E9%AB%94%E9%A9%97%20https%3A%2F%2Feasoncao.com%2Ffive-years-at-amazon-as-cloud-support-engineer-in-aws%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Feasoncao.com%2Ffive-years-at-amazon-as-cloud-support-engineer-in-aws%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Feasoncao.com%2Ffive-years-at-amazon-as-cloud-support-engineer-in-aws%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+      <iframe
+        style="width: 100%; max-width: 485px; height: 170px; margin: auto; overflow: hidden; display: block;"
+        src="https://button.like.co/in/embed/easoncao/button?referrer=https%3A%2F%2Feasoncao.com%2Ffive-years-at-amazon-as-cloud-support-engineer-in-aws%2F" frameBorder="0">
+      </iframe>
+      
+
+      <!-- Buy me a coffee -->
+      <section class="page__share">
+        <h4 class="page__share-title">Is that useful? Let me know or buy me a coffee</h4>
+        <p class="page__meta">這篇內容對你有幫助嗎？</p>
+        <a href="https://paypal.me/e4son"><img src="https://cdn.jsdelivr.net/gh/twolfson/paypal-github-button@1.0.0/dist/button.svg" alt="Support via PayPal"></a>
+        <a href="https://p.ecpay.com.tw/17C964C" class="btn btn--success">一次性支持 (ECPay)</a>
+      </section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/aws-cloud-support-engineer-interview-tips-and-required-skills/" class="pagination--pager" title="在 AWS Cloud Support Engineer 面試中脫穎而出：必備的技術能力和重要特質
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+      <div class="page__comments">
+  
+  
+      <h4 class="page__comments-title">Leave a comment</h4>
+      <section id="disqus_thread"></section>
+    
+</div>
+
+    
+  </article>
+
+  
+
+  <!-- Google Adsense -->
+  <div class="page__related">
+    <h4 class="page__related-title">You May Also Have Interest</h4>
+    <div>
+        <!-- responsive ad -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-1852752964062281"
+             data-ad-slot="2849626059"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+  </div>
+
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/2023/03/aws-cloud-support-engineer-interview-tips-and-required-skills/cover.jpg" alt="">
+      </div>
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/aws-cloud-support-engineer-interview-tips-and-required-skills/" rel="permalink">在 AWS Cloud Support Engineer 面試中脫穎而出：必備的技術能力和重要特質
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">如果你正準備面試 AWS Cloud Support Engineer 的職位，在這篇文章中，我將與你分享我對於 AWS Cloud Support Engineer 所需的必備技能和特質，幫助你更好地了解這份職位且思考自己目前所具備的能力是與該團隊所交集，讓你在面試中脫穎而出。
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/eks-aws-load-balancer-controller-v1-to-v2-migration-behavior/" rel="permalink">[AWS] 那些沒寫在文件上的事 - AWS Load Balancer Controller v1 升級至 v2
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  3 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">隨著 Amazon EKS 對於 Kubernetes 1.22 的推出，1.21 也預計於 February 15, 2023 在 Amazon EKS 終止支援 1，對於 AWS Load Balancer Controller 仍然使用舊版本的用戶來說，勢必面臨需要升級 AWS Load Balancer ...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/2020/10/zero-downtime-deployment-when-using-alb-ingress-controller/deployment-workflow-alb-ingress-controller-4-side-note-of-deregister.png" alt="">
+      </div>
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/zero-downtime-deployment-when-using-alb-ingress-controller-on-amazon-eks-and-prevent-502-error/" rel="permalink">[AWS][EKS] Zero downtime deployment(RollingUpdate) when using AWS Load Balancer Controller on Amazon EKS
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  21 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">This article is describing the thing you need to aware when using ALB Ingress Controller (AWS Load Balancer Controller) to do deployment and prevent 502 erro...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/2022/05/serverless-ecpay-aws/create-payment-flow.png" alt="">
+      </div>
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/serverless-ecpay-aws/" rel="permalink">在 AWS 上打造 Serverless (無伺服器) 雲端綠界支付金流 (ECPay)
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  less than 1 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">金流系統一直是許多線上服務、電商所必備的功能之一；常見的使用方式往往是透過第三方金流服務提供商對應的模組實現 (例如：OpenCart, WooCommerce)，以串接金流系統實現購物結帳的機制。
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+
+
+<div id="footer-subscribe-email-list">
+    <h3>Get the updates </h3>
+    <form action="https://docs.google.com/forms/d/e/1FAIpQLSfuofCYvu2cV614aDt6SO5ua_5trT0EC5yeSJObLY0KGjFtvQ/formResponse" method="POST">
+        <div style="display: flex;">
+            <!-- input name="entry.205499253" type="text" id="Name" class="form-control" placeholder="Name" -->
+            <input name="entry.1288273007" type="email" id="email" class="form-control" placeholder="Email" required="required" style="margin-top: 2px; margin-right: 5px; width: 50%;">
+            <input class="btn btn--primary" id="subscribe" type="submit" value="訂閱 (Sign Up)" style="width: 30%;">
+        </div>
+    </form>
+</div>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8GPCXJPGFZ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-8GPCXJPGFZ');
+</script>
+<!-- end custom footer snippets -->
+
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+          <li><a href="https://facebook.com/EasonTechTalk" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i> Facebook</a></li>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    <li><a href="/sitemap.xml"><i class="fas fa-fw fa-sitemap" aria-hidden="true"></i> SiteMap</a></li>
+    <li><a href="/tags"><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags</a></li>
+    <li><a href="https://toolbox.easoncao.com/"><i class="fas fa-fw fa-toolbox" aria-hidden="true"></i> ToolBox</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2023 Continuous Improvement. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+  <script>
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-80058083-2']);
+  
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "https://easoncao.com/five-years-at-amazon-as-cloud-support-engineer-in-aws/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/five-years-at-amazon-as-cloud-support-engineer-in-aws"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://lenlabs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

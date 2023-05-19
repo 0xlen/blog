@@ -1,0 +1,994 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.19.3 by Michael Rose
+  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>[AWS] 那些沒寫在文件上的事 - AWS Load Balancer Controller v1 升級至 v2 - Continuous Improvement</title>
+<meta name="description" content="This article is sharing the best practice for doing load balancing on Amazon EKS, learn what is advantage and disadvantage of using different controller. We will discuss more detail about what is the problem of using default Kubernetes service deployment as mentioned on official document.">
+
+
+  <meta name="author" content="Yang-Xin Cao (Eason Cao)">
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Continuous Improvement">
+<meta property="og:title" content="[AWS] 那些沒寫在文件上的事 - AWS Load Balancer Controller v1 升級至 v2">
+<meta property="og:url" content="https://easoncao.com/eks-aws-load-balancer-controller-v1-to-v2-migration-behavior/">
+
+
+  <meta property="og:description" content="This article is sharing the best practice for doing load balancing on Amazon EKS, learn what is advantage and disadvantage of using different controller. We will discuss more detail about what is the problem of using default Kubernetes service deployment as mentioned on official document.">
+
+
+
+  <meta property="og:image" content="https://easoncao.com/assets/og-image.jpg">
+
+
+
+
+
+  <meta property="article:published_time" content="2023-02-05T00:00:00-06:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://easoncao.com/eks-aws-load-balancer-controller-v1-to-v2-migration-behavior/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Continuous Improvement",
+      "url": "https://easoncao.com/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Continuous Improvement Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- Google adsense -->
+<script data-ad-client="ca-pub-1852752964062281" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<link rel="shortcut icon" type="image/jpg" href="/assets/apple-touch-icon.png"/>
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+          <a class="site-logo" href="/"><img src="/assets/apple-touch-icon.png" alt=""></a>
+        
+        <a class="site-title" href="/">
+          Continuous Improvement
+          <span class="site-subtitle"></span>
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/posts/">所有文章 All Posts</a>
+            </li><li class="masthead__menu-item">
+              <a href="/courses/">學習資源 Learning</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">關於 About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="https://www.gravatar.com/avatar/0d33994eec9eddc67415e07a7fcafc9d?s=200" alt="Yang-Xin Cao (Eason Cao)" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Yang-Xin Cao (Eason Cao)</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>Engineer@Amazon <br />- <a href="https://www.awshof.com/allstarscertifiedlist.html">AWS All-5 certified</a> / ECS &amp; EKS SME / Marathon Runner / PADI Open Water Diver</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Amazon / Dublin, Ireland</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:eason@easoncao.com" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+            <li><a href="https://linkedin.com/in/easoncao" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-id-badge" aria-hidden="true"></i><span class="label">LinkedIn</span></a></li>
+          
+        
+          
+        
+          
+            <li><a href="https://facebook.com/EasonTechTalk" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i><span class="label">Facebook</span></a></li>
+          
+        
+          
+            <li><a href="https://github.com/0xlen" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="[AWS] 那些沒寫在文件上的事 - AWS Load Balancer Controller v1 升級至 v2">
+    <meta itemprop="description" content="隨著 Amazon EKS 對於 Kubernetes 1.22 的推出，1.21 也預計於 February 15, 2023 在 Amazon EKS 終止支援 1，對於 AWS Load Balancer Controller 仍然使用舊版本的用戶來說，勢必面臨需要升級 AWS Load Balancer Controller 至 2.4.1 以上版本的需要。若在現有環境中仍持續運行 AWS Load Balancer Controller v1 (原 ALB Ingress Controller)，此時此刻將可能來到遷移業務需求的高峰。由於 AWS Load Balancer Controller v2 版本帶來了許多的改進，並且與 v1 版本有很大的差異，絕對不是套用一個 YAML 文件就能搞定的事情。            Amazon EKS Kubernetes versions - Amazon EKS Kubernetes release calendar &#8617;      ">
+    <meta itemprop="datePublished" content="2023-02-05T00:00:00-06:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">[AWS] 那些沒寫在文件上的事 - AWS Load Balancer Controller v1 升級至 v2
+</h1>
+          
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  3 minute read
+
+</p>
+          
+        </header>
+      
+
+      <!-- Google ads in article -->
+      <div>
+          <ins class="adsbygoogle"
+               style="display:block; text-align:center;"
+               data-ad-layout="in-article"
+               data-ad-format="fluid"
+               data-ad-client="ca-pub-1852752964062281"
+               data-ad-slot="8435469231"></ins>
+          <script>
+               (adsbygoogle = window.adsbygoogle || []).push({});
+          </script>
+      </div>
+      <hr>
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-cog"></i> Table of Contents</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#那些沒寫在文件上的事">那些沒寫在文件上的事</a>
+    <ul>
+      <li><a href="#elb-資源命名規則改變帶來可能的停機行為">ELB 資源命名規則改變帶來可能的停機行為</a>
+        <ul>
+          <li><a href="#實際測試行為">實際測試行為</a>
+            <ul>
+              <li><a href="#step-1部署-alb-ingress-controller-v101">Step 1：部署 ALB Ingress Controller v1.0.1</a></li>
+              <li><a href="#step-2升級至-alb-ingress-controller-v119">Step 2：升級至 ALB Ingress Controller v1.1.9</a></li>
+              <li><a href="#step-3升級至-aws-load-balancer-controller-v2">Step 3：升級至 AWS Load Balancer Controller v2</a></li>
+            </ul>
+          </li>
+          <li><a href="#行為分析">行為分析</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#總結">總結</a></li>
+  <li><a href="#related-posts">Related Posts</a></li>
+  <li><a href="#references">References</a></li>
+</ul>
+
+            </nav>
+          </aside>
+        
+        <p>隨著 Amazon EKS 對於 Kubernetes 1.22 的推出，1.21 也預計於 February 15, 2023 在 Amazon EKS 終止支援 <sup id="fnref:eks-kubernetes-release-calendar" role="doc-noteref"><a href="#fn:eks-kubernetes-release-calendar" class="footnote" rel="footnote">1</a></sup>，對於 AWS Load Balancer Controller 仍然使用舊版本的用戶來說，勢必面臨需要升級 AWS Load Balancer Controller 至 2.4.1 以上版本的需要。若在現有環境中仍持續運行 AWS Load Balancer Controller v1 (原 ALB Ingress Controller)，此時此刻將可能來到遷移業務需求的高峰。由於 AWS Load Balancer Controller v2 版本帶來了許多的改進，並且與 v1 版本有很大的差異，絕對不是套用一個 YAML 文件就能搞定的事情。</p>
+
+<p>在 AWS Load Balancer Controller 文件中提及了具體的幾個注意事項<sup id="fnref:lb-migrate-v1-to-v2" role="doc-noteref"><a href="#fn:lb-migrate-v1-to-v2" class="footnote" rel="footnote">2</a></sup>，然而，有些情境文件上不見得會全部捕捉 (或是不巧剛好被我遇到)，以下列舉在 AWS Load Balancer Controller 遷移到 v2 版本之前，我個人在協助用戶執行遷移關注到的幾個有趣的問題。</p>
+
+<h2 id="那些沒寫在文件上的事">那些沒寫在文件上的事</h2>
+
+<h3 id="elb-資源命名規則改變帶來可能的停機行為">ELB 資源命名規則改變帶來可能的停機行為</h3>
+
+<p>也許有的人發現 v1 版本的控制器升級到 v2 版本控制器的過程，會由 v2 控制器產生一個新的 ELB 資源，並且將相關資源部署到新產生的資源中完成遷移，舊有 v1 建立的 ELB 資源就不會繼續使用。使得完成遷移的過程如果有依賴舊有 ELB 資源的位置 (e.g. <code class="language-plaintext highlighter-rouge">fe584233-echoserver-echose-XXXX-XXXXXXX.ap-northeast-1.elb.amazonaws.com</code>) 或是有依賴服務關聯，就要記得去改對應的 DNS 紀錄。在文件上也確實具體提到了這項行為：</p>
+
+<blockquote>
+  <p>The AWS LoadBalancer resource created for your Ingress will be preserved. If migrating from&lt;v1.1.3, a new AWS LoadBalancer resource will be created and the old AWS LoadBalancer will remain in the account. However, the old AWS LoadBalancer will not be used for the ingress resource.</p>
+</blockquote>
+
+<p>對於很多用戶來說，這可能不是什麼大問題；但對於已經有許多系統依賴單一 ELB 資源的用戶來說，前期規劃安裝也沒想太多就直接給他上了。導致這樣的升級過程對這部分用戶來說，就像跑了廁所蹲了馬桶，卻仍然還便秘一樣令人不愉快。</p>
+
+<p>於是就有仍然在運行 v1.0.1 版本的客戶們很天才地提了我甚至都沒思考過的升級路徑：</p>
+
+<blockquote>
+  <p>既然文件上是說 <code class="language-plaintext highlighter-rouge">&lt;v1.1.3</code>，那是不是我先升級到大於這個版本之後 (例如：<code class="language-plaintext highlighter-rouge">v1.1.9</code>)，再升級到 v2 版本就可以保留原有的 ELB 資源了呢？</p>
+
+  <p>升級路徑為 v1.0.1 -&gt; v1.1.9 -&gt; v2</p>
+</blockquote>
+
+<p>邏輯上好像沒有什麼謬誤，但在看過 AWS Load Balancer Controlelr 的原始代碼後，很遺憾，只能說這種想法真的是太美好了。</p>
+
+<h4 id="實際測試行為">實際測試行為</h4>
+
+<p>根據 AWS Load Balancer Controller v2 版本對應產生的 ELB 資源名稱都存在 <code class="language-plaintext highlighter-rouge">k8s</code> 保留字串的不正確觀察，我大可以預料到只要是舊版本的 v1 控制器遷移很可能都無法複用舊有的 ELB 資源。</p>
+
+<p>但針對上述的行為我們可以大膽假設，仍需要仔細驗證一下相關的行為。為求真相，實際在我的環境簡單複製測試後，直接地瓦解了上述的論證。</p>
+
+<h5 id="step-1部署-alb-ingress-controller-v101">Step 1：部署 ALB Ingress Controller v1.0.1</h5>
+
+<p>首先，我在我的環境運行了 <code class="language-plaintext highlighter-rouge">v1.0.1</code> 的控制器，歷經一番考古和 kubectl convert 轉換 (舊有的 API 宣告)，將舊版 v1.0.1 控制器成功安裝到 Kubernetes 1.20 版本中運行，並且部署一個簡單的範例應用：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Running controller v1.0.1</span>
+<span class="nv">$ </span>kubectl apply <span class="nt">-f</span> https://raw.githubusercontent.com/kubernetes-sigs/aws-alb-ingress-controller/v1.0.1/docs/examples/rbac-role.yaml
+<span class="nv">$ </span>wget https://raw.githubusercontent.com/kubernetes-sigs/aws-alb-ingress-controller/v1.0.1/docs/examples/alb-ingress-controller.yaml
+<span class="nv">$ </span>kubectl apply <span class="nt">-f</span> alb-ingress-controller.yaml
+<span class="nv">$ </span>kubectl logs <span class="nt">-n</span> kube-system <span class="si">$(</span>kubectl get po <span class="nt">-n</span> kube-system | egrep <span class="nt">-o</span> alb-ingress[a-zA-Z0-9-]+<span class="si">)</span>
+
+W0130 12:45:29.518393       1 client_config.go:552] Neither <span class="nt">--kubeconfig</span> nor <span class="nt">--master</span> was specified.  Using the inClusterConfig.  This might not work.
+<span class="nt">-------------------------------------------------------------------------------</span>
+AWS ALB Ingress controller
+  Release:    v1.0.1
+  Build:      git-ebac62dd
+  Repository: https://github.com/kubernetes-sigs/aws-alb-ingress-controller.git
+<span class="nt">-------------------------------------------------------------------------------</span>
+
+<span class="c"># Running a sample application</span>
+<span class="nv">$ </span>kubectl describe ing <span class="nt">-n</span> echoserver echoserver
+Address:          fe584233-echoserver-echose-XXXX-XXXXXXX.ap-northeast-1.elb.amazonaws.com
+...
+</code></pre></div></div>
+
+<h5 id="step-2升級至-alb-ingress-controller-v119">Step 2：升級至 ALB Ingress Controller v1.1.9</h5>
+
+<p>並且直接更新到 <code class="language-plaintext highlighter-rouge">v1.1.9</code> 版本，即使 ALB Ingress Controller 存在刷新操作，仍然針對原有的 Ingress 物件保留了原本的部署關聯 (<code class="language-plaintext highlighter-rouge">fe584233-echoserver-echose-XXXX-XXXXXXX.ap-northeast-1.elb.amazonaws.com</code>)：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Upgrade and deploy to v1.1.9</span>
+
+<span class="nv">$ </span>kubectl apply <span class="nt">-f</span> https://raw.githubusercontent.com/kubernetes-sigs/aws-alb-ingress-controller/v1.1.9/docs/examples/rbac-role.yaml
+
+<span class="c"># Use kubectl and update the image to "docker.io/amazon/aws-alb-ingress-controller:v1.1.9"</span>
+<span class="nv">$ </span>kubectl logs <span class="nt">-n</span> kube-system <span class="si">$(</span>kubectl get po <span class="nt">-n</span> kube-system | egrep <span class="nt">-o</span> <span class="s2">"alb-ingress[a-zA-Z0-9-]+"</span><span class="si">)</span>
+
+W0130 13:05:04.770613       1 client_config.go:549] Neither <span class="nt">--kubeconfig</span> nor <span class="nt">--master</span> was specified.  Using the inClusterConfig.  This might not work.
+<span class="nt">-------------------------------------------------------------------------------</span>
+AWS ALB Ingress controller
+  Release:    v1.1.9
+  Build:      6c19d2fb
+  Repository: https://github.com/kubernetes-sigs/aws-alb-ingress-controller.git
+<span class="nt">-------------------------------------------------------------------------------</span>
+
+<span class="c"># ELB name doesn't change</span>
+<span class="nv">$ </span>kubectl describe ing <span class="nt">-n</span> echoserver echoserver
+Address:          fe584233-echoserver-echose-XXXX-XXXXXXX.ap-northeast-1.elb.amazonaws.com
+</code></pre></div></div>
+
+<h5 id="step-3升級至-aws-load-balancer-controller-v2">Step 3：升級至 AWS Load Balancer Controller v2</h5>
+
+<p>在預備升級 v2 的過程 ELB 資源都持續存在，且 Ingress 也同樣關聯舊有的 ELB 資源；然而，一旦 v2 版本一部署下去，新的 ELB 資源立即被建立，並且使用不同的命名 (<code class="language-plaintext highlighter-rouge">k8s-echoserv-echoserv-XXXXXXXX-XXXXXXX</code>) 運作，並且關聯的 Ingress 和 Kubernetes Service 均遷移使用新的 ELB 資源：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Update the controller to v2</span>
+<span class="c"># The old ALB Ingress controller has been uninstalled at this moment, and can see the ingress object is still preserved</span>
+
+<span class="nv">$ </span>kubectl describe ing <span class="nt">-n</span> echoserver echoserver
+Address:          fe584233-echoserver-echose-XXXX-XXXXXXX.ap-northeast-1.elb.amazonaws.com
+....
+
+<span class="nv">$ </span>helm <span class="nb">install </span>aws-load-balancer-controller eks/aws-load-balancer-controller <span class="se">\</span>
+  <span class="nt">-n</span> kube-system <span class="se">\</span>
+  <span class="nt">--set</span> <span class="nv">clusterName</span><span class="o">=</span>eks <span class="se">\</span>
+  <span class="nt">--set</span> serviceAccount.create<span class="o">=</span><span class="nb">false</span> <span class="se">\</span>
+  <span class="nt">--set</span> serviceAccount.name <span class="o">=</span>aws-load-balancer-controller
+
+<span class="c"># Once v2 controller has been installed, the controller will update the ELB name</span>
+
+<span class="nv">$ </span>kubectl describe ing <span class="nt">-n</span> echoserver echoserver
+Address:          k8s-echoserv-echoserv-XXXXXXXX-XXXXXXX.ap-northeast-1.elb.amazonaws.com
+...
+
+Events:
+  Type    Reason                  Age   From     Message
+  <span class="nt">----</span>    <span class="nt">------</span>                  <span class="nt">----</span>  <span class="nt">----</span>     <span class="nt">-------</span>
+  Normal  SuccessfullyReconciled  11s   ingress  Successfully reconciled
+</code></pre></div></div>
+
+<p>此時，舊有的 ELB 資源 (<code class="language-plaintext highlighter-rouge">fe584233-echoserver-echose-XXXX-XXXXXXX.ap-northeast-1.elb.amazonaws.com </code>) 仍然存在，只是 AWS Load Balancer Controller 並未直接管理及操作該資源，並且不再執行註冊 Kubernetes Service 至相關 Target Group 資源。</p>
+
+<h4 id="行為分析">行為分析</h4>
+
+<p>從上述部署來看，我們可以觀察到 v1 版本的控制器在古時候，使用 namespace + ingress 名稱的方式進行組合命名，這項行為也確實在 <code class="language-plaintext highlighter-rouge">v1.0.1</code> 如此呼叫 (Source: <a href="https://github.com/kubernetes-sigs/aws-load-balancer-controller/blob/v1.0.1/internal/alb/lb/loadbalancer.go#L299-L317">L299-L317</a>)，在 <code class="language-plaintext highlighter-rouge">v1.1.9</code> (Source: <a href="https://github.com/kubernetes-sigs/aws-load-balancer-controller/blob/v1.1.9/internal/alb/lb/loadbalancer.go#L285-L304">L285-L304</a>) 亦同。一個 <code class="language-plaintext highlighter-rouge">NameLB</code> 短短幾行副程式道盡前人的字串處理之美 (Source: <a href="https://github.com/kubernetes-sigs/aws-load-balancer-controller/blob/v1.0.1/internal/alb/generator/name.go#L23-L39">v1.0.1</a>, <a href="https://github.com/kubernetes-sigs/aws-load-balancer-controller/blob/v1.1.9/internal/alb/generator/name.go#L23-L39">v1.1.9</a>)：</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="p">(</span><span class="n">gen</span> <span class="o">*</span><span class="n">NameGenerator</span><span class="p">)</span> <span class="n">NameLB</span><span class="p">(</span><span class="n">namespace</span> <span class="kt">string</span><span class="p">,</span> <span class="n">ingressName</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">string</span> <span class="p">{</span>
+  <span class="n">hasher</span> <span class="o">:=</span> <span class="n">md5</span><span class="o">.</span><span class="n">New</span><span class="p">()</span>
+  <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">hasher</span><span class="o">.</span><span class="n">Write</span><span class="p">([]</span><span class="kt">byte</span><span class="p">(</span><span class="n">namespace</span> <span class="o">+</span> <span class="n">ingressName</span><span class="p">))</span>
+  <span class="n">hash</span> <span class="o">:=</span> <span class="n">hex</span><span class="o">.</span><span class="n">EncodeToString</span><span class="p">(</span><span class="n">hasher</span><span class="o">.</span><span class="n">Sum</span><span class="p">(</span><span class="no">nil</span><span class="p">))[</span><span class="o">:</span><span class="m">4</span><span class="p">]</span>
+
+  <span class="n">r</span><span class="p">,</span> <span class="n">_</span> <span class="o">:=</span> <span class="n">regexp</span><span class="o">.</span><span class="n">Compile</span><span class="p">(</span><span class="s">"[[:^alnum:]]"</span><span class="p">)</span>
+  <span class="n">name</span> <span class="o">:=</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Sprintf</span><span class="p">(</span><span class="s">"%s-%s-%s"</span><span class="p">,</span>
+    <span class="n">r</span><span class="o">.</span><span class="n">ReplaceAllString</span><span class="p">(</span><span class="n">gen</span><span class="o">.</span><span class="n">ALBNamePrefix</span><span class="p">,</span> <span class="s">"-"</span><span class="p">),</span>
+    <span class="n">r</span><span class="o">.</span><span class="n">ReplaceAllString</span><span class="p">(</span><span class="n">namespace</span><span class="p">,</span> <span class="s">""</span><span class="p">),</span>
+    <span class="n">r</span><span class="o">.</span><span class="n">ReplaceAllString</span><span class="p">(</span><span class="n">ingressName</span><span class="p">,</span> <span class="s">""</span><span class="p">),</span>
+  <span class="p">)</span>
+  <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">&gt;</span> <span class="m">26</span> <span class="p">{</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="p">[</span><span class="o">:</span><span class="m">26</span><span class="p">]</span>
+  <span class="p">}</span>
+  <span class="n">name</span> <span class="o">=</span> <span class="n">name</span> <span class="o">+</span> <span class="s">"-"</span> <span class="o">+</span> <span class="n">hash</span>
+  <span class="k">return</span> <span class="n">name</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>然而，在 v2 版本除了功能性的改進，針對 ALB Ingress Controller 也確實做了多項程式上的重構。最顯著的就是上述命名的變更，在 v2 版本的命名中存在了更多元的規範 (Source: <a href="https://github.com/kubernetes-sigs/aws-load-balancer-controller/blob/8d282339857c615b0bec6e3d984063c697e98f70/pkg/ingress/model_build_load_balancer.go#L90-L124">v2.4.4, L90-L124</a>)：</p>
+
+<div class="language-go highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">func</span> <span class="p">(</span><span class="n">t</span> <span class="o">*</span><span class="n">defaultModelBuildTask</span><span class="p">)</span> <span class="n">buildLoadBalancerName</span><span class="p">(</span><span class="n">_</span> <span class="n">context</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">scheme</span> <span class="n">elbv2model</span><span class="o">.</span><span class="n">LoadBalancerScheme</span><span class="p">)</span> <span class="p">(</span><span class="kt">string</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+  <span class="o">...</span>
+  <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">explicitNames</span><span class="p">)</span> <span class="o">==</span> <span class="m">1</span> <span class="p">{</span>
+    <span class="n">name</span><span class="p">,</span> <span class="n">_</span> <span class="o">:=</span> <span class="n">explicitNames</span><span class="o">.</span><span class="n">PopAny</span><span class="p">()</span>
+    <span class="c">// The name of the loadbalancer can only have up to 32 characters</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">&gt;</span> <span class="m">32</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="s">""</span><span class="p">,</span> <span class="n">errors</span><span class="o">.</span><span class="n">New</span><span class="p">(</span><span class="s">"load balancer name cannot be longer than 32 characters"</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">name</span><span class="p">,</span> <span class="no">nil</span>
+  <span class="p">}</span>
+  <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">explicitNames</span><span class="p">)</span> <span class="o">&gt;</span> <span class="m">1</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="s">""</span><span class="p">,</span> <span class="n">errors</span><span class="o">.</span><span class="n">Errorf</span><span class="p">(</span><span class="s">"conflicting load balancer name: %v"</span><span class="p">,</span> <span class="n">explicitNames</span><span class="p">)</span>
+  <span class="p">}</span>
+  <span class="n">uuidHash</span> <span class="o">:=</span> <span class="n">sha256</span><span class="o">.</span><span class="n">New</span><span class="p">()</span>
+  <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">uuidHash</span><span class="o">.</span><span class="n">Write</span><span class="p">([]</span><span class="kt">byte</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">clusterName</span><span class="p">))</span>
+  <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">uuidHash</span><span class="o">.</span><span class="n">Write</span><span class="p">([]</span><span class="kt">byte</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">ingGroup</span><span class="o">.</span><span class="n">ID</span><span class="o">.</span><span class="n">String</span><span class="p">()))</span>
+  <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">uuidHash</span><span class="o">.</span><span class="n">Write</span><span class="p">([]</span><span class="kt">byte</span><span class="p">(</span><span class="n">scheme</span><span class="p">))</span>
+  <span class="n">uuid</span> <span class="o">:=</span> <span class="n">hex</span><span class="o">.</span><span class="n">EncodeToString</span><span class="p">(</span><span class="n">uuidHash</span><span class="o">.</span><span class="n">Sum</span><span class="p">(</span><span class="no">nil</span><span class="p">))</span>
+
+  <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">ingGroup</span><span class="o">.</span><span class="n">ID</span><span class="o">.</span><span class="n">IsExplicit</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">payload</span> <span class="o">:=</span> <span class="n">invalidLoadBalancerNamePattern</span><span class="o">.</span><span class="n">ReplaceAllString</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">ingGroup</span><span class="o">.</span><span class="n">ID</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span> <span class="s">""</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Sprintf</span><span class="p">(</span><span class="s">"k8s-%.17s-%.10s"</span><span class="p">,</span> <span class="n">payload</span><span class="p">,</span> <span class="n">uuid</span><span class="p">),</span> <span class="no">nil</span>
+  <span class="p">}</span>
+
+  <span class="n">sanitizedNamespace</span> <span class="o">:=</span> <span class="n">invalidLoadBalancerNamePattern</span><span class="o">.</span><span class="n">ReplaceAllString</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">ingGroup</span><span class="o">.</span><span class="n">ID</span><span class="o">.</span><span class="n">Namespace</span><span class="p">,</span> <span class="s">""</span><span class="p">)</span>
+  <span class="n">sanitizedName</span> <span class="o">:=</span> <span class="n">invalidLoadBalancerNamePattern</span><span class="o">.</span><span class="n">ReplaceAllString</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">ingGroup</span><span class="o">.</span><span class="n">ID</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span> <span class="s">""</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">fmt</span><span class="o">.</span><span class="n">Sprintf</span><span class="p">(</span><span class="s">"k8s-%.8s-%.8s-%.10s"</span><span class="p">,</span> <span class="n">sanitizedNamespace</span><span class="p">,</span> <span class="n">sanitizedName</span><span class="p">,</span> <span class="n">uuid</span><span class="p">),</span> <span class="no">nil</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>除了對於 ELB 命名的檢查更為嚴謹了，也多了以 Cluster 名稱、Ingress Group 和多個關聯的識別資料進行雜湊產生 UUID，最終透過 <code class="language-plaintext highlighter-rouge">k8s-</code> 前綴組織成了人見 - 人們不見得愛的正則化命名。</p>
+
+<h2 id="總結">總結</h2>
+
+<p>本章用了數百字的篇幅傳遞 v2 版本真的改很多東西，作為總結：</p>
+
+<p>若從 v1 版本遷移至 v2 控制器涉及你目前所遭遇或未來將面臨的情境，則生成新的 ELB 資源都是<strong>很有可能且可以預期的行為</strong>。</p>
+
+<p>在規劃遷移的同時，若尚未對 ELB 資源存取設計另一層存取介面的情境，考慮透過 DNS 紀錄 (CNAME) 方法管理應對 ELB 資源更新變更的存取位置是一種常見的做法，以降低用戶端因上述升級行為所產生的改動；也建議透過規劃相應的停機時間和更新 DNS 對應紀錄的變更紀錄納入考量。</p>
+
+<p>畢竟，有很多事情只是人生暫時過不去的坎，在這樣的機制下，沒有什麼事情是清一下 DNS 快取以及「請稍候重試」提示訊息不能解決的。</p>
+
+<h2 id="related-posts">Related Posts</h2>
+
+<ul>
+  <li><a href="/eks-best-practice-load-balancing-1-en">Best practice for load balancing - 1. Let’s start with an example from Kubernetes document</a></li>
+  <li><a href="/eks-best-practice-load-balancing-2-en">Best practice for load balancing - 2. imbalanced problem</a></li>
+  <li><a href="/eks-best-practice-load-balancing-3-en">Best practice for load balancing - 3. what controller should I use</a></li>
+</ul>
+
+<h2 id="references">References</h2>
+
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:eks-kubernetes-release-calendar" role="doc-endnote">
+      <p><a href="https://docs.aws.amazon.com/eks/latest/userguide/kubernetes-versions.html#kubernetes-release-calendar">Amazon EKS Kubernetes versions - Amazon EKS Kubernetes release calendar</a> <a href="#fnref:eks-kubernetes-release-calendar" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:lb-migrate-v1-to-v2" role="doc-endnote">
+      <p><a href="https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.4/deploy/upgrade/migrate_v1_v2/">AWS Load Balancer Controller - Migrate from v1 to v2</a> <a href="#fnref:lb-migrate-v1-to-v2" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/#alb-ingress-controller" class="page__taxonomy-item" rel="tag">ALB Ingress Controller</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#alb" class="page__taxonomy-item" rel="tag">ALB</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#amazon-web-services" class="page__taxonomy-item" rel="tag">amazon web services</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#amazon" class="page__taxonomy-item" rel="tag">amazon</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#aws-load-balancer-controller" class="page__taxonomy-item" rel="tag">AWS Load Balancer Controller</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#aws" class="page__taxonomy-item" rel="tag">aws</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#eks" class="page__taxonomy-item" rel="tag">EKS</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#elastic-kubernetes-service" class="page__taxonomy-item" rel="tag">Elastic Kubernetes Service</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#elastic-load-balancer" class="page__taxonomy-item" rel="tag">Elastic Load Balancer</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#elb" class="page__taxonomy-item" rel="tag">ELB</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#k8s" class="page__taxonomy-item" rel="tag">k8s</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#kubernetes" class="page__taxonomy-item" rel="tag">Kubernetes</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#load-balancer" class="page__taxonomy-item" rel="tag">Load Balancer</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2023-02-05T00:00:00-06:00">February 5, 2023</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=%5BAWS%5D+%E9%82%A3%E4%BA%9B%E6%B2%92%E5%AF%AB%E5%9C%A8%E6%96%87%E4%BB%B6%E4%B8%8A%E7%9A%84%E4%BA%8B+-+AWS+Load+Balancer+Controller+v1+%E5%8D%87%E7%B4%9A%E8%87%B3+v2%20https%3A%2F%2Feasoncao.com%2Feks-aws-load-balancer-controller-v1-to-v2-migration-behavior%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Feasoncao.com%2Feks-aws-load-balancer-controller-v1-to-v2-migration-behavior%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Feasoncao.com%2Feks-aws-load-balancer-controller-v1-to-v2-migration-behavior%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+      <iframe
+        style="width: 100%; max-width: 485px; height: 170px; margin: auto; overflow: hidden; display: block;"
+        src="https://button.like.co/in/embed/easoncao/button?referrer=https%3A%2F%2Feasoncao.com%2Feks-aws-load-balancer-controller-v1-to-v2-migration-behavior%2F" frameBorder="0">
+      </iframe>
+      
+
+      <!-- Buy me a coffee -->
+      <section class="page__share">
+        <h4 class="page__share-title">Is that useful? Let me know or buy me a coffee</h4>
+        <p class="page__meta">這篇內容對你有幫助嗎？</p>
+        <a href="https://paypal.me/e4son"><img src="https://cdn.jsdelivr.net/gh/twolfson/paypal-github-button@1.0.0/dist/button.svg" alt="Support via PayPal"></a>
+        <a href="https://p.ecpay.com.tw/17C964C" class="btn btn--success">一次性支持 (ECPay)</a>
+      </section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/zero-downtime-deployment-when-using-alb-ingress-controller-on-amazon-eks-and-prevent-502-error/" class="pagination--pager" title="[AWS][EKS] Zero downtime deployment(RollingUpdate) when using AWS Load Balancer Controller on Amazon EKS
+">Previous</a>
+    
+    
+      <a href="/aws-cloud-support-engineer-interview-tips-and-required-skills/" class="pagination--pager" title="在 AWS Cloud Support Engineer 面試中脫穎而出：必備的技術能力和重要特質
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+      <div class="page__comments">
+  
+  
+      <h4 class="page__comments-title">Leave a comment</h4>
+      <section id="disqus_thread"></section>
+    
+</div>
+
+    
+  </article>
+
+  
+
+  <!-- Google Adsense -->
+  <div class="page__related">
+    <h4 class="page__related-title">You May Also Have Interest</h4>
+    <div>
+        <!-- responsive ad -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-1852752964062281"
+             data-ad-slot="2849626059"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+  </div>
+
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/2023/04/five-years-at-amazon-as-cloud-support-engineer-in-aws/cover.jpg" alt="">
+      </div>
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/five-years-at-amazon-as-cloud-support-engineer-in-aws/" rel="permalink">身處 Amazon 工作 5 年學到的事：在 AWS 擔任 Cloud Support Engineer 是什麼樣的體驗
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">2023 是我在 AWS 擔任 Cloud Support Engineer 的第六年，這份工作對我來說某種程度上是又愛又恨。作為見證 AWS 中文技術支援團隊的一員，五年時間說長不長，說短也不短，卻有非常多學習和體悟。
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/2023/03/aws-cloud-support-engineer-interview-tips-and-required-skills/cover.jpg" alt="">
+      </div>
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/aws-cloud-support-engineer-interview-tips-and-required-skills/" rel="permalink">在 AWS Cloud Support Engineer 面試中脫穎而出：必備的技術能力和重要特質
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">如果你正準備面試 AWS Cloud Support Engineer 的職位，在這篇文章中，我將與你分享我對於 AWS Cloud Support Engineer 所需的必備技能和特質，幫助你更好地了解這份職位且思考自己目前所具備的能力是與該團隊所交集，讓你在面試中脫穎而出。
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/2020/10/zero-downtime-deployment-when-using-alb-ingress-controller/deployment-workflow-alb-ingress-controller-4-side-note-of-deregister.png" alt="">
+      </div>
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/zero-downtime-deployment-when-using-alb-ingress-controller-on-amazon-eks-and-prevent-502-error/" rel="permalink">[AWS][EKS] Zero downtime deployment(RollingUpdate) when using AWS Load Balancer Controller on Amazon EKS
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  21 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">This article is describing the thing you need to aware when using ALB Ingress Controller (AWS Load Balancer Controller) to do deployment and prevent 502 erro...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/2022/05/serverless-ecpay-aws/create-payment-flow.png" alt="">
+      </div>
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/serverless-ecpay-aws/" rel="permalink">在 AWS 上打造 Serverless (無伺服器) 雲端綠界支付金流 (ECPay)
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  less than 1 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">金流系統一直是許多線上服務、電商所必備的功能之一；常見的使用方式往往是透過第三方金流服務提供商對應的模組實現 (例如：OpenCart, WooCommerce)，以串接金流系統實現購物結帳的機制。
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+
+
+<div id="footer-subscribe-email-list">
+    <h3>Get the updates </h3>
+    <form action="https://docs.google.com/forms/d/e/1FAIpQLSfuofCYvu2cV614aDt6SO5ua_5trT0EC5yeSJObLY0KGjFtvQ/formResponse" method="POST">
+        <div style="display: flex;">
+            <!-- input name="entry.205499253" type="text" id="Name" class="form-control" placeholder="Name" -->
+            <input name="entry.1288273007" type="email" id="email" class="form-control" placeholder="Email" required="required" style="margin-top: 2px; margin-right: 5px; width: 50%;">
+            <input class="btn btn--primary" id="subscribe" type="submit" value="訂閱 (Sign Up)" style="width: 30%;">
+        </div>
+    </form>
+</div>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8GPCXJPGFZ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-8GPCXJPGFZ');
+</script>
+<!-- end custom footer snippets -->
+
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+          <li><a href="https://facebook.com/EasonTechTalk" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i> Facebook</a></li>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    <li><a href="/sitemap.xml"><i class="fas fa-fw fa-sitemap" aria-hidden="true"></i> SiteMap</a></li>
+    <li><a href="/tags"><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags</a></li>
+    <li><a href="https://toolbox.easoncao.com/"><i class="fas fa-fw fa-toolbox" aria-hidden="true"></i> ToolBox</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2023 Continuous Improvement. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+  <script>
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-80058083-2']);
+  
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "https://easoncao.com/eks-aws-load-balancer-controller-v1-to-v2-migration-behavior/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/eks-aws-load-balancer-controller-v1-to-v2-migration-behavior"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://lenlabs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

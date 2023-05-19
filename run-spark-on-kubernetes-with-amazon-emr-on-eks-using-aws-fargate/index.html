@@ -1,0 +1,1142 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.19.3 by Michael Rose
+  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>在 Amazon EMR on EKS 使用 AWS Fargate 運行你的 Big Data 大數據 Map Reduce 運算 - Continuous Improvement</title>
+<meta name="description" content="在這篇內容中，我會展示如何整合 AWS EMR 及 Amazon EKS，並且採用 AWS Fargate 以無服務器架構 (Serverless) 以幫助你運行 Spark 進行你的 Big Data 大數據 Map Reduce 運算">
+
+
+  <meta name="author" content="Yang-Xin Cao (Eason Cao)">
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Continuous Improvement">
+<meta property="og:title" content="在 Amazon EMR on EKS 使用 AWS Fargate 運行你的 Big Data 大數據 Map Reduce 運算">
+<meta property="og:url" content="https://easoncao.com/run-spark-on-kubernetes-with-amazon-emr-on-eks-using-aws-fargate/">
+
+
+  <meta property="og:description" content="在這篇內容中，我會展示如何整合 AWS EMR 及 Amazon EKS，並且採用 AWS Fargate 以無服務器架構 (Serverless) 以幫助你運行 Spark 進行你的 Big Data 大數據 Map Reduce 運算">
+
+
+
+  <meta property="og:image" content="https://easoncao.com/assets/images/posts/2021/05/run-spark-on-kubernetes-with-amazon-emr-on-eks-using-aws-fargate/cover.png">
+
+
+
+
+
+  <meta property="article:published_time" content="2021-05-14T00:00:00-05:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://easoncao.com/run-spark-on-kubernetes-with-amazon-emr-on-eks-using-aws-fargate/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Continuous Improvement",
+      "url": "https://easoncao.com/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Continuous Improvement Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- Google adsense -->
+<script data-ad-client="ca-pub-1852752964062281" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<link rel="shortcut icon" type="image/jpg" href="/assets/apple-touch-icon.png"/>
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+          <a class="site-logo" href="/"><img src="/assets/apple-touch-icon.png" alt=""></a>
+        
+        <a class="site-title" href="/">
+          Continuous Improvement
+          <span class="site-subtitle"></span>
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/posts/">所有文章 All Posts</a>
+            </li><li class="masthead__menu-item">
+              <a href="/courses/">學習資源 Learning</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">關於 About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="https://www.gravatar.com/avatar/0d33994eec9eddc67415e07a7fcafc9d?s=200" alt="Yang-Xin Cao (Eason Cao)" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Yang-Xin Cao (Eason Cao)</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>Engineer@Amazon <br />- <a href="https://www.awshof.com/allstarscertifiedlist.html">AWS All-5 certified</a> / ECS &amp; EKS SME / Marathon Runner / PADI Open Water Diver</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Amazon / Dublin, Ireland</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:eason@easoncao.com" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+            <li><a href="https://linkedin.com/in/easoncao" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-id-badge" aria-hidden="true"></i><span class="label">LinkedIn</span></a></li>
+          
+        
+          
+        
+          
+            <li><a href="https://facebook.com/EasonTechTalk" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i><span class="label">Facebook</span></a></li>
+          
+        
+          
+            <li><a href="https://github.com/0xlen" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="在 Amazon EMR on EKS 使用 AWS Fargate 運行你的 Big Data 大數據 Map Reduce 運算">
+    <meta itemprop="description" content="在上一篇內容中，我展示了如何整合 AWS EMR 及 Amazon EKS 以幫助你運行 Spark 進行你的 Big Data 大數據 Map Reduce 運算，如果你想具體了解在一般環境下如何快速建立 Amazon EMR on EKS 的環境，可以參考：一小時內搭建好 Amazon EMR on EKS 運行 Spark on Kuberentes。在這一篇內容，我將基於上篇的執行環境，與你分享如何使用 AWS Fargate 運行你的 Map Reduce 運算。">
+    <meta itemprop="datePublished" content="2021-05-14T00:00:00-05:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">在 Amazon EMR on EKS 使用 AWS Fargate 運行你的 Big Data 大數據 Map Reduce 運算
+</h1>
+          
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  5 minute read
+
+</p>
+          
+        </header>
+      
+
+      <!-- Google ads in article -->
+      <div>
+          <ins class="adsbygoogle"
+               style="display:block; text-align:center;"
+               data-ad-layout="in-article"
+               data-ad-format="fluid"
+               data-ad-client="ca-pub-1852752964062281"
+               data-ad-slot="8435469231"></ins>
+          <script>
+               (adsbygoogle = window.adsbygoogle || []).push({});
+          </script>
+      </div>
+      <hr>
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right ">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-cog"></i> Table of Contents</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#簡介">簡介</a></li>
+  <li><a href="#概覽-overview">概覽 (Overview)</a>
+    <ul>
+      <li><a href="#fargate-profile">Fargate Profile</a></li>
+    </ul>
+  </li>
+  <li><a href="#開始動手做">開始動手做</a>
+    <ul>
+      <li><a href="#預先準備工作">預先準備工作</a>
+        <ul>
+          <li><a href="#option-完全運行基於-aws-fargate-為技術的-eks-cluster">(Option) 完全運行基於 AWS Fargate 為技術的 EKS Cluster</a></li>
+        </ul>
+      </li>
+      <li><a href="#step-1-建立一個新的-fargate-profile">Step 1. 建立一個新的 Fargate Profile</a>
+        <ul>
+          <li><a href="#option-1-使用-aws-console">Option 1. 使用 AWS Console</a></li>
+          <li><a href="#option-2-使用-aws-cli">Option 2. 使用 AWS CLI</a></li>
+        </ul>
+      </li>
+      <li><a href="#step-2-為-amazonn-emr-賦予操作-kubernetes-cluster-的權限">Step 2. 為 Amazonn EMR 賦予操作 Kubernetes Cluster 的權限</a></li>
+      <li><a href="#step-3-將-amazon-eks-註冊至-amazon-emr-作為可運算對象-virtual-cluster">Step 3. 將 Amazon EKS 註冊至 Amazon EMR 作為可運算對象 (Virtual Cluster)</a></li>
+      <li><a href="#step-4-運行-spark-job">Step 4. 運行 Spark Job！</a></li>
+    </ul>
+  </li>
+  <li><a href="#總結">總結</a></li>
+  <li><a href="#看更多系列文章">看更多系列文章</a></li>
+</ul>
+
+            </nav>
+          </aside>
+        
+        <p>在上一篇內容中，我展示了如何整合 AWS EMR 及 Amazon EKS 以幫助你運行 Spark 進行你的 Big Data 大數據 Map Reduce 運算，如果你想具體了解在一般環境下如何快速建立 Amazon EMR on EKS 的環境，可以參考：<a href="/run-spark-on-kubernetes-with-amazon-emr-on-eks-in-1-hour">一小時內搭建好 Amazon EMR on EKS 運行 Spark on Kuberentes</a>。在這一篇內容，我將基於上篇的執行環境，與你分享如何使用 AWS Fargate 運行你的 Map Reduce 運算。</p>
+
+<figure class="">
+  <img src="/assets/images/posts/2021/05/run-spark-on-kubernetes-with-amazon-emr-on-eks-using-aws-fargate/cover.png" alt="在 Amazon EMR on EKS 使用 AWS Fargate 採用無伺服器 Serverless 架構運行你的 Big Data 大數據 Map Reduce 運算" />
+  
+    <figcaption>
+      在 Amazon EMR on EKS 使用 AWS Fargate 採用無伺服器 Serverless 架構運行你的 Big Data 大數據 Map Reduce 運算
+
+    </figcaption>
+  
+</figure>
+
+<h2 id="簡介">簡介</h2>
+
+<p><strong>AWS Fargate 是什麼？</strong></p>
+
+<blockquote>
+  <p>AWS Fargate 是一種無伺服器運算引擎，適用於搭配 Amazon Elastic Container Service (ECS) 與 Amazon Elastic Kubernetes Service (EKS) 使用的容器。在過去，你會需要顧慮為你的容器部署之前相應的可用運算環境 (例如：我需要先部署 1 臺機器以供我啟動容器) 並且煩惱底層運算機器的擴展。然而，一旦選擇 Fargate 作為運行技術，你只需要專注容器的業務運行 (比如：我需要運行 10 個容器，簡簡單單的就能啟動，不需要顧慮要先運行多少底層運算機器)，並可以依照所需資源大小 (CPU / Memory) 以執行時間計費。</p>
+
+  <p>Fargate 的執行環境是單獨且隔離的，你的應用資源並不會與其他在雲端上的客戶共享並被存取。使用這種運行模式，你也無需煩惱定期需要更新你底層的作業系統核心、軟體、漏洞修補以確保安全性和合規。</p>
+</blockquote>
+
+<figure class="">
+  <img src="/assets/images/posts/2021/05/run-spark-on-kubernetes-with-amazon-emr-on-eks-using-aws-fargate/compare-fargate-on-eks.png" alt="在 Amazon EKS 使用 AWS Fargate 與一般運行負載的區別" />
+  
+    <figcaption>
+      在 Amazon EKS 使用 AWS Fargate 與一般運行負載的區別 (<a href="https://aws.amazon.com/blogs/containers/saving-money-pod-at-time-with-eks-fargate-and-aws-compute-savings-plans/">source</a>)
+
+    </figcaption>
+  
+</figure>
+
+<h2 id="概覽-overview">概覽 (Overview)</h2>
+
+<figure class="">
+  <img src="/assets/images/posts/2021/05/run-spark-on-kubernetes-with-amazon-emr-on-eks-using-aws-fargate/how-it-works.png" alt="運作概覽" />
+  
+    <figcaption>
+      運作概覽 (<a href="https://aws.amazon.com/emr/features/eks/">source</a>)
+
+    </figcaption>
+  
+</figure>
+
+<p>基本上與上一篇 <a href="/run-spark-on-kubernetes-with-amazon-emr-on-eks-in-1-hour">一小時內搭建好 Amazon EMR on EKS 運行 Spark on Kuberentes</a> 並未有太大的出入，最顯著的差異為將工作負載轉移至 AWS Fargate 上運行。</p>
+
+<p>在這篇內容中，我們將會為 Amazon EKS 設置相應的 Kubernetes namespace 並設置 Fargate Profile，以供任何在特定 Kubernetes namespace 中啟動，在 Amazon EMR 無需進行過多複雜的設置。</p>
+
+<h3 id="fargate-profile">Fargate Profile</h3>
+
+<p>在 Amazon EKS 中提供了 AWS Fargate Profile。這項配置就像是一個設定檔，如果要將運行於 Amazonn EKS 中的 Pod 採用 Fargate 技術運行，則需要定義一個 Fargate Profile，指定哪些 Pod 應在啟動時使用 Fargate。Fargate Profile 可以宣告哪些 Pod 要在 Fargate 上執行。</p>
+
+<p>在這個配置中，會有一個 Selector，用於指定特定的 Kubernetes namespace 或是特定 Kubernetes Labels 採用 Fargate 技術運行 Pod。如果要 Pod 符合 Fargate Profile 中的任一 Selector，則該 Pod 會用 Fargate 技術運行。</p>
+
+<h2 id="開始動手做">開始動手做</h2>
+
+<h3 id="預先準備工作">預先準備工作</h3>
+
+<ul>
+  <li>擁有 EKS Cluster</li>
+</ul>
+
+<p>在上一篇內容中，提到了使用 eksctl 命令建立一個 EKS Cluster：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>eksctl create cluster --name emr-eks-demo --nodes 3 --region us-east-1
+</code></pre></div></div>
+
+<p>然而，這樣的設置預設會建立 3 個 EC2 instance 作為 Worker Node，如果你想要將所有的負載及工作完全都使用 AWS Fargate 採無伺服器技術運行，你可以改採使用 <code class="language-plaintext highlighter-rouge">--fargate</code> 選項建立 EKS Cluster：</p>
+
+<h4 id="option-完全運行基於-aws-fargate-為技術的-eks-cluster">(Option) 完全運行基於 AWS Fargate 為技術的 EKS Cluster</h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>eksctl create cluster <span class="nt">--name</span> emr-eks-demo <span class="nt">--region</span> us-east-1 <span class="nt">--fargate</span>
+
+2021-05-13 01:40:28 <span class="o">[</span>ℹ]  eksctl version 0.38.0
+2021-05-13 01:40:28 <span class="o">[</span>ℹ]  using region us-east-1
+2021-05-13 01:40:28 <span class="o">[</span>ℹ]  setting availability zones to <span class="o">[</span>us-east-1c us-east-1a]
+2021-05-13 01:40:28 <span class="o">[</span>ℹ]  subnets <span class="k">for </span>us-east-1c - public:192.168.0.0/19 private:192.168.64.0/19
+2021-05-13 01:40:28 <span class="o">[</span>ℹ]  subnets <span class="k">for </span>us-east-1a - public:192.168.32.0/19 private:192.168.96.0/19
+2021-05-13 01:40:28 <span class="o">[</span>ℹ]  using Kubernetes version 1.18
+2021-05-13 01:40:28 <span class="o">[</span>ℹ]  creating EKS cluster <span class="s2">"emr-eks-demo"</span> <span class="k">in</span> <span class="s2">"us-east-1"</span> region with Fargate profile
+2021-05-13 01:40:28 <span class="o">[</span>ℹ]  <span class="k">if </span>you encounter any issues, check CloudFormation console or try <span class="s1">'eksctl utils describe-stacks --region=us-east-1 --cluster=emr-eks-demo'</span>
+2021-05-13 01:40:28 <span class="o">[</span>ℹ]  CloudWatch logging will not be enabled <span class="k">for </span>cluster <span class="s2">"emr-eks-demo"</span> <span class="k">in</span> <span class="s2">"us-east-1"</span>
+2021-05-13 01:40:28 <span class="o">[</span>ℹ]  you can <span class="nb">enable </span>it with <span class="s1">'eksctl utils update-cluster-logging --enable-types={SPECIFY-YOUR-LOG-TYPES-HERE (e.g. all)} --region=us-east-1 --cluster=emr-eks-demo'</span>
+2021-05-13 01:40:28 <span class="o">[</span>ℹ]  Kubernetes API endpoint access will use default of <span class="o">{</span><span class="nv">publicAccess</span><span class="o">=</span><span class="nb">true</span>, <span class="nv">privateAccess</span><span class="o">=</span><span class="nb">false</span><span class="o">}</span> <span class="k">for </span>cluster <span class="s2">"emr-eks-demo"</span> <span class="k">in</span> <span class="s2">"us-east-1"</span>
+2021-05-13 01:40:28 <span class="o">[</span>ℹ]  2 sequential tasks: <span class="o">{</span> create cluster control plane <span class="s2">"emr-eks-demo"</span>, 2 sequential sub-tasks: <span class="o">{</span> 2 sequential sub-tasks: <span class="o">{</span> <span class="nb">wait </span><span class="k">for </span>control plane to become ready, create fargate profiles <span class="o">}</span>, create addons <span class="o">}</span> <span class="o">}</span>
+2021-05-13 01:40:28 <span class="o">[</span>ℹ]  building cluster stack <span class="s2">"eksctl-emr-eks-demo-cluster"</span>
+2021-05-13 01:40:30 <span class="o">[</span>ℹ]  deploying stack <span class="s2">"eksctl-emr-eks-demo-cluster"</span>
+...
+</code></pre></div></div>
+
+<p>建立完成後，若正確建立完全運行基於 AWS Fargate 為技術的 EKS Cluster，你可以注意到會有 Fargate Node 自動地被註冊至 EKS Cluster 中：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>kubectl get nodes
+
+NAME                                      STATUS   ROLES    AGE   VERSION
+fargate-ip-192-168-124-153.ec2.internal   Ready    &lt;none&gt;   34h   v1.18.9-eks-866667
+fargate-ip-192-168-80-190.ec2.internal    Ready    &lt;none&gt;   34h   v1.18.9-eks-866667
+</code></pre></div></div>
+
+<blockquote>
+  <p>部分 Amazon EMR 配置與<a href="/run-spark-on-kubernetes-with-amazon-emr-on-eks-in-1-hour">上一篇</a>內容大同小異，你也可以參考該篇內容，以取得更多細節互相參考。</p>
+</blockquote>
+
+<h3 id="step-1-建立一個新的-fargate-profile">Step 1. 建立一個新的 Fargate Profile</h3>
+
+<p>在 Kubernetes Cluster 中建立一個用於計算 EMR 任務的 namespace (Kubernetes namespace)，為了方便辨識都是採用 AWS Fargate 技術運行，我將其命名為 <code class="language-plaintext highlighter-rouge">emr-fargate-job</code></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl create ns emr-fargate-job
+</code></pre></div></div>
+
+<h4 id="option-1-使用-aws-console">Option 1. 使用 AWS Console</h4>
+
+<p>你可以參考以下步驟以圖形化介面為你的 EKS Cluster 設置 Fargate Profile：</p>
+
+<ul>
+  <li>開啟 <a href="https://console.aws.amazon.com/eks/home">EKS Console</a> 並選擇你的 EKS Cluster</li>
+  <li>在你的 EKS Cluster 中，找到 <strong>Compute</strong> 頁籤底下的 <strong>Fargate Profiles</strong>，並選擇 <strong>Add Fargate Profile</strong></li>
+</ul>
+
+<figure class="">
+  <img src="/assets/images/posts/2021/05/run-spark-on-kubernetes-with-amazon-emr-on-eks-using-aws-fargate/fargate-profile-in-eks-console.png" alt="建立 Fargate Profile" />
+  
+    <figcaption>
+      建立 Fargate Profile
+
+    </figcaption>
+  
+</figure>
+
+<ul>
+  <li>設定你的 Fargate Profile：
+    <ul>
+      <li>Name: <code class="language-plaintext highlighter-rouge">emr-fp</code> (可以設置你容易辨識的名稱)</li>
+      <li>Pod execution role: <code class="language-plaintext highlighter-rouge">AmazonEKSFargatePodExecutionRole</code> (請參考下面有關 <code class="language-plaintext highlighter-rouge">AmazonEKSFargatePodExecutionRole</code> 的註解)</li>
+      <li>Subnets: (選擇你的 subnet。請注意目前使用 Fargate 技術運行的 Pod 僅支持 Private subnet，你的 subnet 會需要採用 NAT Gateway，這個如果你使用 eksctl 建立你的集群會，不用煩惱太多，請選擇使用 Private subnet)</li>
+    </ul>
+  </li>
+</ul>
+
+<figure class="">
+  <img src="/assets/images/posts/2021/05/run-spark-on-kubernetes-with-amazon-emr-on-eks-using-aws-fargate/add-fargate-profile-step-1-setup.png" alt="Step 1 - 設置 Fargate Profile" />
+  
+    <figcaption>
+      Step 1 - 設置 Fargate Profile
+
+    </figcaption>
+  
+</figure>
+
+<ul>
+  <li>設定 Selector，如此一來運行在這個 namespace 的 Pod 都可以採用 AWS Fargate 技術運行：
+    <ul>
+      <li>Namespace: <code class="language-plaintext highlighter-rouge">emr-fargate-job</code> （指定使用後續運行 Job 的 Kubernetes namespace)</li>
+    </ul>
+  </li>
+</ul>
+
+<figure class="">
+  <img src="/assets/images/posts/2021/05/run-spark-on-kubernetes-with-amazon-emr-on-eks-using-aws-fargate/add-fargate-profile-step-2-config-selector.png" alt="Step 2 - 設置 Selector" />
+  
+    <figcaption>
+      Step 2 - 設置 Selector
+
+    </figcaption>
+  
+</figure>
+
+<ul>
+  <li>檢視你的設置是否有誤，並且按下 <strong>Create</strong>：</li>
+</ul>
+
+<figure class="">
+  <img src="/assets/images/posts/2021/05/run-spark-on-kubernetes-with-amazon-emr-on-eks-using-aws-fargate/add-fargate-profile-step-3-review.png" alt="Step 3 - 檢視設定並建立 Fargate Profile" />
+  
+    <figcaption>
+      Step 3 - 檢視設定並建立 Fargate Profile
+
+    </figcaption>
+  
+</figure>
+
+<p>開始建立後，你可以在前面的 EKS Console 點擊你的 Fargate Profile，一旦狀態變更為 <strong>ACTIVE</strong> 即是建立成功：</p>
+
+<figure class="">
+  <img src="/assets/images/posts/2021/05/run-spark-on-kubernetes-with-amazon-emr-on-eks-using-aws-fargate/view-fargate-profile-detail.png" alt="檢視 Fargate Profile 詳細資料" />
+  
+    <figcaption>
+      檢視 Fargate Profile 詳細資料
+
+    </figcaption>
+  
+</figure>
+
+<h4 id="option-2-使用-aws-cli">Option 2. 使用 AWS CLI</h4>
+
+<p>若你慣於使用 AWS CLI，你可以參考以下命令以為你的 EKS Cluster 設置 Fargate Profile：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>aws eks create-fargate-profile <span class="se">\</span>
+    <span class="nt">--fargate-profile-name</span> emr-fp <span class="se">\</span>
+    <span class="nt">--cluster-name</span> emr-eks-demo <span class="se">\</span>
+    <span class="nt">--pod-execution-role-arn</span> arn:aws:iam::11122233344:role/AmazonEKSFargatePodExecutionRole <span class="se">\</span>
+    <span class="nt">--selectors</span> <span class="nv">namespace</span><span class="o">=</span>emr-fargate-job
+</code></pre></div></div>
+
+<p>[output]</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+    "fargateProfile": {
+    "fargateProfileName": "emr-fp",
+    "fargateProfileArn": "arn:aws:eks:us-east-1:11122233344:fargateprofile/emr-eks-demo/emr-fp/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
+    "clusterName": "emr-eks-demo",
+    "createdAt": "2021-05-14T12:49:42.323000+00:00",
+    "podExecutionRoleArn": "arn:aws:iam::11122233344:role/AmazonEKSFargatePodExecutionRole",
+    "subnets": [
+        "subnet-084d1971bb3f2f605",
+        "subnet-0f9ed9f597f259975"
+    ],
+    "selectors": [
+            {
+                "namespace": "emr-fargate-job"
+            }
+        ],
+        "status": "CREATING",
+        "tags": {}
+    }
+}
+</code></pre></div></div>
+
+<p>註：一般來說 <code class="language-plaintext highlighter-rouge">AmazonEKSFargatePodExecutionRole</code> 在你過去有建立過 EKS on Fargate 的操作會存在，如果你的帳戶並沒有，可以參考<a href="https://docs.aws.amazon.com/zh_tw/eks/latest/userguide/pod-execution-role.html">這篇文件建立</a>。</p>
+
+<h3 id="step-2-為-amazonn-emr-賦予操作-kubernetes-cluster-的權限">Step 2. 為 Amazonn EMR 賦予操作 Kubernetes Cluster 的權限</h3>
+
+<p>建立後，下一步便是為 Amazon EMR 賦予操作該 namespace 相應的權限 (Amazon EMR 將會使用 Service Linked Role <code class="language-plaintext highlighter-rouge">AWSServiceRoleForAmazonEMRContainers</code> 操作集群)，因此，這個動作將會使用 eksctl 建立 Amazon EMR 操作 EKS Cluster 所必須的 RBAC 相關權限，如此一來，使用 Amazon EMR 送出運算任務時，才能正確的在 EKS Cluster 中建立相關的資源 (例如：Job, Pod, Secret … 等等)：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>eksctl create iamidentitymapping <span class="se">\</span>
+    <span class="nt">--cluster</span> emr-eks-demo <span class="se">\</span>
+    <span class="nt">--namespace</span> emr-fargate-job <span class="se">\</span>
+    <span class="nt">--service-name</span> <span class="s2">"emr-containers"</span>
+</code></pre></div></div>
+
+<p>在完成設置後，需要更新 EMR 操作 Job Execution Role 相應的 Trust Policy (配置 Job Execution Role 的相關步驟和啟用 OIDC Provider 可以參考<a href="/run-spark-on-kubernetes-with-amazon-emr-on-eks-in-1-hour/#step-3-%E5%95%9F%E7%94%A8-oidc-provider-%E4%BB%A5%E5%88%A9%E5%BE%8C%E7%BA%8C%E9%85%8D%E7%BD%AE-iam-role-for-service-account-irsa">前一篇 Step 3 &amp; Step 4. 建立 EMR 可以操作的角色 (IAM Role) 並更新對應的權限</a>)：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    eksctl create iamserviceaccount <span class="se">\</span>
+        <span class="nt">--name</span> emr-on-eks-job-execution-role <span class="se">\</span>
+        <span class="nt">--namespace</span> emr-fargate-job <span class="se">\</span>
+        <span class="nt">--cluster</span> emr-eks-demo <span class="se">\</span>
+        <span class="nt">--attach-policy-arn</span> arn:aws:iam::11122233344:policy/EMR-EKS-JobExecutionRolePolicy <span class="se">\</span>
+        <span class="nt">--approve</span> <span class="se">\</span>
+        <span class="nt">--override-existing-serviceaccounts</span>
+</code></pre></div></div>
+
+<p>獲取 IAM Role 名稱 (arn:aws:iam::11122233344:role/eksctl-emr-eks-demo-addon-iamserviceaccount-Role1-1681FO4LQG4QC)。請注意是 <strong>emr-fargate-job</strong> namespace：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl describe sa/emr-on-eks-job-execution-role <span class="nt">-n</span> emr-fargate-job
+
+Name:                emr-on-eks-job-execution-role
+Namespace:           emr-fargate-job
+Labels:              &lt;none&gt;
+Annotations:         eks.amazonaws.com/role-arn: arn:aws:iam::11122233344:role/eksctl-emr-eks-demo-addon-iamserviceaccount-Role1-1681FO4LQG4QC
+Image pull secrets:  &lt;none&gt;
+Mountable secrets:   emr-on-eks-job-execution-role-token-jbjxp
+Tokens:              emr-on-eks-job-execution-role-token-jbjxp
+Events:              &lt;none&gt;
+</code></pre></div></div>
+
+<p>在取得 IAM Role ARN 後，請再套用命令前，將以下更換為你相應的 IAM Role 名稱 (<code class="language-plaintext highlighter-rouge">&lt;eksctl-emr-eks-demo-addon-iamserviceaccount-Role1-1681FO4LQG4QC&gt;</code>)：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code> aws emr-containers update-role-trust-policy <span class="se">\</span>
+    <span class="nt">--cluster-name</span> emr-eks-demo <span class="se">\</span>
+    <span class="nt">--namespace</span> emr-fargate-job <span class="se">\</span>
+    <span class="nt">--role-name</span> &lt;eksctl-emr-eks-demo-addon-iamserviceaccount-Role1-1681FO4LQG4QC&gt;
+</code></pre></div></div>
+
+<h3 id="step-3-將-amazon-eks-註冊至-amazon-emr-作為可運算對象-virtual-cluster">Step 3. 將 Amazon EKS 註冊至 Amazon EMR 作為可運算對象 (Virtual Cluster)</h3>
+
+<p>使用以下命令於 EMR 建立一個 Virtual Cluster (可以將 <code class="language-plaintext highlighter-rouge">my_emr_virtual_cluster</code> 更換為你容易識別的名稱)：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>aws emr-containers create-virtual-cluster <span class="se">\</span>
+    <span class="nt">--name</span> emr_fargate_virtual_cluster <span class="se">\</span>
+    <span class="nt">--container-provider</span> <span class="s1">'{
+        "id": "emr-eks-demo",
+        "type": "EKS",
+        "info": {
+        "eksInfo": {
+                "namespace": "emr-fargate-job"
+            }
+        }
+    }'</span>
+</code></pre></div></div>
+
+<p>[output]</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"wuenyscuofnz53vy5m39g2n10"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"emr_fargate_virtual_cluster"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"arn"</span><span class="p">:</span><span class="w"> </span><span class="s2">"arn:aws:emr-containers:us-east-1:11122233344:/virtualclusters/wuenyscuofnz53vy5m39g2n10"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="step-4-運行-spark-job">Step 4. 運行 Spark Job！</h3>
+
+<p>(套用上述設置運行 Spark Job 的一項使用範例)</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>aws emr-containers start-job-run <span class="se">\</span>
+    <span class="nt">--virtual-cluster-id</span> wuenyscuofnz53vy5m39g2n10 <span class="se">\</span>
+    <span class="nt">--name</span> pi-job <span class="se">\</span>
+    <span class="nt">--execution-role-arn</span> arn:aws:iam::11122233344:role/eksctl-emr-eks-demo-addon-iamserviceaccount-Role1-1681FO4LQG4QC <span class="se">\</span>
+    <span class="nt">--release-label</span> emr-6.2.0-latest <span class="se">\</span>
+    <span class="nt">--job-driver</span> <span class="s1">'{"sparkSubmitJobDriver": {"entryPoint": "local:///usr/lib/spark/examples/src/main/python/pi.py", "sparkSubmitParameters": "--conf spark.executor.instances=1 --conf spark.executor.memory=1G --conf spark.executor.cores=1 --conf spark.driver.cores=1"}}'</span> <span class="se">\</span>
+    <span class="nt">--configuration-overrides</span> <span class="s1">'{"applicationConfiguration": [{"classification": "spark-defaults", "properties": {"spark.driver.memory": "2G"}}], "monitoringConfiguration": {"cloudWatchMonitoringConfiguration": {"logGroupName": "emr-on-eks-log", "logStreamNamePrefix": "pi"}, "persistentAppUI":"ENABLED",  "s3MonitoringConfiguration": {"logUri": "s3://My-EMR-Log-Bucket" }}}'</span>
+</code></pre></div></div>
+
+<p>[output]</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+    "id": "00000002ubarp3tg0ne",
+    "name": "pi-job",
+    "arn": "arn:aws:emr-containers:us-east-1:11122233344:/virtualclusters/wuenyscuofnz53vy5m39g2n10/jobruns/00000002ubarp3tg0ne",
+    "virtualClusterId": "wuenyscuofnz53vy5m39g2n10"
+}
+</code></pre></div></div>
+
+<p>送出任務後，若一切正確配置，你可以在 <code class="language-plaintext highlighter-rouge">emr-fargate-job</code> 中找到你的 Pod，並且，稍待幾分鐘，Fargate 將會幫助你調度並部署新的 Fargate Node 供其運算：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>kubectl get nodes
+NAME                                      STATUS     ROLES    AGE   VERSION
+fargate-ip-192-168-118-40.ec2.internal    NotReady   &lt;none&gt;   6s    v1.18.9-eks-866667
+...
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>kubectl get pods <span class="nt">-n</span> emr-fargate-job
+NAME                               READY   STATUS    RESTARTS   AGE
+00000002ubatqrom028-87b7k          3/3     Running   0          3m32s
+spark-00000002ubatqrom028-driver   0/2     Pending   0          44s
+
+Name:               00000002ubatqrom028-87b7k
+Namespace:          emr-fargate-job
+Priority:           2000001000
+PriorityClassName:  system-node-critical
+Node:               fargate-ip-192-168-118-40.ec2.internal/192.168.118.40
+</code></pre></div></div>
+
+<p>當 Job 完成運算，你可以在 EMR Console 中得知該任務完成的變化。</p>
+
+<h2 id="總結">總結</h2>
+
+<p>在這篇內容中，我展示了如何使用 Amazon EMR + Amazon EKS 並使用 AWS Fargate 與你分享快速部署一個範例的運行無伺服器的執行架構，運行大數據運算工作，能夠協助你在配置時具體了解其流程。</p>
+
+<p>由於很多人對於 AWS Fargate 可能十分陌生，希望上述的內容，能夠幫助你了解並幫助你成功運行這樣的解決方案。如果你覺得這樣的內容有幫助，可以在底下按個 Like / 留言讓我知道，並且分享給有需要搭建環境的人，幫助他們快速了解 AWS Fargate 的神奇威力！</p>
+
+<h2 id="看更多系列文章">看更多系列文章</h2>
+
+<ul>
+  <li><a href="/run-spark-on-kubernetes-with-amazon-emr-on-eks-in-1-hour">一小時內搭建好 Amazon EMR on EKS 運行 Spark on Kuberentes</a></li>
+  <li><a href="/run-spark-on-kubernetes-with-amazon-emr-on-eks-using-aws-fargate">在 Amazon EMR on EKS 使用 AWS Fargate 運行你的 Big Data 大數據 Map Reduce 運算</a></li>
+</ul>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/#amazon-web-services" class="page__taxonomy-item" rel="tag">amazon web services</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#aws-fargate" class="page__taxonomy-item" rel="tag">AWS Fargate</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#aws" class="page__taxonomy-item" rel="tag">aws</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#bigdata" class="page__taxonomy-item" rel="tag">BigData</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#eks" class="page__taxonomy-item" rel="tag">EKS</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#emr" class="page__taxonomy-item" rel="tag">EMR</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#kubernetes" class="page__taxonomy-item" rel="tag">Kubernetes</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#map-reduce" class="page__taxonomy-item" rel="tag">Map Reduce</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#serverless" class="page__taxonomy-item" rel="tag">Serverless</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#spark" class="page__taxonomy-item" rel="tag">Spark</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2021-05-14T00:00:00-05:00">May 14, 2021</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=%E5%9C%A8+Amazon+EMR+on+EKS+%E4%BD%BF%E7%94%A8+AWS+Fargate+%E9%81%8B%E8%A1%8C%E4%BD%A0%E7%9A%84+Big+Data+%E5%A4%A7%E6%95%B8%E6%93%9A+Map+Reduce+%E9%81%8B%E7%AE%97%20https%3A%2F%2Feasoncao.com%2Frun-spark-on-kubernetes-with-amazon-emr-on-eks-using-aws-fargate%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Feasoncao.com%2Frun-spark-on-kubernetes-with-amazon-emr-on-eks-using-aws-fargate%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Feasoncao.com%2Frun-spark-on-kubernetes-with-amazon-emr-on-eks-using-aws-fargate%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+      <iframe
+        style="width: 100%; max-width: 485px; height: 170px; margin: auto; overflow: hidden; display: block;"
+        src="https://button.like.co/in/embed/easoncao/button?referrer=https%3A%2F%2Feasoncao.com%2Frun-spark-on-kubernetes-with-amazon-emr-on-eks-using-aws-fargate%2F" frameBorder="0">
+      </iframe>
+      
+
+      <!-- Buy me a coffee -->
+      <section class="page__share">
+        <h4 class="page__share-title">Is that useful? Let me know or buy me a coffee</h4>
+        <p class="page__meta">這篇內容對你有幫助嗎？</p>
+        <a href="https://paypal.me/e4son"><img src="https://cdn.jsdelivr.net/gh/twolfson/paypal-github-button@1.0.0/dist/button.svg" alt="Support via PayPal"></a>
+        <a href="https://p.ecpay.com.tw/17C964C" class="btn btn--success">一次性支持 (ECPay)</a>
+      </section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/run-spark-on-kubernetes-with-amazon-emr-on-eks-in-1-hour/" class="pagination--pager" title="一小時內搭建好 Amazon EMR on EKS 運行 Spark on Kuberentes
+">Previous</a>
+    
+    
+      <a href="/remote-work-tips-for-beginner/" class="pagination--pager" title="寫給第一次遠距工作的你 - 9 個技巧幫助你調適自己並保持高效能 (WFH / Work From Home)
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+      <div class="page__comments">
+  
+  
+      <h4 class="page__comments-title">Leave a comment</h4>
+      <section id="disqus_thread"></section>
+    
+</div>
+
+    
+  </article>
+
+  
+
+  <!-- Google Adsense -->
+  <div class="page__related">
+    <h4 class="page__related-title">You May Also Have Interest</h4>
+    <div>
+        <!-- responsive ad -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-1852752964062281"
+             data-ad-slot="2849626059"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+  </div>
+
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/2023/04/five-years-at-amazon-as-cloud-support-engineer-in-aws/cover.jpg" alt="">
+      </div>
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/five-years-at-amazon-as-cloud-support-engineer-in-aws/" rel="permalink">身處 Amazon 工作 5 年學到的事：在 AWS 擔任 Cloud Support Engineer 是什麼樣的體驗
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">2023 是我在 AWS 擔任 Cloud Support Engineer 的第六年，這份工作對我來說某種程度上是又愛又恨。作為見證 AWS 中文技術支援團隊的一員，五年時間說長不長，說短也不短，卻有非常多學習和體悟。
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/2023/03/aws-cloud-support-engineer-interview-tips-and-required-skills/cover.jpg" alt="">
+      </div>
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/aws-cloud-support-engineer-interview-tips-and-required-skills/" rel="permalink">在 AWS Cloud Support Engineer 面試中脫穎而出：必備的技術能力和重要特質
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">如果你正準備面試 AWS Cloud Support Engineer 的職位，在這篇文章中，我將與你分享我對於 AWS Cloud Support Engineer 所需的必備技能和特質，幫助你更好地了解這份職位且思考自己目前所具備的能力是與該團隊所交集，讓你在面試中脫穎而出。
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/eks-aws-load-balancer-controller-v1-to-v2-migration-behavior/" rel="permalink">[AWS] 那些沒寫在文件上的事 - AWS Load Balancer Controller v1 升級至 v2
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  3 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">隨著 Amazon EKS 對於 Kubernetes 1.22 的推出，1.21 也預計於 February 15, 2023 在 Amazon EKS 終止支援 1，對於 AWS Load Balancer Controller 仍然使用舊版本的用戶來說，勢必面臨需要升級 AWS Load Balancer ...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/2020/10/zero-downtime-deployment-when-using-alb-ingress-controller/deployment-workflow-alb-ingress-controller-4-side-note-of-deregister.png" alt="">
+      </div>
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/zero-downtime-deployment-when-using-alb-ingress-controller-on-amazon-eks-and-prevent-502-error/" rel="permalink">[AWS][EKS] Zero downtime deployment(RollingUpdate) when using AWS Load Balancer Controller on Amazon EKS
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  22 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">This article is describing the thing you need to aware when using ALB Ingress Controller (AWS Load Balancer Controller) to do deployment and prevent 502 erro...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+
+
+<div id="footer-subscribe-email-list">
+    <h3>Get the updates </h3>
+    <form action="https://docs.google.com/forms/d/e/1FAIpQLSfuofCYvu2cV614aDt6SO5ua_5trT0EC5yeSJObLY0KGjFtvQ/formResponse" method="POST">
+        <div style="display: flex;">
+            <!-- input name="entry.205499253" type="text" id="Name" class="form-control" placeholder="Name" -->
+            <input name="entry.1288273007" type="email" id="email" class="form-control" placeholder="Email" required="required" style="margin-top: 2px; margin-right: 5px; width: 50%;">
+            <input class="btn btn--primary" id="subscribe" type="submit" value="訂閱 (Sign Up)" style="width: 30%;">
+        </div>
+    </form>
+</div>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8GPCXJPGFZ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-8GPCXJPGFZ');
+</script>
+<!-- end custom footer snippets -->
+
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+          <li><a href="https://facebook.com/EasonTechTalk" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i> Facebook</a></li>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    <li><a href="/sitemap.xml"><i class="fas fa-fw fa-sitemap" aria-hidden="true"></i> SiteMap</a></li>
+    <li><a href="/tags"><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags</a></li>
+    <li><a href="https://toolbox.easoncao.com/"><i class="fas fa-fw fa-toolbox" aria-hidden="true"></i> ToolBox</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2023 Continuous Improvement. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+  <script>
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-80058083-2']);
+  
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "https://easoncao.com/run-spark-on-kubernetes-with-amazon-emr-on-eks-using-aws-fargate/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/run-spark-on-kubernetes-with-amazon-emr-on-eks-using-aws-fargate"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://lenlabs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

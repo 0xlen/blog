@@ -1,0 +1,850 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.19.3 by Michael Rose
+  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>一個關於我大學專題的故事 - 四軸無人機專案 Parrot Bebop Drone 和 Python library Katarina - Continuous Improvement</title>
+<meta name="description" content="A story about my student project of undergraduate degree, a Bebop Drone and Open Source library - Katarina">
+
+
+  <meta name="author" content="Yang-Xin Cao (Eason Cao)">
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Continuous Improvement">
+<meta property="og:title" content="一個關於我大學專題的故事 - 四軸無人機專案 Parrot Bebop Drone 和 Python library Katarina">
+<meta property="og:url" content="https://easoncao.com/a-story-about-my-project-using-bebop-drone-and-katarina/">
+
+
+  <meta property="og:description" content="A story about my student project of undergraduate degree, a Bebop Drone and Open Source library - Katarina">
+
+
+
+  <meta property="og:image" content="https://easoncao.com/assets/og-image.jpg">
+
+
+
+
+
+  <meta property="article:published_time" content="2018-07-01T00:00:00-05:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://easoncao.com/a-story-about-my-project-using-bebop-drone-and-katarina/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Continuous Improvement",
+      "url": "https://easoncao.com/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Continuous Improvement Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- Google adsense -->
+<script data-ad-client="ca-pub-1852752964062281" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<link rel="shortcut icon" type="image/jpg" href="/assets/apple-touch-icon.png"/>
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+          <a class="site-logo" href="/"><img src="/assets/apple-touch-icon.png" alt=""></a>
+        
+        <a class="site-title" href="/">
+          Continuous Improvement
+          <span class="site-subtitle"></span>
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/posts/">所有文章 All Posts</a>
+            </li><li class="masthead__menu-item">
+              <a href="/courses/">學習資源 Learning</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">關於 About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="https://www.gravatar.com/avatar/0d33994eec9eddc67415e07a7fcafc9d?s=200" alt="Yang-Xin Cao (Eason Cao)" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Yang-Xin Cao (Eason Cao)</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>Engineer@Amazon <br />- <a href="https://www.awshof.com/allstarscertifiedlist.html">AWS All-5 certified</a> / ECS &amp; EKS SME / Marathon Runner / PADI Open Water Diver</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Amazon / Dublin, Ireland</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:eason@easoncao.com" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+            <li><a href="https://linkedin.com/in/easoncao" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-id-badge" aria-hidden="true"></i><span class="label">LinkedIn</span></a></li>
+          
+        
+          
+        
+          
+            <li><a href="https://facebook.com/EasonTechTalk" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i><span class="label">Facebook</span></a></li>
+          
+        
+          
+            <li><a href="https://github.com/0xlen" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="一個關於我大學專題的故事 - 四軸無人機專案 Parrot Bebop Drone 和 Python library Katarina">
+    <meta itemprop="description" content="前言">
+    <meta itemprop="datePublished" content="2018-07-01T00:00:00-05:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">一個關於我大學專題的故事 - 四軸無人機專案 Parrot Bebop Drone 和 Python library Katarina
+</h1>
+          
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  1 minute read
+
+</p>
+          
+        </header>
+      
+
+      <!-- Google ads in article -->
+      <div>
+          <ins class="adsbygoogle"
+               style="display:block; text-align:center;"
+               data-ad-layout="in-article"
+               data-ad-format="fluid"
+               data-ad-client="ca-pub-1852752964062281"
+               data-ad-slot="8435469231"></ins>
+          <script>
+               (adsbygoogle = window.adsbygoogle || []).push({});
+          </script>
+      </div>
+      <hr>
+
+      <section class="page__content" itemprop="text">
+        
+        <h2 id="前言">前言</h2>
+
+<p>大學四年的學習歷程即將告一個段落，邁入人生下個階段，趁著幾天空閒的時間將這些記憶跟過程付諸文章，紀錄自己那些年不凡且獨特的過往。</p>
+
+<h2 id="一個關於無人飛機的專案">一個關於無人飛機的專案</h2>
+
+<p>在台灣普及的大學學程裡面，大部分都納入了專題研究相關的課程內容，一旦升上大三，通常不管是哪個系所，幾乎開始動工進行專題的工作。可能有很多學生或是系所會將專題視為大學四年內的學習成果，非常重視，不過，畢竟每個學期都在完成不同類型的專案，相對於我自己大一每學期都有專案跟每週都有寫不完的程式相比，對於投入專題工作的心情，其實感受不大，覺得只是在未完成清單裡面多加一項「專題」的待辦事項，加上在實習公司內也有其他重要的事情需要完成，所以對於專題的投入比例並沒有太高，純粹當個好玩的業餘項目在研究。偶而有報告或是接近截止日期時相對投入些，所以就更無憂無慮的可以專心研究自己想深鑽的內容。</p>
+
+<p>雖然心裡這樣說說，但是還是會想著：當然可以也稍微努力做一下，有得獎是好事，沒得獎就算了。於是抱持著這樣的心態選定我自己有興趣的專案題目，尤其我對於影像視覺相關的研究領域很感興趣，從高中開始就使用 OpenCV 做相關的應用，不過這個領域並不是我最擅長的項目，於是乎，既然有這樣的研究機會，我二話不說在大三差不多能找專題老師的時機，就跟同學組隊找了影像視覺應用研究領域的教授來指導我們的專題內容。當初與實驗室教授選定專案題目時，異想天開想搞跟電梯有關的專案，不過後來想想還是有點無用所以中途就換了其他題目，當然也是搞個自己想玩的項目：無人機。</p>
+
+<p>這一搞還好，一玩下去不得了，坑特別多。首先，一般市售的家用無人機，基本上是除了飛行之外能應用於研究實驗用的功能真的是極為稀少，我們從實驗室借到的無人機產品是 2015 主打一般消費市場的飛機，基本上，就是一台遙控飛機在天上飛附上一組鏡頭，而對於飛機所擁有的感測器及軟體，有非常大的不足需要克服。</p>
+
+<figure class="">
+  <img src="/assets/images/posts/2018/07/bebop-drone-and-katarina/bebop-drone-product.png" alt="Parrot Bebop Drone" />
+  
+    <figcaption>
+      Parrot Bebop Drone
+
+    </figcaption>
+  
+</figure>
+
+<p>(Photo credit: <a href="https://www.parrot.com/us">Parrot</a>)</p>
+
+<p>Specification</p>
+<ul>
+  <li>Video: full HD 1080p</li>
+  <li>GPS: Yes</li>
+  <li>Processor: Dual core processor with quad-core GPU</li>
+  <li>Storage: 8 GB flash storage system</li>
+  <li>Video resolution: 1920 x 1080p (30 fps)</li>
+  <li>Photo resolution: 4096 x 3072 pixels</li>
+  <li>Video encoding: H264</li>
+  <li>Wi-Fi 802.11a/b/g/n/ac</li>
+  <li>Wi-Fi Aerials: 2.4 and 5 GHz dual dipole aerials</li>
+  <li>SDK Release</li>
+</ul>
+
+<p>Product reference</p>
+<ul>
+  <li><a href="https://www.amazon.com/Parrot-Bebop-Quadcopter-Drone-Red/dp/B00OOR9060">Amazon: Parrot Bebop drone</a></li>
+</ul>
+
+<p>你可以下載官方提供的 App，就可以透過 Wi-Fi 的方式與無人機進行連線，以手持的方式遙控飛機。那麼一般手持裝置是如何做到控制飛機的？其實背後技術原理是透過發送含有指令的 UDP 封包進行飛機的控制，例如前後左右、旋轉角度等。</p>
+
+<p>一開始打算使用 GitHub 上一些新奇的專案和語言來實做，但是考量我與夥伴由於同時要實習還要兼顧一大堆作業課業報告的緣故，每週能夠開發研究的時間就顯得特別寶貴，於是為了提高開發的速度，我決定使用彼此熟悉的語言和豐富成熟的框架來進行應用的實作：</p>
+
+<ul>
+  <li>Python 2.6</li>
+  <li>OpenCV: 負責影像運算和辨識</li>
+  <li><a href="http://flask.pocoo.org/">Flask</a>: 網頁控制介面開發</li>
+  <li>Python library for Bebop Drone - <a href="https://github.com/robotika/katarina">katarina</a>: 處理無人機控制飛行和決策</li>
+</ul>
+
+<p>Katarina 是一個開源的 Python 函式庫，是由一群捷克的開發者組成的 Robotika 底下的一項項目，老實說我不是特別清楚團隊的成員背景，但是秉持開源的精神，還是十分感謝他們貢獻這項專案。該項目主要是針對 Parrot 無人機公司釋出的 <a href="http://developer.parrot.com/docs/SDK3/">SDK</a> 提供 Python 的接口，使得 Python 開發者能夠利用熟悉的語言控制該公司的無人機產品。</p>
+
+<h2 id="於是我改改了幾行代碼">於是，我改改了幾行代碼</h2>
+
+<p>但是這個坑一踩，才知道有多大洞。整個專案最讓我詬病的是，飛機本身的限制造成在專案研究過程很大的障礙，需要逐一克服：</p>
+
+<ul>
+  <li>一旦飛機超出一定範圍，Wi-Fi 連線延遲會拉高，影像的回傳就會產生延遲，此時進行的飛行決策很可能是錯誤的。</li>
+  <li>無人飛機透過四個軸的飛行槳控制，保持飛行的穩定以維持一定的平衡，然而，對於家用的無人機來說，並不能保證其穩定的順暢，很可能因為風阻或是干擾等其他因素飛機會不斷飄移。</li>
+  <li>由於帶動四軸飛行槳時，馬達運轉需要大量的功耗，然而，家用無人機所攜帶的電池飛行的時間有限，一顆要充將近一小時的電池僅夠支撐室內約 15 - 20 分鐘的飛行，往往研究還沒正式開始測試或是取得需要的數據就得先行換備用電池，不斷的在考驗人性。</li>
+  <li>飛機為了保持飛行的穩定，其機身設計採用流線型並且限制重量，一旦超出負重，當在空中起飛並盤旋時，飛機會失去本身機身的穩定，所以難以附掛額外的零組件或是電池。</li>
+  <li>飛機的本身運算能力有限，飛行同時要在飛機本身分析影像內容是一項考驗運算能力和電力的一項挑戰。</li>
+</ul>
+
+<p>同時，最嚴重的是，我發現 Katarina 固然提供豐富的控制方法，然而，他原本使用的影像串流方式十分、十分的慢。回傳的影像可以說是飛機五秒前的位置，一旦 Wi-Fi 傳輸距離與影像串流分析的機器過遠，基本上你就不知道飛機目前飄到那去了。由於我的專案需要即時的影像回饋進行飛機的飛行決策，一旦偵測到目標物體就會往物體靠近飛行並且滯留。如果現在回傳的影像是五秒前的，由於上述提到的致命缺點，飛機很可能因為不穩定已經往左右或其他方向飄移，這時若飛行決策的邏輯還送出飛行指令驅使飛機往該方向前進，一旦附近有障礙物，肯定撞機。所以一旦有幾秒以上的延遲，都是十分致命的。</p>
+
+<p>就算將所有障礙物清空，撇除障礙物問題，還是必須要克服影像串流造成的延遲，因為飛機的位置不一定會是影像當時回饋的相對位置，這都會影響飛行決策是否能正確的往目標物體靠近。但是 Katarina 本身的串流方式就有很大的延遲問題，在 GitHub 上面也有一些關於這個問題的討論：</p>
+
+<ul>
+  <li><a href="https://github.com/robotika/katarina/issues/3">GitHub issue#3: Improving Speed for Receiving Real-Time Image</a></li>
+</ul>
+
+<p>經過一番深入研究和測試，我注意到 Parrot 官方提供的 SDK 內其實有配置 RTP 串流的協議和對應的連線資訊：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#define ARDISCOVERY_CONNECTION_JSON_ARSTREAM2_CLIENT_STREAM_PORT_KEY "arstream2_client_stream_port"
+#define ARDISCOVERY_CONNECTION_JSON_ARSTREAM2_CLIENT_CONTROL_PORT_KEY "arstream2_client_control_port"
+#define ARDISCOVERY_CONNECTION_JSON_ARSTREAM2_SERVER_STREAM_PORT_KEY "arstream2_server_stream_port"
+#define ARDISCOVERY_CONNECTION_JSON_ARSTREAM2_SERVER_CONTROL_PORT_KEY "arstream2_server_control_port"
+</span></code></pre></div></div>
+
+<ul>
+  <li><a href="https://github.com/Parrot-Developers/libARDiscovery/blob/2eb8441bd1834928cd77b3ce4f4dddee4434f024/Includes/libARDiscovery/ARDISCOVERY_Connection.h#L58">libARDiscovery</a></li>
+  <li><a href="https://github.com/Parrot-Developers/application_notes/blob/5fd43c383ad58a2763f31f58c85f5f1e6ab6877b/BebopStreamVLC/BebopDroneStartStream.c#L551">Parrot-Developers-Stream</a></li>
+</ul>
+
+<p>此外，我也在網路上找到很有趣的一篇文章：<a href="http://cvdrone.de/stream-bebop-video-with-python-opencv.html">Stream Bebop Video With Python Opencv</a>，這個範例使用 Python 去執行另一個開源一樣提供給 Bebop 以 Node.js 寫成的 <a href="https://github.com/hybridgroup/node-bebop">node-bebop</a> 專案，利用呼叫 Node.js 版本的函式庫內提供的串流方法進行 RTP 串流，實際上，是蠻有趣的作法。</p>
+
+<p>於是，我就嘗試改改了幾行代碼，經過我的測試並應用在我的專題內，送了一個 Pull Request 給了作者，在與無人機連接時送出必要的影像訊息，在執行時能夠使用 RTP 串流的方式接收影像：</p>
+
+<ul>
+  <li><a href="https://github.com/robotika/katarina/pull/14">GitHub pull request#14: Enable RTP Streaming on Bebop and add sample code</a></li>
+</ul>
+
+<p>不久，我就收到了來自 Robotika 的問候：</p>
+
+<figure class="">
+  <img src="/assets/images/posts/2018/07/bebop-drone-and-katarina/email-from-robotika-about-katarina.png" alt="Email from Robotika about Katarina project" />
+  
+    <figcaption>
+      Email from Robotika about Katarina project
+
+    </figcaption>
+  
+</figure>
+
+<p>在我回覆不久，Robotika 的 Martin 就將我的 Pull request 合併進專案內，成為該專案目前唯一一個 Pull request。</p>
+
+<h2 id="收穫">收穫？</h2>
+
+<p>串流問題解決了，一般來說，OpenCV 的應用程式往往都是單執行緒的運算方式，獲取單張影像後進行運算和特徵判斷，但是這樣的方法往往會在運算速度的緣故發生一些效能瓶頸。於是，我又透過改寫程式利用一些多執行緒的處理技巧，搭配在應用程式裡面設計 Queue 的邏輯，使得接收串流影像是一個單元，真正進行影像判斷和飛行決策的則是另外的單元，並且加入一些判斷機制，盡可能降低因為串流產生的延遲造成的錯誤飛行決策。</p>
+
+<p>不過由於飛機的限制，並沒有深度等等的感測器，整個專案困難的部分也包含影像飛行對於實際距離換算的方法，經過一系列的微調和測試，完成了一個 PoC 的版本：</p>
+
+<!-- Courtesy of embedresponsively.com //-->
+
+<div class="responsive-video-container">
+    <iframe src="https://www.youtube-nocookie.com/embed/n7VqhPPqlpY" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe>
+  </div>
+
+<p>(這個影片給幾個同學看過後，都被開玩笑其實我們的專題不是無人機收費，比較像是無人飛行武器開發，精準投遞摧毀目標 … lol)</p>
+
+<p>專題展示前幾天至當天早上，我還與夥伴玩起黑客松，逐一的將沒有完成的介面進行收尾以利當天的展示，十分感謝這些年來大大小小專案的磨練，已經練就開始前幾個小時甚至 Demo 當下還在送 Commit / 改程式的功力，不過既然是當成業餘的項目，開心好玩並且從中收穫最重要，比賽反而是其次了。</p>
+
+<p>最後，我並沒有得獎，也許在評審委員教授的眼裡，看見的應用價值是商機和獲獎的必要條件。但是，對我來說，這個專題帶給我的並不是這樣表面的效益和回饋，而是在重重的困難和限制下對於盡力完成研究的方法和價值。我的幾行代碼，卻是貢獻是數個全世界使用 Bebop drone 和 Katarina 的無人機玩家們，即便在不同的國家，我們卻用著相同的語言和同樣的精神在交流、共同解決相同的問題，其所成就感已經超越單一個專題的獎項所帶來的滿足。</p>
+
+<p>我想，這就是一項成就解鎖吧!</p>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/#drone" class="page__taxonomy-item" rel="tag">drone</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#python" class="page__taxonomy-item" rel="tag">python</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2018-07-01T00:00:00-05:00">July 1, 2018</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=%E4%B8%80%E5%80%8B%E9%97%9C%E6%96%BC%E6%88%91%E5%A4%A7%E5%AD%B8%E5%B0%88%E9%A1%8C%E7%9A%84%E6%95%85%E4%BA%8B+-+%E5%9B%9B%E8%BB%B8%E7%84%A1%E4%BA%BA%E6%A9%9F%E5%B0%88%E6%A1%88+Parrot+Bebop+Drone+%E5%92%8C+Python+library+Katarina%20https%3A%2F%2Feasoncao.com%2Fa-story-about-my-project-using-bebop-drone-and-katarina%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Feasoncao.com%2Fa-story-about-my-project-using-bebop-drone-and-katarina%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Feasoncao.com%2Fa-story-about-my-project-using-bebop-drone-and-katarina%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+      <iframe
+        style="width: 100%; max-width: 485px; height: 170px; margin: auto; overflow: hidden; display: block;"
+        src="https://button.like.co/in/embed/easoncao/button?referrer=https%3A%2F%2Feasoncao.com%2Fa-story-about-my-project-using-bebop-drone-and-katarina%2F" frameBorder="0">
+      </iframe>
+      
+
+      <!-- Buy me a coffee -->
+      <section class="page__share">
+        <h4 class="page__share-title">Is that useful? Let me know or buy me a coffee</h4>
+        <p class="page__meta">這篇內容對你有幫助嗎？</p>
+        <a href="https://paypal.me/e4son"><img src="https://cdn.jsdelivr.net/gh/twolfson/paypal-github-button@1.0.0/dist/button.svg" alt="Support via PayPal"></a>
+        <a href="https://p.ecpay.com.tw/17C964C" class="btn btn--success">一次性支持 (ECPay)</a>
+      </section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/create-a-line-bot/" class="pagination--pager" title="使用 AWS Lambda 建立 Line bot
+">Previous</a>
+    
+    
+      <a href="/recover-atom-note-on-windows/" class="pagination--pager" title="救回 Windows 上意外關閉且遺失的 Atom 筆記 (1.27.2 x64)
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+      <div class="page__comments">
+  
+  
+      <h4 class="page__comments-title">Leave a comment</h4>
+      <section id="disqus_thread"></section>
+    
+</div>
+
+    
+  </article>
+
+  
+
+  <!-- Google Adsense -->
+  <div class="page__related">
+    <h4 class="page__related-title">You May Also Have Interest</h4>
+    <div>
+        <!-- responsive ad -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-1852752964062281"
+             data-ad-slot="2849626059"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+  </div>
+
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/2023/04/five-years-at-amazon-as-cloud-support-engineer-in-aws/cover.jpg" alt="">
+      </div>
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/five-years-at-amazon-as-cloud-support-engineer-in-aws/" rel="permalink">身處 Amazon 工作 5 年學到的事：在 AWS 擔任 Cloud Support Engineer 是什麼樣的體驗
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">2023 是我在 AWS 擔任 Cloud Support Engineer 的第六年，這份工作對我來說某種程度上是又愛又恨。作為見證 AWS 中文技術支援團隊的一員，五年時間說長不長，說短也不短，卻有非常多學習和體悟。
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/2023/03/aws-cloud-support-engineer-interview-tips-and-required-skills/cover.jpg" alt="">
+      </div>
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/aws-cloud-support-engineer-interview-tips-and-required-skills/" rel="permalink">在 AWS Cloud Support Engineer 面試中脫穎而出：必備的技術能力和重要特質
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">如果你正準備面試 AWS Cloud Support Engineer 的職位，在這篇文章中，我將與你分享我對於 AWS Cloud Support Engineer 所需的必備技能和特質，幫助你更好地了解這份職位且思考自己目前所具備的能力是與該團隊所交集，讓你在面試中脫穎而出。
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/eks-aws-load-balancer-controller-v1-to-v2-migration-behavior/" rel="permalink">[AWS] 那些沒寫在文件上的事 - AWS Load Balancer Controller v1 升級至 v2
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  3 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">隨著 Amazon EKS 對於 Kubernetes 1.22 的推出，1.21 也預計於 February 15, 2023 在 Amazon EKS 終止支援 1，對於 AWS Load Balancer Controller 仍然使用舊版本的用戶來說，勢必面臨需要升級 AWS Load Balancer ...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/2020/10/zero-downtime-deployment-when-using-alb-ingress-controller/deployment-workflow-alb-ingress-controller-4-side-note-of-deregister.png" alt="">
+      </div>
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/zero-downtime-deployment-when-using-alb-ingress-controller-on-amazon-eks-and-prevent-502-error/" rel="permalink">[AWS][EKS] Zero downtime deployment(RollingUpdate) when using AWS Load Balancer Controller on Amazon EKS
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  22 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">This article is describing the thing you need to aware when using ALB Ingress Controller (AWS Load Balancer Controller) to do deployment and prevent 502 erro...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+
+
+<div id="footer-subscribe-email-list">
+    <h3>Get the updates </h3>
+    <form action="https://docs.google.com/forms/d/e/1FAIpQLSfuofCYvu2cV614aDt6SO5ua_5trT0EC5yeSJObLY0KGjFtvQ/formResponse" method="POST">
+        <div style="display: flex;">
+            <!-- input name="entry.205499253" type="text" id="Name" class="form-control" placeholder="Name" -->
+            <input name="entry.1288273007" type="email" id="email" class="form-control" placeholder="Email" required="required" style="margin-top: 2px; margin-right: 5px; width: 50%;">
+            <input class="btn btn--primary" id="subscribe" type="submit" value="訂閱 (Sign Up)" style="width: 30%;">
+        </div>
+    </form>
+</div>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8GPCXJPGFZ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-8GPCXJPGFZ');
+</script>
+<!-- end custom footer snippets -->
+
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+          <li><a href="https://facebook.com/EasonTechTalk" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i> Facebook</a></li>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    <li><a href="/sitemap.xml"><i class="fas fa-fw fa-sitemap" aria-hidden="true"></i> SiteMap</a></li>
+    <li><a href="/tags"><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags</a></li>
+    <li><a href="https://toolbox.easoncao.com/"><i class="fas fa-fw fa-toolbox" aria-hidden="true"></i> ToolBox</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2023 Continuous Improvement. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+  <script>
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-80058083-2']);
+  
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "https://easoncao.com/a-story-about-my-project-using-bebop-drone-and-katarina/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/a-story-about-my-project-using-bebop-drone-and-katarina"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://lenlabs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,1561 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.19.3 by Michael Rose
+  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>[AWS][EKS] Zero downtime deployment(RollingUpdate) when using AWS Load Balancer Controller on Amazon EKS - Continuous Improvement</title>
+<meta name="description" content="This article is describing the thing you need to aware when using ALB Ingress Controller (AWS Load Balancer Controller) to do deployment and prevent 502 errors">
+
+
+  <meta name="author" content="Yang-Xin Cao (Eason Cao)">
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Continuous Improvement">
+<meta property="og:title" content="[AWS][EKS] Zero downtime deployment(RollingUpdate) when using AWS Load Balancer Controller on Amazon EKS">
+<meta property="og:url" content="https://easoncao.com/zero-downtime-deployment-when-using-alb-ingress-controller-on-amazon-eks-and-prevent-502-error/">
+
+
+  <meta property="og:description" content="This article is describing the thing you need to aware when using ALB Ingress Controller (AWS Load Balancer Controller) to do deployment and prevent 502 errors">
+
+
+
+  <meta property="og:image" content="https://easoncao.com/assets/images/posts/2020/10/zero-downtime-deployment-when-using-alb-ingress-controller/deployment-workflow-alb-ingress-controller-4-side-note-of-deregister.png">
+
+
+
+
+
+  <meta property="article:published_time" content="2022-06-01T00:00:00-05:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://easoncao.com/zero-downtime-deployment-when-using-alb-ingress-controller-on-amazon-eks-and-prevent-502-error/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Continuous Improvement",
+      "url": "https://easoncao.com/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Continuous Improvement Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- Google adsense -->
+<script data-ad-client="ca-pub-1852752964062281" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<link rel="shortcut icon" type="image/jpg" href="/assets/apple-touch-icon.png"/>
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+          <a class="site-logo" href="/"><img src="/assets/apple-touch-icon.png" alt=""></a>
+        
+        <a class="site-title" href="/">
+          Continuous Improvement
+          <span class="site-subtitle"></span>
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/posts/">所有文章 All Posts</a>
+            </li><li class="masthead__menu-item">
+              <a href="/courses/">學習資源 Learning</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">關於 About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="https://www.gravatar.com/avatar/0d33994eec9eddc67415e07a7fcafc9d?s=200" alt="Yang-Xin Cao (Eason Cao)" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Yang-Xin Cao (Eason Cao)</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>Engineer@Amazon <br />- <a href="https://www.awshof.com/allstarscertifiedlist.html">AWS All-5 certified</a> / ECS &amp; EKS SME / Marathon Runner / PADI Open Water Diver</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Amazon / Dublin, Ireland</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:eason@easoncao.com" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+            <li><a href="https://linkedin.com/in/easoncao" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-id-badge" aria-hidden="true"></i><span class="label">LinkedIn</span></a></li>
+          
+        
+          
+        
+          
+            <li><a href="https://facebook.com/EasonTechTalk" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i><span class="label">Facebook</span></a></li>
+          
+        
+          
+            <li><a href="https://github.com/0xlen" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="[AWS][EKS] Zero downtime deployment(RollingUpdate) when using AWS Load Balancer Controller on Amazon EKS">
+    <meta itemprop="description" content="This article is describing the thing you need to aware when using ALB Ingress Controller (AWS Load Balancer Controller) to do deployment and prevent 502 errors.">
+    <meta itemprop="datePublished" content="2022-06-01T00:00:00-05:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">[AWS][EKS] Zero downtime deployment(RollingUpdate) when using AWS Load Balancer Controller on Amazon EKS
+</h1>
+          
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  21 minute read
+
+</p>
+          
+        </header>
+      
+
+      <!-- Google ads in article -->
+      <div>
+          <ins class="adsbygoogle"
+               style="display:block; text-align:center;"
+               data-ad-layout="in-article"
+               data-ad-format="fluid"
+               data-ad-client="ca-pub-1852752964062281"
+               data-ad-slot="8435469231"></ins>
+          <script>
+               (adsbygoogle = window.adsbygoogle || []).push({});
+          </script>
+      </div>
+      <hr>
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right ">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-cog"></i> Table of Contents</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#whats-aws-load-balancer-controller-legacy-alb-ingress-controller">What’s AWS Load Balancer Controller (legacy ALB Ingress Controller)</a></li>
+  <li><a href="#how-to-deploy-kubernetes-with-aws-load-balancer-controller">How to deploy Kubernetes with AWS Load Balancer Controller?</a></li>
+  <li><a href="#so--whats-the-problem">So … what’s the problem?</a>
+    <ul>
+      <li><a href="#scenario-rolling-the-new-container-image-to-existing-container-application-with-potential-service-downtime">Scenario: Rolling the new container image to existing container application with potential service downtime</a></li>
+      <li><a href="#the-issue-and-the-workflow-of-the-aws-load-balancer-controller">The issue and the workflow of the AWS Load Balancer Controller</a></li>
+    </ul>
+  </li>
+  <li><a href="#how-to-resolve-the-issue-and-meet-zero-downtime">How to resolve the issue and meet zero-downtime?</a>
+    <ul>
+      <li><a href="#factor-1-pod-readiness-gates">Factor-1: Pod Readiness Gates</a>
+        <ul>
+          <li><a href="#alb-ingress-controller-1x-legacy">ALB Ingress Controller 1.x (Legacy)</a></li>
+          <li><a href="#aws-load-balancer-controller-after-v2x">AWS Load Balancer Controller (After v2.x)</a></li>
+        </ul>
+      </li>
+      <li><a href="#factor-2-graceful-shutdown-your-applications">Factor-2: Graceful shutdown your applications</a></li>
+      <li><a href="#an-example-to-achieve-zero-downtime-when-doing-rolling-update-after-applying-methods-above">An example to achieve zero downtime when doing rolling update after applying methods above</a></li>
+    </ul>
+  </li>
+  <li><a href="#conclusion">Conclusion</a>
+    <ul>
+      <li><a href="#references">References</a></li>
+    </ul>
+  </li>
+</ul>
+
+            </nav>
+          </aside>
+        
+        <p>This article is describing the thing you need to aware when using ALB Ingress Controller (AWS Load Balancer Controller) to do deployment and prevent 502 errors.</p>
+
+<figure class="">
+  <img src="/assets/images/posts/2020/10/zero-downtime-deployment-when-using-alb-ingress-controller/deployment-workflow-alb-ingress-controller-4-side-note-of-deregister.png" alt="Overview" />
+  
+    <figcaption>
+      Overview
+
+    </figcaption>
+  
+</figure>
+
+<h2 id="whats-aws-load-balancer-controller-legacy-alb-ingress-controller">What’s AWS Load Balancer Controller (legacy ALB Ingress Controller)</h2>
+
+<p>Kubernetes doesn’t involve the Application Load Balancer (ALB) deployment in the native implementation for using Kubernetes service object with <code class="language-plaintext highlighter-rouge">type=LoadBalancer</code>. Therefore, if you would like to expose your container service with Application Load Balancer (ALB) on EKS, it is recommended to integrate with AWS Load Balancer Controller (In the past, it was <strong>ALB Ingress Controller</strong> when it firstly initiated by <a href="https://aws.amazon.com/blogs/apn/coreos-and-ticketmaster-collaborate-to-bring-aws-application-load-balancer-support-to-kubernetes/">CoreOS and Ticketmaster</a>). This controller make it possible to manage have load balancers with Kubernetes deployment.</p>
+
+<p>Below is showing an overview diagram that describing the controller workflow:</p>
+
+<figure class="">
+  <img src="/assets/images/posts/2020/10/zero-downtime-deployment-when-using-alb-ingress-controller/controller-design.png" alt="How AWS Load Balancer Controller works" />
+  
+    <figcaption>
+      How AWS Load Balancer Controller works - <a href="https://kubernetes-sigs.github.io/aws-load-balancer-controller/guide/controller/how-it-works/">source</a>
+
+    </figcaption>
+  
+</figure>
+
+<ul>
+  <li>(1) The controller watches for ingress events from the API server.</li>
+  <li>(2) An ALB (ELBv2) is created in AWS for the new ingress resource. This ALB can be internet-facing or internal.</li>
+  <li>(3) Target Groups are created in AWS for each unique Kubernetes service described in the ingress resource.</li>
+  <li>(4) Listeners are created for every port detailed in your ingress resource annotations.</li>
+  <li>(5) Rules(ELB Listener Rules) are created for each path specified in your ingress resource. This ensures traffic to a specific path is routed to the correct Kubernetes Service.</li>
+</ul>
+
+<blockquote>
+  <p>Note: AWS ALB Ingress Controller is replaced, while rename it to be “AWS Load Balancer Controller” with several new features coming out. For more detail, please refer the <a href="https://github.com/kubernetes-sigs/aws-alb-ingress-controller">GitHub project - kubernetes-sigs/aws-alb-ingress-controller</a></p>
+</blockquote>
+
+<h2 id="how-to-deploy-kubernetes-with-aws-load-balancer-controller">How to deploy Kubernetes with AWS Load Balancer Controller?</h2>
+
+<p>Using Application Load Balancer as example, when running the controller, AWS Load Balancer Controller will be deployed as a Pod running on your worker node while continously monitor/watch your cluster state. Once there have any request for <code class="language-plaintext highlighter-rouge">Ingress</code>  object creation, AWS Load Balancer Controller will help you to manage and create Application Load Balancer resource. Here is a part of example for <code class="language-plaintext highlighter-rouge">v1.1.8</code> deployment manifest:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">apps/v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Deployment</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">labels</span><span class="pi">:</span>
+    <span class="na">app.kubernetes.io/name</span><span class="pi">:</span> <span class="s">alb-ingress-controller</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">alb-ingress-controller</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">kube-system</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">selector</span><span class="pi">:</span>
+    <span class="na">matchLabels</span><span class="pi">:</span>
+      <span class="na">app.kubernetes.io/name</span><span class="pi">:</span> <span class="s">alb-ingress-controller</span>
+  <span class="na">template</span><span class="pi">:</span>
+    <span class="na">metadata</span><span class="pi">:</span>
+      <span class="na">labels</span><span class="pi">:</span>
+        <span class="na">app.kubernetes.io/name</span><span class="pi">:</span> <span class="s">alb-ingress-controller</span>
+    <span class="na">spec</span><span class="pi">:</span>
+      <span class="na">containers</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">alb-ingress-controller</span>
+          <span class="na">args</span><span class="pi">:</span>
+            <span class="c1"># Setting the ingress-class flag below ensures that only ingress resources with the</span>
+            <span class="c1"># annotation kubernetes.io/ingress.class: "alb" are respected by the controller. You may</span>
+            <span class="c1"># choose any class you'd like for this controller to respect.</span>
+            <span class="pi">-</span> <span class="s">--ingress-class=alb</span>
+
+            <span class="c1"># REQUIRED</span>
+            <span class="c1"># Name of your cluster. Used when naming resources created</span>
+            <span class="c1"># by the ALB Ingress Controller, providing distinction between</span>
+            <span class="c1"># clusters.</span>
+            <span class="c1"># - --cluster-name=devCluster</span>
+
+            <span class="c1"># AWS VPC ID this ingress controller will use to create AWS resources.</span>
+            <span class="c1"># If unspecified, it will be discovered from ec2metadata.</span>
+            <span class="c1"># - --aws-vpc-id=vpc-xxxxxx</span>
+
+            <span class="c1"># AWS region this ingress controller will operate in.</span>
+            <span class="c1"># If unspecified, it will be discovered from ec2metadata.</span>
+            <span class="c1"># List of regions: http://docs.aws.amazon.com/general/latest/gr/rande.html#vpc_region</span>
+            <span class="c1"># - --aws-region=us-west-1</span>
+          <span class="err"> </span><span class="na">image</span><span class="pi">:</span> <span class="s">docker.io/amazon/aws-alb-ingress-controller:v1.1.8</span>
+      <span class="na">serviceAccountName</span><span class="pi">:</span> <span class="s">alb-ingress-controller</span>
+</code></pre></div></div>
+
+<p>The deployment basically will run a copy of ALB Ingress Controller (pod/alb-ingress-controller-xxxxxxxx-xxxxx) in <code class="language-plaintext highlighter-rouge">kube-system</code>:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NAMESPACE     NAME                                          READY   STATUS    RESTARTS   AGE
+kube-system   pod/alb-ingress-controller-5fd8d5d894-8kf7z   1/1     Running   0          28s
+
+NAMESPACE     NAME                                     READY   UP-TO-DATE   AVAILABLE   AGE
+kube-system   deployment.apps/alb-ingress-controller   1/1     1            1           3m48s
+</code></pre></div></div>
+
+<p>Since v2, the controller added lots of different custom resources and enhancements. But the core deployment still preserve many thing that mentioned in this post. Depending on your environment, the default and suggested installation steps may also involve the configuration of IRSA (IAM Role for Service Account) to grant permission for the AWS Load Balancer Controller Pods in order to operate AWS resources (e.g. ELB), so it is recommended to take a look official documentation to help you quickly understand how to install the controller:</p>
+
+<ul>
+  <li><a href="https://docs.aws.amazon.com/eks/latest/userguide/alb-ingress.html">AWS Load Balancer Controller on Amazon EKS</a></li>
+</ul>
+
+<p>In addition, the service can be deployed as <code class="language-plaintext highlighter-rouge">Ingress</code> Object. For example, if you tried to deploy the simple 2048 application:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>kubectl apply <span class="nt">-f</span> https://raw.githubusercontent.com/kubernetes-sigs/aws-alb-ingress-controller/v1.1.8/docs/examples/2048/2048-namespace.yaml
+<span class="nv">$ </span>kubectl apply <span class="nt">-f</span> https://raw.githubusercontent.com/kubernetes-sigs/aws-alb-ingress-controller/v1.1.8/docs/examples/2048/2048-deployment.yaml
+<span class="nv">$ </span>kubectl apply <span class="nt">-f</span> https://raw.githubusercontent.com/kubernetes-sigs/aws-alb-ingress-controller/v1.1.8/docs/examples/2048/2048-service.yaml
+<span class="nv">$ </span>kubectl apply <span class="nt">-f</span> https://raw.githubusercontent.com/kubernetes-sigs/aws-alb-ingress-controller/v1.1.8/docs/examples/2048/2048-ingress.yaml
+</code></pre></div></div>
+
+<p>The file <code class="language-plaintext highlighter-rouge">2048-ingress.yaml</code> is mentioning the <code class="language-plaintext highlighter-rouge">annotations</code>, <code class="language-plaintext highlighter-rouge">spec</code> in format that supported by ALB Ingress Controller can recognize (Before Kubernetes 1.18):</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">extensions/v1beta1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Ingress</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">2048-ingress"</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s2">"</span><span class="s">2048-game"</span>
+  <span class="na">annotations</span><span class="pi">:</span>
+    <span class="na">kubernetes.io/ingress.class</span><span class="pi">:</span> <span class="s">alb</span>
+    <span class="na">alb.ingress.kubernetes.io/scheme</span><span class="pi">:</span> <span class="s">internet-facing</span>
+  <span class="na">labels</span><span class="pi">:</span>
+    <span class="na">app</span><span class="pi">:</span> <span class="s">2048-ingress</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">rules</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">http</span><span class="pi">:</span>
+        <span class="na">paths</span><span class="pi">:</span>
+          <span class="pi">-</span> <span class="na">path</span><span class="pi">:</span> <span class="s">/*</span>
+            <span class="na">backend</span><span class="pi">:</span>
+              <span class="na">serviceName</span><span class="pi">:</span> <span class="s2">"</span><span class="s">service-2048"</span>
+              <span class="na">servicePort</span><span class="pi">:</span> <span class="m">80</span>
+</code></pre></div></div>
+
+<p>Before the IngressClass resource and ingressClassName field were added in Kubernetes 1.18, Ingress classes were specified with a <code class="language-plaintext highlighter-rouge">kubernetes.io/ingress.class</code> annotation on the Ingress. So right now, you should see the ingress specification will be defined as below if you are using controller version <code class="language-plaintext highlighter-rouge">v2.x</code>:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>kubectl apply <span class="nt">-f</span> https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.4.1/docs/examples/2048/2048_full.yaml
+</code></pre></div></div>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">networking.k8s.io/v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Ingress</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">game-2048</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">ingress-2048</span>
+  <span class="na">annotations</span><span class="pi">:</span>
+    <span class="na">alb.ingress.kubernetes.io/scheme</span><span class="pi">:</span> <span class="s">internet-facing</span>
+    <span class="na">alb.ingress.kubernetes.io/target-type</span><span class="pi">:</span> <span class="s">ip</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">ingressClassName</span><span class="pi">:</span> <span class="s">alb</span>
+  <span class="na">rules</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">http</span><span class="pi">:</span>
+        <span class="na">paths</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">path</span><span class="pi">:</span> <span class="s">/</span>
+          <span class="na">pathType</span><span class="pi">:</span> <span class="s">Prefix</span>
+          <span class="na">backend</span><span class="pi">:</span>
+            <span class="na">service</span><span class="pi">:</span>
+              <span class="na">name</span><span class="pi">:</span> <span class="s">service-2048</span>
+              <span class="na">port</span><span class="pi">:</span>
+                <span class="na">number</span><span class="pi">:</span> <span class="m">80</span>
+</code></pre></div></div>
+
+<p>The ingress object will construct ELB Listeners according rules and forward the connection to the corresponding backend(<code class="language-plaintext highlighter-rouge">serviceName</code>), which match the group of service <code class="language-plaintext highlighter-rouge">service-2048</code>, any traffic match the rule <code class="language-plaintext highlighter-rouge">/*</code> will be routed to the group of selected Pods. In this case, Pods are exposed on the worker node based on <code class="language-plaintext highlighter-rouge">type=NodePort</code>:</p>
+
+<p>Here is the definition of this Kubernetes service:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Service</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">service-2048"</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s2">"</span><span class="s">2048-game"</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">ports</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">port</span><span class="pi">:</span> <span class="m">80</span>
+      <span class="na">targetPort</span><span class="pi">:</span> <span class="m">80</span>
+      <span class="na">protocol</span><span class="pi">:</span> <span class="s">TCP</span>
+  <span class="na">type</span><span class="pi">:</span> <span class="s">NodePort</span>
+  <span class="na">selector</span><span class="pi">:</span>
+    <span class="na">app</span><span class="pi">:</span> <span class="s2">"</span><span class="s">2048"</span>
+</code></pre></div></div>
+
+<h2 id="so--whats-the-problem">So … what’s the problem?</h2>
+
+<p><strong>Zero downtime deployment</strong> is always a big challenge for DevOps/Operation team when running any kind of business. When you try to apply the controller as a solution to expose your service, it has a couple of things need to take care due to the behavior of Kubernetes, ALB and AWS Load Balancer Controller. To achieve zero downtime, you need to consider many perspectives, some new challenges will also popup when you would like to roll out the new deployment for your Pods with AWS Load Balancer Controller.</p>
+
+<p>Let’s use the 2048 game as example to describe the scenario when you are trying to roll out a new version of your container application. In my environment, I have:</p>
+
+<ul>
+  <li>A Kubernetes service <code class="language-plaintext highlighter-rouge">service/service-2048</code> using <code class="language-plaintext highlighter-rouge">NodePort</code> to expose the service</li>
+  <li>The deployment also have 5 copy of Pods for 2048 game, which is my backend application waiting for connections forwarding by Application Load Balancer (ALB)</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>NAMESPACE     NAME                                          READY   STATUS    RESTARTS   AGE
+2048-game     pod/2048-deployment-58fb66554b-2f748          1/1     Running   0          53s
+2048-game     pod/2048-deployment-58fb66554b-4hz5q          1/1     Running   0          53s
+2048-game     pod/2048-deployment-58fb66554b-jdfps          1/1     Running   0          53s
+2048-game     pod/2048-deployment-58fb66554b-rlpqm          1/1     Running   0          53s
+2048-game     pod/2048-deployment-58fb66554b-s492n          1/1     Running   0          53s
+
+NAMESPACE     NAME                   TYPE        CLUSTER-IP      EXTERNAL-IP   PORT<span class="o">(</span>S<span class="o">)</span>         AGE
+2048-game     service/service-2048   NodePort    10.100.53.119   &lt;none&gt;        80:30337/TCP    52s
+
+NAMESPACE     NAME                                     READY   UP-TO-DATE   AVAILABLE   AGE
+2048-game     deployment.apps/2048-deployment          5/5     5            5           53s
+</code></pre></div></div>
+
+<p>And for sure, once the controller correctly set up and provision the ELB resource, the full domain of ELB also will be recorded to the <code class="language-plaintext highlighter-rouge">Ingress</code> object:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ kubectl get ingress -n 2048-game
+NAME           HOSTS   ADDRESS                                                                      PORTS   AGE
+2048-ingress   *       xxxxxxxx-2048game-xxxxxxxx-xxxx-xxxxxxxxx.ap-northeast-1.elb.amazonaws.com   80      11m
+</code></pre></div></div>
+
+<p>I can use the DNS name as endpoint to visit my container service:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>curl <span class="nt">-s</span> xxxxxxxx-2048game-xxxxxxxx-xxxx-xxxxxxxxx.ap-northeast-1.elb.amazonaws.com | <span class="nb">head</span>
+&lt;<span class="o">!</span>DOCTYPE html&gt;
+&lt;html&gt;
+&lt;<span class="nb">head</span><span class="o">&gt;</span>
+  &lt;meta <span class="nv">charset</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="o">&gt;</span>
+  &lt;title&gt;2048&lt;/title&gt;
+
+  &lt;<span class="nb">link </span><span class="nv">href</span><span class="o">=</span><span class="s2">"style/main.css"</span> <span class="nv">rel</span><span class="o">=</span><span class="s2">"stylesheet"</span> <span class="nb">type</span><span class="o">=</span><span class="s2">"text/css"</span><span class="o">&gt;</span>
+  &lt;<span class="nb">link </span><span class="nv">rel</span><span class="o">=</span><span class="s2">"shortcut icon"</span> <span class="nv">href</span><span class="o">=</span><span class="s2">"favicon.ico"</span><span class="o">&gt;</span>
+  ...
+</code></pre></div></div>
+
+<figure class="">
+  <img src="/assets/images/posts/2020/10/zero-downtime-deployment-when-using-alb-ingress-controller/alb-ingress-controller-with-2048-game-screenshot.png" alt="2048 Game deployed with controller" />
+  
+    <figcaption>
+      2048 Game deployed with controller
+
+    </figcaption>
+  
+</figure>
+
+<p>This application can be any kind of critical service you are running. As a administrator, SRE (Site Reliability Engineer), member of operation team or a DevOps engineer, the goal and your duty is: <strong>we always try to ensure the service can run properly without any issue and no interruption</strong> (Sometimes it means good sleep). That’s why people really gets hand dirty and maintain the regular operation usually don’t like to adopt service change, because it generally means <strong>unstable</strong>.</p>
+
+<p>No matter you don’t want to change, with any new business requests, you still can face the challenges like: your developers are saying that <strong>“Oh! we need to upgrade the application”</strong>, <strong>“we are going to roll out a bug fix”</strong>, <strong>“the new feature is going to be online”</strong>, no one can one hundred percent guarantees the service can run properly if any changes applied, because system usually has its limitation and trade-off. Any service downtime can lead anyone of stakeholders(users, operation team or leadership) unhappy.</p>
+
+<p>However, <strong>the question is that can we better to address these problem once we know the limitation and its behavior?</strong> Some people in Taiwan will also consider to put <a href="https://en.wikipedia.org/wiki/Kuai_Kuai_culture">Kuai Kuai</a> on the workstation because they believe it can make service happy, but I am not very obsessed with this method, so in the following section I will try to walk through more realistic logic and phenomena by using the 2048 game as my sample service.</p>
+
+<p>I am going to use a simple loop trick to continously access my service via the endpoint <code class="language-plaintext highlighter-rouge">xxxxxxxx-2048game-xxxxxxxx-xxxx-xxxxxxxxx.ap-northeast-1.elb.amazonaws.com</code> to demonstrate a scenario: This is a popular web service and we always have customer need to access it. (e.g. social media platform, bitcoin trading platform or any else, we basically have zero tolerance for any service downtime as it can impact our revenue.), as below:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="k">while </span><span class="nb">true</span><span class="p">;</span><span class="k">do</span> ./request-my-service.sh<span class="p">;</span> <span class="nb">sleep </span>0.1<span class="p">;</span> <span class="k">done
+</span><span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">200_TotalTime</span><span class="o">=</span>0.010038
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">200_TotalTime</span><span class="o">=</span>0.012131
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">200_TotalTime</span><span class="o">=</span>0.005366
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">200_TotalTime</span><span class="o">=</span>0.010119
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">200_TotalTime</span><span class="o">=</span>0.012066
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">200_TotalTime</span><span class="o">=</span>0.005451
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">200_TotalTime</span><span class="o">=</span>0.010006
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">200_TotalTime</span><span class="o">=</span>0.012084
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">200_TotalTime</span><span class="o">=</span>0.005598
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">200_TotalTime</span><span class="o">=</span>0.010086
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">200_TotalTime</span><span class="o">=</span>0.012162
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">200_TotalTime</span><span class="o">=</span>0.005278
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">200_TotalTime</span><span class="o">=</span>0.010326
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">200_TotalTime</span><span class="o">=</span>0.012193
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">200_TotalTime</span><span class="o">=</span>0.005347
+...
+</code></pre></div></div>
+
+<p>Meanwhile, I am using <code class="language-plaintext highlighter-rouge">RollingUpdate</code> strategy in my Kubernetes deployment strategy with <code class="language-plaintext highlighter-rouge">maxUnavailable=25%</code>, which means, when Kubernetes need to update or patch(Like update the image or environment variables), the maximum number of unavailable Pods cannot exceed over <code class="language-plaintext highlighter-rouge">25%</code> as well as it ensures that at least 75% of the desired number of Pods are up (only replace 1-2 Pods if I have 5 copies at the same time):</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">apps/v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Deployment</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">2048-deployment</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">2048-game</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="s">...</span>
+  <span class="s">selector</span><span class="err">:</span>
+    <span class="na">matchLabels</span><span class="pi">:</span>
+      <span class="na">app</span><span class="pi">:</span> <span class="s2">"</span><span class="s">2048"</span>
+<span class="err">  </span><span class="s">...</span>
+  <span class="s">strategy</span><span class="err">:</span>
+    <span class="na">rollingUpdate</span><span class="pi">:</span>
+      <span class="na">maxSurge</span><span class="pi">:</span> <span class="s">25%</span>
+      <span class="na">maxUnavailable</span><span class="pi">:</span> <span class="s">25%</span>
+    <span class="na">type</span><span class="pi">:</span> <span class="s">RollingUpdate</span>
+</code></pre></div></div>
+
+<h3 id="scenario-rolling-the-new-container-image-to-existing-container-application-with-potential-service-downtime">Scenario: Rolling the new container image to existing container application with potential service downtime</h3>
+
+<p>When rolling the new version of my container application (for example, I update my deployment by replacing the container image with the new image <code class="language-plaintext highlighter-rouge">nginx</code>), it potentially can have a period of time that can return <code class="language-plaintext highlighter-rouge">HTTP Status Code 502</code> error in my few hits:</p>
+
+<figure class="">
+  <img src="/assets/images/posts/2020/10/zero-downtime-deployment-when-using-alb-ingress-controller/http-502-error-during-deployment-using-instance-mode.png" alt="The HTTP 502 Error response from ELB (instance mode)" />
+  
+    <figcaption>
+      The HTTP 502 Error response from ELB during the rolling update deployment (instance mode)
+
+    </figcaption>
+  
+</figure>
+
+<p>If you are specifying the controller to use <code class="language-plaintext highlighter-rouge">instance</code> mode to register targets(Pods) to your ELB Target Group, it will use worker nodes’ instance ID and expose your service in that ELB target group with Kubernetes <code class="language-plaintext highlighter-rouge">NodePort</code>. In this case, the traffic will follow the Kubernetes networking design to do second tier of transmission according to <code class="language-plaintext highlighter-rouge">externalTrafficPolicy</code> defined in the Kubernetes <code class="language-plaintext highlighter-rouge">Service</code> object (No matter using <code class="language-plaintext highlighter-rouge">externalTrafficPolicy=Cluster</code> or <code class="language-plaintext highlighter-rouge">externalTrafficPolicy=Local</code>).</p>
+
+<p>Due to the controller only care about to register Worker Node to the ELB target group, so if the scenario doesn’t involve the worker node replacement, the case basically have miniumun even no downtime(expect that it is rare to have downtime if the Kubernetes can perfectly handle the traffic forwarding); however, this is not how real world operate, few seconds downtime still can happen potentially due to the workflow below:</p>
+
+<p><strong>This is the general workflow when the client reach out to the service endpoint (ELB) and how was traffic goes</strong></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Client ----&gt; ELB ----&gt; Worker Node (iptables) / In this step it might be forwarded to other Worker Node ----&gt; Pod
+</code></pre></div></div>
+
+<p>So, in these cases, you can see the downtime:</p>
+
+<ul>
+  <li>(1) The client established the connection with ELB, ELB is trying to forward the request to the backend (the Worker Node), but the Worker Node is not ready to serve the Pod.</li>
+  <li>(2) Follow the iptables rules, the traffic be forwarded to the Pod just terminated due to RollingUpdate (Or the Pod just got the in-flight reqeust but immediately need to be terminated, the Pod flip to <code class="language-plaintext highlighter-rouge">Terminating</code> state. It haven’t response back yet, caused the ELB doesn’t get the response from Pod.)</li>
+  <li>(3) ELB established connection with the Worker Node-1, once the packet enter into the Worker Node-1, it follows the iptables then forward it to the Pod running on Worker Node-2 (jump out the current worker node), however, the Worker Node-2 just got terminated due to auto scaling strategy or any replacement due to upgrade, caused the connection lost.</li>
+</ul>
+
+<p>Let’s say if you try to remove the encapsulation layer of the Kubernetes networking design and make thing more easier based on the AWS supported CNI Plugin (Only rely on the ELB to forward the traffic to the Pod directly by using <code class="language-plaintext highlighter-rouge">IP mode</code> with annotation setting <code class="language-plaintext highlighter-rouge">alb.ingress.kubernetes.io/target-type: ip</code> in my Ingress object), you can see the downtime more obvious when Pod doing RollingUpdate. That’s because not only the problem we mentioned the issues in case (1)/(2)/(3), but also there has different topic on the behavior of the controller need to be covered if the question comes to <strong>zero downtime deployment</strong>:</p>
+
+<p>Here is an example by using IP mode (<code class="language-plaintext highlighter-rouge">alb.ingress.kubernetes.io/target-type: ip</code>) as <a href="https://kubernetes-sigs.github.io/aws-load-balancer-controller/guide/ingress/annotations/#target-type">resgistration type</a> to route traffic directly to the Pod IP</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">networking.k8s.io/v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Ingress</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s">game-2048</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">ingress-2048</span>
+  <span class="na">annotations</span><span class="pi">:</span>
+    <span class="na">alb.ingress.kubernetes.io/scheme</span><span class="pi">:</span> <span class="s">internet-facing</span>
+    <span class="na">alb.ingress.kubernetes.io/target-type</span><span class="pi">:</span> <span class="s">ip</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">ingressClassName</span><span class="pi">:</span> <span class="s">alb</span>
+  <span class="na">rules</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">http</span><span class="pi">:</span>
+        <span class="na">paths</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">path</span><span class="pi">:</span> <span class="s">/</span>
+          <span class="na">pathType</span><span class="pi">:</span> <span class="s">Prefix</span>
+          <span class="na">backend</span><span class="pi">:</span>
+            <span class="na">service</span><span class="pi">:</span>
+              <span class="na">name</span><span class="pi">:</span> <span class="s">service-2048</span>
+              <span class="na">port</span><span class="pi">:</span>
+                <span class="na">number</span><span class="pi">:</span> <span class="m">80</span>
+</code></pre></div></div>
+
+<figure class="">
+  <img src="/assets/images/posts/2020/10/zero-downtime-deployment-when-using-alb-ingress-controller/alb-target-group-with-pod-in-ip-mode.png" alt="An example when using IP mode in AWS Load BalancerController" />
+  
+    <figcaption>
+      An example when using IP mode in AWS Load Balancer Controller - Can see my Pods all are registering with Pod owns IP address
+
+    </figcaption>
+  
+</figure>
+
+<p>Again follow the issue we mentioned (1) (2) (3), when doing the rolling update (I was replacing the image again in <code class="language-plaintext highlighter-rouge">IP mode</code>), similar problem can be observed. Potentially, you can have 10-15 seconds even longer downtime can be noticed if you are doing the same lab:</p>
+
+<figure class="">
+  <img src="/assets/images/posts/2020/10/zero-downtime-deployment-when-using-alb-ingress-controller/http-502-error-during-deployment-using-ip-mode.png" alt="The HTTP 502 Error response from ELB (IP mode)" />
+  
+    <figcaption>
+      The HTTP 502 Error response from ELB during the rolling update deployment (IP mode)
+
+    </figcaption>
+  
+</figure>
+
+<p>When Kubernetes is rolling the deployment, in the target group, you will see AWS Load Balancer Controller was issuing old targets draining process(Old Pods) in the meantime</p>
+
+<figure class="">
+  <img src="/assets/images/posts/2020/10/zero-downtime-deployment-when-using-alb-ingress-controller/old-target-doing-draining-in-target-group-with-ip-mode.png" alt="Old targets were going to be draining state in target group" />
+  
+    <figcaption>
+      Old targets were going to be draining state in target group
+
+    </figcaption>
+  
+</figure>
+
+<p>However, you still can see HTTP 502/504 errors exceed 3-10 seconds for a single requset</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">200_TotalTime</span><span class="o">=</span>0.005413
+2048
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">200_TotalTime</span><span class="o">=</span>0.009980
+502 Bad Gateway
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">502_TotalTime</span><span class="o">=</span>3.076954
+2048
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">200_TotalTime</span><span class="o">=</span>0.005700
+2048
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">200_TotalTime</span><span class="o">=</span>0.010019
+502 Bad Gateway
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">502_TotalTime</span><span class="o">=</span>3.081601
+2048
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">200_TotalTime</span><span class="o">=</span>0.005527
+502 Bad Gateway
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">502_TotalTime</span><span class="o">=</span>3.070947
+502 Bad Gateway
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">502_TotalTime</span><span class="o">=</span>3.187812
+504 Gateway Time-out
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">504_TotalTime</span><span class="o">=</span>10.006324
+Welcome to nginx!
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">200_TotalTime</span><span class="o">=</span>0.011838
+Welcome to nginx!
+</code></pre></div></div>
+
+<h3 id="the-issue-and-the-workflow-of-the-aws-load-balancer-controller">The issue and the workflow of the AWS Load Balancer Controller</h3>
+
+<p>Let’s use this scenario as it is a edge problem we need to consider for most use case. The issue generally is bringing out the core topic we want to address and giving a good entry point to dive deep into the workflow between the Kubernetes, AWS Load Balancer Controller and the ELB, which can lead HTTP status code 502/503(5xx) erros during deployment when having Pod termination.</p>
+
+<p>Before diving into it, we need to know <strong>when a pod is being replaced, AWS Load Balancer Controller will register the new pod in the target group and removes the old Pods.</strong> However, at the same time:</p>
+
+<ul>
+  <li>For the the new Pods, the target is in <code class="language-plaintext highlighter-rouge">initial</code> state, until it pass the defined health check threshold (ALB health check)</li>
+  <li>For the old Pods is remaining as <code class="language-plaintext highlighter-rouge">draining</code> state, until it completes draining action for the in-flight connection, or reaching out the <code class="language-plaintext highlighter-rouge">Deregistration delay</code> defined in the target group.</li>
+</ul>
+
+<p>Which result in the service to be unavailable and return HTTP 502.</p>
+
+<p>To better understand that, I made the following diagrams. It might be helpful to you understanding the workflow:</p>
+
+<p>1) In the diagram, I used the following IP addresses to remark and help you recognize new/old Pods. Here is the initial deployment.</p>
+
+<ul>
+  <li>Old Pods: Target-1(Private IP: 10.1.1.1), Target-2(Private IP: 10.2.2.2)</li>
+  <li>New Pods: Target-3(Private IP: 10.3.3.3), Target-4(Private IP: 10.4.4.4)</li>
+</ul>
+
+<figure class="">
+  <img src="/assets/images/posts/2020/10/zero-downtime-deployment-when-using-alb-ingress-controller/deployment-workflow-alb-ingress-controller-1-initial.png" alt="Deployment workflow of AWS Load Balancer Controller - 1. the initial deployment" />
+  
+    <figcaption>
+      Deployment workflow of AWS Load Balancer Controller - 1. the initial deployment
+
+    </figcaption>
+  
+</figure>
+
+<p>2) At this stage, I was doing container image update and start rolling out the new copies of Pods. In the meantime, the controller will make <code class="language-plaintext highlighter-rouge">RegisterTarget</code> API call to ELB on behalf of the Kubernetes.</p>
+
+<figure class="">
+  <img src="/assets/images/posts/2020/10/zero-downtime-deployment-when-using-alb-ingress-controller/deployment-workflow-alb-ingress-controller-2-register-target.png" alt="Deployment workflow of AWS Load Balancer Controller - 2. start rolling out the new copies of Pods and AWS Load Balancer Controller is going to issue RegisterTarget API call" />
+  
+    <figcaption>
+      Deployment workflow of AWS Load Balancer Controller - 2. start rolling out the new copies of Pods and AWS Load Balancer Controller is going to issue RegisterTarget API call
+
+    </figcaption>
+  
+</figure>
+
+<p>3) Meanwhile, the <code class="language-plaintext highlighter-rouge">DeregisterTarget</code> API will be called by AWS Load Balancer Controller and new targets are in <code class="language-plaintext highlighter-rouge">initial</code> state.</p>
+
+<figure class="">
+  <img src="/assets/images/posts/2020/10/zero-downtime-deployment-when-using-alb-ingress-controller/deployment-workflow-alb-ingress-controller-3-start-dereigster-old-target.png" alt="Deployment workflow of AWS Load Balancer Controller - 3. AWS Load Balancer Controller start to dereigster old targets on ELB Target Group" />
+  
+    <figcaption>
+      Deployment workflow of AWS Load Balancer Controller - 3. AWS Load Balancer Controller start to dereigster old targets on ELB Target Group
+
+    </figcaption>
+  
+</figure>
+
+<p>4) At this stage, anything could happen to cause service outage. Because the <code class="language-plaintext highlighter-rouge">DeregisterTarget</code> API call might take some time to process, but, Kubernetes doesn’t have any design to monitor the current state of the ELB Target Group, it only care about rolling the new version of Pods and terminate old one.</p>
+
+<p>In this case, if the Pod got terminated by Kubernetes but <code class="language-plaintext highlighter-rouge">Target-1</code> or <code class="language-plaintext highlighter-rouge">Target-2</code> are still leaving in the ELB Target Group as <code class="language-plaintext highlighter-rouge">Active</code>/<code class="language-plaintext highlighter-rouge">Healthy</code> state (It need to wait few seconds to be <code class="language-plaintext highlighter-rouge">Unhealthy</code> once it reach out to the threshold of ELB HTTP health check), result in the ELB cannot forward the front-end request to the backend correctly.</p>
+
+<figure class="">
+  <img src="/assets/images/posts/2020/10/zero-downtime-deployment-when-using-alb-ingress-controller/deployment-workflow-alb-ingress-controller-4-side-note-of-deregister.png" alt="Deployment workflow of AWS Load Balancer Controller - 4. Note: issue cause by inconsistent state between Kubernetes and ELB" />
+  
+    <figcaption>
+      Deployment workflow of AWS Load Balancer Controller - 4. Note: issue cause by inconsistent state between Kubernetes and ELB
+
+    </figcaption>
+  
+</figure>
+
+<p>5) ELB received the <code class="language-plaintext highlighter-rouge">DeregisterTarget</code> request. So the ELB Target Group will start to perform connection draining(set old targets as <code class="language-plaintext highlighter-rouge">draining</code>), and mark the <code class="language-plaintext highlighter-rouge">Target-1</code>/<code class="language-plaintext highlighter-rouge">Target-2</code> as <code class="language-plaintext highlighter-rouge">draining</code> state, any new connection won’t be routed to these old targets.</p>
+
+<figure class="">
+  <img src="/assets/images/posts/2020/10/zero-downtime-deployment-when-using-alb-ingress-controller/deployment-workflow-alb-ingress-controller-5-elb-doing-draining.png" alt="Deployment workflow of AWS Load Balancer Controller - 5. ELB start to perform connection draining for old targets" />
+  
+    <figcaption>
+      Deployment workflow of AWS Load Balancer Controller - 5. ELB start to perform connection draining for old targets
+
+    </figcaption>
+  
+</figure>
+
+<p>6) However, here brings another issue: if the new targets (<code class="language-plaintext highlighter-rouge">Target-3</code> and <code class="language-plaintext highlighter-rouge">Target-4</code>) are still working on passing the health check of ELB(Currently those are in <code class="language-plaintext highlighter-rouge">Initial</code> state), there has no backend can provide service at this moment, which can cause the ELB only can return HTTTP 5XX status code</p>
+
+<figure class="">
+  <img src="/assets/images/posts/2020/10/zero-downtime-deployment-when-using-alb-ingress-controller/deployment-workflow-alb-ingress-controller-6-response-5XX-error.png" alt="Deployment workflow - 6. ELB response HTTP 5XX error due to no healthy targets in can provide service" />
+  
+    <figcaption>
+      Deployment workflow - 6. ELB response HTTP 5XX error due to no healthy targets in can provide service
+
+    </figcaption>
+  
+</figure>
+
+<p>7) Until the new Pods is in <code class="language-plaintext highlighter-rouge">Running</code> state as well as can react the health check reqeust from ELB through HTTP/HTTPS protocol, the ELB end up mark the targets as <code class="language-plaintext highlighter-rouge">Active/Healthy</code> and the service become available</p>
+
+<figure class="">
+  <img src="/assets/images/posts/2020/10/zero-downtime-deployment-when-using-alb-ingress-controller/deployment-workflow-alb-ingress-controller-7-new-pod-in-active.png" alt="Deployment workflow - 7. The service need to wait a period to recover until new targets passed the ELB health check" />
+  
+    <figcaption>
+      Deployment workflow - 7. The service need to wait a period to recover until new targets passed the ELB health check
+
+    </figcaption>
+  
+</figure>
+
+<h2 id="how-to-resolve-the-issue-and-meet-zero-downtime">How to resolve the issue and meet zero-downtime?</h2>
+
+<h3 id="factor-1-pod-readiness-gates">Factor-1: Pod Readiness Gates</h3>
+
+<p>Since version <a href="https://github.com/kubernetes-sigs/aws-alb-ingress-controller/releases/tag/v1.1.6">v1.1.6</a>, AWS Load Balancer Controller (ALB Ingress Controller) introduced <a href="https://github.com/kubernetes-sigs/aws-alb-ingress-controller/blob/master/docs/guide/ingress/pod-conditions.md">Pod readiness gates</a>. This feature can monitor the rolling deployment state and trigger the deployment pause due to any unexpected issue(such as: getting timeout error for AWS APIs), which guarantees you always have Pods in the Target Group even having issue on calling ELB APIs when doing rolling update.</p>
+
+<h4 id="alb-ingress-controller-1x-legacy">ALB Ingress Controller 1.x (Legacy)</h4>
+
+<p>As mentioned in the previous workflow, obviously, if you would like to prevent the downtime, it is required to use several workarounds to ensure the Pod state consistency between ALB, ALB Ingress Controller and Kubernetes.</p>
+
+<p>In the past, the readiness gate can be configured with legacy (version 1) by using the following pod spec. Here is an example to add a readiness gate with <code class="language-plaintext highlighter-rouge">conditionType: target-health.alb.ingress.k8s.aws/&lt;ingress name&gt;_&lt;service name&gt;_&lt;service port&gt;</code></p>
+
+<p>(As it might be changed afterward, for more detail, please refer to the documentation as mentioned in the AWS Load Balancer Controller project on GitHub):</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Service</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">nginx-service</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">clusterIP</span><span class="pi">:</span> <span class="s">None</span>
+  <span class="na">ports</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">port</span><span class="pi">:</span> <span class="m">80</span>
+    <span class="na">protocol</span><span class="pi">:</span> <span class="s">TCP</span>
+    <span class="na">targetPort</span><span class="pi">:</span> <span class="m">80</span>
+  <span class="na">selector</span><span class="pi">:</span>
+    <span class="na">app</span><span class="pi">:</span> <span class="s">nginx</span>
+<span class="nn">---</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">extensions/v1beta1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Ingress</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">nginx-ingress</span>
+  <span class="na">annotations</span><span class="pi">:</span>
+    <span class="na">kubernetes.io/ingress.class</span><span class="pi">:</span> <span class="s">alb</span>
+    <span class="na">alb.ingress.kubernetes.io/target-type</span><span class="pi">:</span> <span class="s">ip</span>
+    <span class="na">alb.ingress.kubernetes.io/scheme</span><span class="pi">:</span> <span class="s">internal</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">rules</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">http</span><span class="pi">:</span>
+        <span class="na">paths</span><span class="pi">:</span>
+          <span class="pi">-</span> <span class="na">backend</span><span class="pi">:</span>
+              <span class="na">serviceName</span><span class="pi">:</span> <span class="s">nginx-service</span>
+              <span class="na">servicePort</span><span class="pi">:</span> <span class="m">80</span>
+            <span class="na">path</span><span class="pi">:</span> <span class="s">/*</span>
+<span class="nn">---</span>
+<span class="na">apiVersion</span><span class="pi">:</span> <span class="s">apps/v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Deployment</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">nginx-deployment</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">selector</span><span class="pi">:</span>
+    <span class="na">matchLabels</span><span class="pi">:</span>
+      <span class="na">app</span><span class="pi">:</span> <span class="s">nginx</span>
+  <span class="na">replicas</span><span class="pi">:</span> <span class="m">2</span>
+  <span class="na">template</span><span class="pi">:</span>
+    <span class="na">metadata</span><span class="pi">:</span>
+      <span class="na">labels</span><span class="pi">:</span>
+        <span class="na">app</span><span class="pi">:</span> <span class="s">nginx</span>
+    <span class="na">spec</span><span class="pi">:</span>
+      <span class="na">readinessGates</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">conditionType</span><span class="pi">:</span> <span class="s">target-health.alb.ingress.k8s.aws/nginx-ingress_nginx-service_80</span>
+      <span class="na">containers</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">nginx</span>
+        <span class="na">image</span><span class="pi">:</span> <span class="s">nginx</span>
+        <span class="na">ports</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">containerPort</span><span class="pi">:</span> <span class="m">80</span>
+</code></pre></div></div>
+
+<h4 id="aws-load-balancer-controller-after-v2x">AWS Load Balancer Controller (After v2.x)</h4>
+
+<p><strong>For now, if you are using controller later than v2, the readiness gate configuration can be automatically injected to the pod spec</strong> by defining the label <code class="language-plaintext highlighter-rouge">elbv2.k8s.aws/pod-readiness-gate-inject: enabled</code> to your Kubernetes namespace.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>kubectl create namespace readiness
+namespace/readiness created
+
+<span class="nv">$ </span>kubectl label namespace readiness elbv2.k8s.aws/pod-readiness-gate-inject<span class="o">=</span>enabled
+namespace/readiness labeled
+
+<span class="nv">$ </span>kubectl describe namespace readiness
+Name:         readiness
+Labels:       elbv2.k8s.aws/pod-readiness-gate-inject<span class="o">=</span>enabled
+Annotations:  &lt;none&gt;
+Status:       Active
+</code></pre></div></div>
+
+<p>So defining legacy fields <code class="language-plaintext highlighter-rouge">readinessGates</code> and <code class="language-plaintext highlighter-rouge">conditionType</code> are not required if you are using controller later than <code class="language-plaintext highlighter-rouge">v2.0</code>. <strong>If you have a pod spec with legacy readiness gate configuration, ensure you label the namespace and create the Service/Ingress objects before applying the pod/deployment manifest. The controller will remove all legacy readiness-gate configuration and add new ones during pod creation.</strong></p>
+
+<h3 id="factor-2-graceful-shutdown-your-applications">Factor-2: Graceful shutdown your applications</h3>
+
+<p>For existing connections(As mentioned in the workflow-4), the case is involving the gracefully shutdown/termination handling in Kubernetes. Therefore, it is requires to use the method provided by Kubernetes.</p>
+
+<p>You can use <a href="https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-termination">Pod Lifecycle</a> with <code class="language-plaintext highlighter-rouge">preStop</code> hook and make some pause(like using <code class="language-plaintext highlighter-rouge">sleep</code> command) for Pod termination. This trick ensures ALB can have some time to completely remove old targets on Target Group (It is recommended to adjust longer based on your <code class="language-plaintext highlighter-rouge">Deregistration delay</code>):</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="na">lifecycle</span><span class="pi">:</span>
+      <span class="na">preStop</span><span class="pi">:</span>
+        <span class="na">exec</span><span class="pi">:</span>
+          <span class="na">command</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">/bin/sh"</span><span class="pi">,</span> <span class="s2">"</span><span class="s">-c"</span><span class="pi">,</span> <span class="s2">"</span><span class="s">sleep</span><span class="nv"> </span><span class="s">40"</span><span class="pi">]</span>
+<span class="err">  </span><span class="na">terminationGracePeriodSeconds</span><span class="pi">:</span> <span class="m">70</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>Note: If a container has a preStop hook configured, that runs before the container enters the Terminated state. Also, if the preStop hook needs longer to complete than the default grace period allows, you must modify <code class="language-plaintext highlighter-rouge">terminationGracePeriodSeconds</code> to suit this.</p>
+</blockquote>
+
+<h3 id="an-example-to-achieve-zero-downtime-when-doing-rolling-update-after-applying-methods-above">An example to achieve zero downtime when doing rolling update after applying methods above</h3>
+
+<p>First apply the label to the namespace so the controller can automatically inject the readiness gate:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Namespace</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">2048-game</span>
+  <span class="na">labels</span><span class="pi">:</span>
+    <span class="na">elbv2.k8s.aws/pod-readiness-gate-inject</span><span class="pi">:</span> <span class="s">enabled</span>
+</code></pre></div></div>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">apiVersion</span><span class="pi">:</span> <span class="s">apps/v1</span>
+<span class="na">kind</span><span class="pi">:</span> <span class="s">Deployment</span>
+<span class="na">metadata</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">2048-deployment"</span>
+  <span class="na">namespace</span><span class="pi">:</span> <span class="s2">"</span><span class="s">2048-game"</span>
+<span class="na">spec</span><span class="pi">:</span>
+  <span class="na">selector</span><span class="pi">:</span>
+    <span class="na">matchLabels</span><span class="pi">:</span>
+      <span class="na">app</span><span class="pi">:</span> <span class="s2">"</span><span class="s">2048"</span>
+  <span class="na">replicas</span><span class="pi">:</span> <span class="m">5</span>
+  <span class="na">template</span><span class="pi">:</span>
+    <span class="na">metadata</span><span class="pi">:</span>
+      <span class="na">labels</span><span class="pi">:</span>
+        <span class="na">app</span><span class="pi">:</span> <span class="s2">"</span><span class="s">2048"</span>
+    <span class="na">spec</span><span class="pi">:</span>
+
+      <span class="c1"># This would be optional if you are using controller after v2.x</span>
+      <span class="na">readinessGates</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">conditionType</span><span class="pi">:</span> <span class="s">target-health.alb.ingress.k8s.aws/2048-ingress_service-2048_80</span>
+
+      <span class="na">terminationGracePeriodSeconds</span><span class="pi">:</span> <span class="m">70</span>
+      <span class="na">containers</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">image</span><span class="pi">:</span> <span class="s">alexwhen/docker-2048</span>
+        <span class="na">imagePullPolicy</span><span class="pi">:</span> <span class="s">Always</span>
+        <span class="na">name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">2048"</span>
+        <span class="na">ports</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="na">containerPort</span><span class="pi">:</span> <span class="m">80</span>
+        <span class="na">lifecycle</span><span class="pi">:</span>
+          <span class="na">preStop</span><span class="pi">:</span>
+            <span class="na">exec</span><span class="pi">:</span>
+              <span class="na">command</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">/bin/sh"</span><span class="pi">,</span> <span class="s2">"</span><span class="s">-c"</span><span class="pi">,</span> <span class="s2">"</span><span class="s">sleep</span><span class="nv"> </span><span class="s">40"</span><span class="pi">]</span>
+</code></pre></div></div>
+
+<p>Here is an example after following the practice I was getting a try. The deployment will apply the feature and can see the status of the readiness gates:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>kubectl get pods <span class="nt">-n</span> 2048-game <span class="nt">-o</span> wide
+NAME                              READY   STATUS    RESTARTS   AGE   IP               NODE                                              NOMINATED NODE   READINESS GATES
+2048-deployment-99b6fb474-c97ht   1/1     Running   0          78s   192.168.14.209   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.compute.internal   &lt;none&gt;           1/1
+2048-deployment-99b6fb474-dcxfs   1/1     Running   0          78s   192.168.31.47    XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.compute.internal   &lt;none&gt;           1/1
+2048-deployment-99b6fb474-kvhhh   1/1     Running   0          54s   192.168.29.6     XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.compute.internal   &lt;none&gt;           1/1
+2048-deployment-99b6fb474-vhjbg   1/1     Running   0          54s   192.168.18.161   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.compute.internal   &lt;none&gt;           1/1
+2048-deployment-99b6fb474-xfd5q   1/1     Running   0          78s   192.168.16.183   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.compute.internal   &lt;none&gt;           1/1
+</code></pre></div></div>
+
+<p>Once rolling the new version of the container image, the deployment goes smoothly and prevent the downtime issue as mentioned in previous paragraphs:</p>
+
+<figure class="">
+  <img src="/assets/images/posts/2020/10/zero-downtime-deployment-when-using-alb-ingress-controller/zero-downtime-deployment-with-alb-demo.png" alt="Zero downtime with AWS Load Balancer Controller - Can see the targets are gracefully replaced when the Kubernetes is doing rolling update" />
+  
+    <figcaption>
+      Zero downtime with AWS Load Balancer Controller - Can see the targets are gracefully replaced when the Kubernetes is doing rolling update
+
+    </figcaption>
+  
+</figure>
+
+<p>In my scenario, the Kubernetes need to take at least 40 seconds termination period for single Pod, so the old targets are gradually moved out instead of remove all of them at once within few seconds, until entire target group only exists new targets.</p>
+
+<p>Therefore, you probably also need to notice the <code class="language-plaintext highlighter-rouge">Deregistration delay</code> defined in your ELB Target Group, which can be updated through <a href="https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.4/guide/ingress/annotations/#target-group-attributes">the annotation</a>:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">alb.ingress.kubernetes.io/target-group-attributes</span><span class="pi">:</span> <span class="s">deregistration_delay.timeout_seconds=30</span>
+</code></pre></div></div>
+
+<p>In this case, it is recommended to be less than 40 seconds so ELB can drain your old targets before the Pod completely shutdown.</p>
+
+<p>With the configuration, client can get normal responses from old Pods/existing connection during the deployment:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">200_TotalTime</span><span class="o">=</span>0.012028
+2048
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">200_TotalTime</span><span class="o">=</span>0.005383
+2048
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">200_TotalTime</span><span class="o">=</span>0.010174
+2048
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">200_TotalTime</span><span class="o">=</span>0.012233
+Welcome to nginx!
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">200_TotalTime</span><span class="o">=</span>0.007116
+2048
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">200_TotalTime</span><span class="o">=</span>0.010090
+2048
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">200_TotalTime</span><span class="o">=</span>0.012201
+2048
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">200_TotalTime</span><span class="o">=</span>0.005532
+2048
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">200_TotalTime</span><span class="o">=</span>0.010107
+2048
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">200_TotalTime</span><span class="o">=</span>0.012163
+Welcome to nginx!
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">200_TotalTime</span><span class="o">=</span>0.005452
+Welcome to nginx!
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">200_TotalTime</span><span class="o">=</span>0.009950
+2048
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">200_TotalTime</span><span class="o">=</span>0.012082
+Welcome to nginx!
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">200_TotalTime</span><span class="o">=</span>0.005349
+2048
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">200_TotalTime</span><span class="o">=</span>0.010142
+2048
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">200_TotalTime</span><span class="o">=</span>0.012143
+2048
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">200_TotalTime</span><span class="o">=</span>0.005507
+
+...
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">200_TotalTime</span><span class="o">=</span>0.012149
+Welcome to nginx!
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">200_TotalTime</span><span class="o">=</span>0.005364
+Welcome to nginx!
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">200_TotalTime</span><span class="o">=</span>0.010021
+Welcome to nginx!
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">200_TotalTime</span><span class="o">=</span>0.012092
+Welcome to nginx!
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">200_TotalTime</span><span class="o">=</span>0.005463
+Welcome to nginx!
+<span class="nv">HTTPCode</span><span class="o">=</span><span class="nv">200_TotalTime</span><span class="o">=</span>0.010136
+Welcome to nginx!
+</code></pre></div></div>
+
+<p>This is the practice in case having AWS Load Balancer Controller for doing graceful deployment with <code class="language-plaintext highlighter-rouge">RollingUpdate</code>. However, it is another big topic need to be discussed regarding what type of the application when rolling the update. Because other type of applications need to establish long connection with the ELB or have requirement for considering persistence data need to be stored on the backend. All these things can bring out other issues we need to talk about.</p>
+
+<p>But in summarize, with the deployment strategy above, it is also recommended to design the client/backend application as stateless, implement retry and fault-tolerance. These mothod usually help to reduce the customer complain and provide better user experience for most common use case.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>Due to the current design of Kubernetes, it is involving the state inconsistent issue when you are exposing the service with Application Load Balancer. Therefore, in this article, I mentioned the potential issue when doing rolling update in the scenario having container service integrating with the AWS Load Balancer Controller (ALB Ingress Controller).</p>
+
+<p>Even the technology is always in revolution, I am still willing to help people better handle the deployment strategy. I used a couple of hours to draft this content and tried to cover several major issues, metioned things you might need to aware, break down the entire workflow and shared few practical suggestions that can be achieved by using AWS Load Balancer Controller in order to meet the goal when doing zero downtime deployment.</p>
+
+<p>The article was written based on my own experience (Of course many communications back and forth with different customers using AWS), it might not be perfect but I hope it is helpful to you. For sure, if you find any typo or have any suggestions, please feel free and leave comment below.</p>
+
+<h3 id="references">References</h3>
+
+<ul>
+  <li><a href="https://docs.aws.amazon.com/eks/latest/userguide/alb-ingress.html">ALB Ingress Controller on Amazon EKS</a></li>
+  <li><a href="https://github.com/kubernetes-sigs/aws-alb-ingress-controller/blob/master/docs/guide/ingress/pod-conditions.md">Using pod conditions / pod readiness gates</a></li>
+  <li><a href="https://github.com/kubernetes-sigs/aws-alb-ingress-controller/issues/1124">Issue#1124</a></li>
+  <li><a href="https://github.com/kubernetes-sigs/aws-alb-ingress-controller/issues/814">Issue#814</a></li>
+  <li><a href="https://github.com/kubernetes-sigs/aws-alb-ingress-controller/issues/1064">Issue#1064</a></li>
+</ul>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/#alb-ingress-controller" class="page__taxonomy-item" rel="tag">ALB Ingress Controller</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#alb" class="page__taxonomy-item" rel="tag">ALB</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#amazon-web-services" class="page__taxonomy-item" rel="tag">amazon web services</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#amazon" class="page__taxonomy-item" rel="tag">amazon</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#aws-load-balancer-controller" class="page__taxonomy-item" rel="tag">AWS Load Balancer Controller</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#aws" class="page__taxonomy-item" rel="tag">aws</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#ec2" class="page__taxonomy-item" rel="tag">EC2</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#eks" class="page__taxonomy-item" rel="tag">EKS</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#elastic-compute-cloud" class="page__taxonomy-item" rel="tag">Elastic Compute Cloud</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#elastic-kubernetes-service" class="page__taxonomy-item" rel="tag">Elastic Kubernetes Service</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#elastic-load-balancer" class="page__taxonomy-item" rel="tag">Elastic Load Balancer</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#elb" class="page__taxonomy-item" rel="tag">ELB</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#k8s" class="page__taxonomy-item" rel="tag">k8s</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#kubernetes" class="page__taxonomy-item" rel="tag">Kubernetes</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#load-balancer" class="page__taxonomy-item" rel="tag">Load Balancer</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2022-06-01T00:00:00-05:00">June 1, 2022</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=%5BAWS%5D%5BEKS%5D+Zero+downtime+deployment%28RollingUpdate%29+when+using+AWS+Load+Balancer+Controller+on+Amazon+EKS%20https%3A%2F%2Feasoncao.com%2Fzero-downtime-deployment-when-using-alb-ingress-controller-on-amazon-eks-and-prevent-502-error%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Feasoncao.com%2Fzero-downtime-deployment-when-using-alb-ingress-controller-on-amazon-eks-and-prevent-502-error%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Feasoncao.com%2Fzero-downtime-deployment-when-using-alb-ingress-controller-on-amazon-eks-and-prevent-502-error%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+      <iframe
+        style="width: 100%; max-width: 485px; height: 170px; margin: auto; overflow: hidden; display: block;"
+        src="https://button.like.co/in/embed/easoncao/button?referrer=https%3A%2F%2Feasoncao.com%2Fzero-downtime-deployment-when-using-alb-ingress-controller-on-amazon-eks-and-prevent-502-error%2F" frameBorder="0">
+      </iframe>
+      
+
+      <!-- Buy me a coffee -->
+      <section class="page__share">
+        <h4 class="page__share-title">Is that useful? Let me know or buy me a coffee</h4>
+        <p class="page__meta">這篇內容對你有幫助嗎？</p>
+        <a href="https://paypal.me/e4son"><img src="https://cdn.jsdelivr.net/gh/twolfson/paypal-github-button@1.0.0/dist/button.svg" alt="Support via PayPal"></a>
+        <a href="https://p.ecpay.com.tw/17C964C" class="btn btn--success">一次性支持 (ECPay)</a>
+      </section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/serverless-ecpay-aws/" class="pagination--pager" title="在 AWS 上打造 Serverless (無伺服器) 雲端綠界支付金流 (ECPay)
+">Previous</a>
+    
+    
+      <a href="/eks-aws-load-balancer-controller-v1-to-v2-migration-behavior/" class="pagination--pager" title="[AWS] 那些沒寫在文件上的事 - AWS Load Balancer Controller v1 升級至 v2
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+      <div class="page__comments">
+  
+  
+      <h4 class="page__comments-title">Leave a comment</h4>
+      <section id="disqus_thread"></section>
+    
+</div>
+
+    
+  </article>
+
+  
+
+  <!-- Google Adsense -->
+  <div class="page__related">
+    <h4 class="page__related-title">You May Also Have Interest</h4>
+    <div>
+        <!-- responsive ad -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-1852752964062281"
+             data-ad-slot="2849626059"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+  </div>
+
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/2023/04/five-years-at-amazon-as-cloud-support-engineer-in-aws/cover.jpg" alt="">
+      </div>
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/five-years-at-amazon-as-cloud-support-engineer-in-aws/" rel="permalink">身處 Amazon 工作 5 年學到的事：在 AWS 擔任 Cloud Support Engineer 是什麼樣的體驗
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">2023 是我在 AWS 擔任 Cloud Support Engineer 的第六年，這份工作對我來說某種程度上是又愛又恨。作為見證 AWS 中文技術支援團隊的一員，五年時間說長不長，說短也不短，卻有非常多學習和體悟。
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/2023/03/aws-cloud-support-engineer-interview-tips-and-required-skills/cover.jpg" alt="">
+      </div>
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/aws-cloud-support-engineer-interview-tips-and-required-skills/" rel="permalink">在 AWS Cloud Support Engineer 面試中脫穎而出：必備的技術能力和重要特質
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">如果你正準備面試 AWS Cloud Support Engineer 的職位，在這篇文章中，我將與你分享我對於 AWS Cloud Support Engineer 所需的必備技能和特質，幫助你更好地了解這份職位且思考自己目前所具備的能力是與該團隊所交集，讓你在面試中脫穎而出。
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/eks-aws-load-balancer-controller-v1-to-v2-migration-behavior/" rel="permalink">[AWS] 那些沒寫在文件上的事 - AWS Load Balancer Controller v1 升級至 v2
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  3 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">隨著 Amazon EKS 對於 Kubernetes 1.22 的推出，1.21 也預計於 February 15, 2023 在 Amazon EKS 終止支援 1，對於 AWS Load Balancer Controller 仍然使用舊版本的用戶來說，勢必面臨需要升級 AWS Load Balancer ...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/2022/05/serverless-ecpay-aws/create-payment-flow.png" alt="">
+      </div>
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/serverless-ecpay-aws/" rel="permalink">在 AWS 上打造 Serverless (無伺服器) 雲端綠界支付金流 (ECPay)
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  less than 1 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">金流系統一直是許多線上服務、電商所必備的功能之一；常見的使用方式往往是透過第三方金流服務提供商對應的模組實現 (例如：OpenCart, WooCommerce)，以串接金流系統實現購物結帳的機制。
+</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+
+
+<div id="footer-subscribe-email-list">
+    <h3>Get the updates </h3>
+    <form action="https://docs.google.com/forms/d/e/1FAIpQLSfuofCYvu2cV614aDt6SO5ua_5trT0EC5yeSJObLY0KGjFtvQ/formResponse" method="POST">
+        <div style="display: flex;">
+            <!-- input name="entry.205499253" type="text" id="Name" class="form-control" placeholder="Name" -->
+            <input name="entry.1288273007" type="email" id="email" class="form-control" placeholder="Email" required="required" style="margin-top: 2px; margin-right: 5px; width: 50%;">
+            <input class="btn btn--primary" id="subscribe" type="submit" value="訂閱 (Sign Up)" style="width: 30%;">
+        </div>
+    </form>
+</div>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8GPCXJPGFZ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-8GPCXJPGFZ');
+</script>
+<!-- end custom footer snippets -->
+
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+          <li><a href="https://facebook.com/EasonTechTalk" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i> Facebook</a></li>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    <li><a href="/sitemap.xml"><i class="fas fa-fw fa-sitemap" aria-hidden="true"></i> SiteMap</a></li>
+    <li><a href="/tags"><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags</a></li>
+    <li><a href="https://toolbox.easoncao.com/"><i class="fas fa-fw fa-toolbox" aria-hidden="true"></i> ToolBox</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2023 Continuous Improvement. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+  <script>
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-80058083-2']);
+  
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "https://easoncao.com/zero-downtime-deployment-when-using-alb-ingress-controller-on-amazon-eks-and-prevent-502-error/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/zero-downtime-deployment-when-using-alb-ingress-controller-on-amazon-eks-and-prevent-502-error"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://lenlabs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

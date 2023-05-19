@@ -1,0 +1,1237 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.19.3 by Michael Rose
+  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>AWS Firecracker 論文導讀：一個小孩才做選擇，我兩個全部都要的 VMM - Continuous Improvement</title>
+<meta name="description" content="AWS Firecracker 是一款由 AWS 開源的輕量級虛擬化運行環境。這項技術使得運行的執行環境具備傳統虛擬機的安全性，提供優化的執行效能和資源利用。在這篇內容中，我將與你分享在閱讀完 Firecracker 論文後具體的導讀細節。">
+
+
+  <meta name="author" content="Yang-Xin Cao (Eason Cao)">
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Continuous Improvement">
+<meta property="og:title" content="AWS Firecracker 論文導讀：一個小孩才做選擇，我兩個全部都要的 VMM">
+<meta property="og:url" content="https://easoncao.com/firecracker-paper-reading/">
+
+
+  <meta property="og:description" content="AWS Firecracker 是一款由 AWS 開源的輕量級虛擬化運行環境。這項技術使得運行的執行環境具備傳統虛擬機的安全性，提供優化的執行效能和資源利用。在這篇內容中，我將與你分享在閱讀完 Firecracker 論文後具體的導讀細節。">
+
+
+
+  <meta property="og:image" content="https://easoncao.com/assets/images/posts/2022/02/firecracker-paper-reading/cover.png">
+
+
+
+
+
+  <meta property="article:published_time" content="2022-02-20T00:00:00-06:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://easoncao.com/firecracker-paper-reading/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Continuous Improvement",
+      "url": "https://easoncao.com/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Continuous Improvement Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- Google adsense -->
+<script data-ad-client="ca-pub-1852752964062281" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<link rel="shortcut icon" type="image/jpg" href="/assets/apple-touch-icon.png"/>
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+          <a class="site-logo" href="/"><img src="/assets/apple-touch-icon.png" alt=""></a>
+        
+        <a class="site-title" href="/">
+          Continuous Improvement
+          <span class="site-subtitle"></span>
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/posts/">所有文章 All Posts</a>
+            </li><li class="masthead__menu-item">
+              <a href="/courses/">學習資源 Learning</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">關於 About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="https://www.gravatar.com/avatar/0d33994eec9eddc67415e07a7fcafc9d?s=200" alt="Yang-Xin Cao (Eason Cao)" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Yang-Xin Cao (Eason Cao)</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>Engineer@Amazon <br />- <a href="https://www.awshof.com/allstarscertifiedlist.html">AWS All-5 certified</a> / ECS &amp; EKS SME / Marathon Runner / PADI Open Water Diver</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Amazon / Dublin, Ireland</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:eason@easoncao.com" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+            <li><a href="https://linkedin.com/in/easoncao" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-id-badge" aria-hidden="true"></i><span class="label">LinkedIn</span></a></li>
+          
+        
+          
+        
+          
+            <li><a href="https://facebook.com/EasonTechTalk" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i><span class="label">Facebook</span></a></li>
+          
+        
+          
+            <li><a href="https://github.com/0xlen" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="AWS Firecracker 論文導讀：一個小孩才做選擇，我兩個全部都要的 VMM">
+    <meta itemprop="description" content="AWS 公開 Firecracker 專案已經至少 1-2 年的時間，也許你多少都聽過這項技術。然而，究竟 Firecracker 是什麼，我想可能你也仍然一知半解。有鑒於我認為學術類型的內容有時不容易讓人明白，因此，我希望可以透過以下的篇幅，分享我自己對於閱讀 Firecracker 設計論文的一些理解。">
+    <meta itemprop="datePublished" content="2022-02-20T00:00:00-06:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">AWS Firecracker 論文導讀：一個小孩才做選擇，我兩個全部都要的 VMM
+</h1>
+          
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  7 minute read
+
+</p>
+          
+        </header>
+      
+
+      <!-- Google ads in article -->
+      <div>
+          <ins class="adsbygoogle"
+               style="display:block; text-align:center;"
+               data-ad-layout="in-article"
+               data-ad-format="fluid"
+               data-ad-client="ca-pub-1852752964062281"
+               data-ad-slot="8435469231"></ins>
+          <script>
+               (adsbygoogle = window.adsbygoogle || []).push({});
+          </script>
+      </div>
+      <hr>
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right sticky">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fas fa-cog"></i> Table of Contents</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#概覽">概覽</a></li>
+  <li><a href="#基本名詞釋義-terminology">基本名詞釋義 (Terminology)</a>
+    <ul>
+      <li><a href="#hypervisor">Hypervisor</a></li>
+      <li><a href="#vmm-virtual-machine-monitor">VMM (Virtual Machine Monitor)</a></li>
+      <li><a href="#qemu">QEMU</a></li>
+      <li><a href="#kvm">KVM</a></li>
+      <li><a href="#crosvm">crosvm</a></li>
+      <li><a href="#cgroup-control-group">Cgroup (Control Group)</a></li>
+      <li><a href="#seccomp">Seccomp</a></li>
+    </ul>
+  </li>
+  <li><a href="#aws-firecracker-是什麼">AWS Firecracker 是什麼</a>
+    <ul>
+      <li><a href="#kvm-在這樣的基礎下做了哪些事">KVM 在這樣的基礎下做了哪些事？</a></li>
+    </ul>
+  </li>
+  <li><a href="#aws-firecracker-實作">AWS Firecracker 實作</a>
+    <ul>
+      <li><a href="#資源限制-rate-limiter">資源限制 (Rate Limiter)</a></li>
+      <li><a href="#安全性-security">安全性 (Security)</a></li>
+    </ul>
+  </li>
+  <li><a href="#firecracker-與-aws-lambda-架構之間的關係-high-level-architecture">Firecracker 與 AWS Lambda 架構之間的關係 (High-level architecture)</a>
+    <ul>
+      <li><a href="#lambda-high-level-to-low-level-architecture">Lambda High-level to low-level architecture</a></li>
+      <li><a href="#firecracker-io-path">Firecracker I/O Path</a></li>
+      <li><a href="#實際遷移到-aws-firecracker-的執行">實際遷移到 AWS Firecracker 的執行</a></li>
+    </ul>
+  </li>
+  <li><a href="#evaluation-性能評估">Evaluation (性能評估)</a></li>
+  <li><a href="#研究改進和結論">研究改進和結論</a></li>
+  <li><a href="#總結">總結</a></li>
+  <li><a href="#延伸資源">延伸資源</a></li>
+  <li><a href="#references">References</a></li>
+</ul>
+
+            </nav>
+          </aside>
+        
+        <p>AWS 公開 Firecracker 專案已經至少 1-2 年的時間，也許你多少都聽過這項技術。然而，究竟 Firecracker 是什麼，我想可能你也仍然一知半解。有鑒於我認為學術類型的內容有時不容易讓人明白，因此，我希望可以透過以下的篇幅，分享我自己對於閱讀 Firecracker 設計論文的一些理解。</p>
+
+<p>由於我個人沒有受過正式的學術訓練，因此，如果有專家願意提供任何見解，也請不吝給予指正及建議。</p>
+
+<figure class="">
+  <img src="/assets/images/posts/2022/02/firecracker-paper-reading/cover.png" alt="Firecracker 概覽" />
+  
+    <figcaption>
+      Firecracker 概覽 (<a href="https://firecracker-microvm.github.io/">source</a>)
+
+    </figcaption>
+  
+</figure>
+
+<h2 id="概覽">概覽</h2>
+
+<p>在閱讀完 Firecracker 的相關論文後，我對於這個專案的結論，<strong>簡直可以說是一個小孩才做選擇，我兩個全部都要的設計</strong>。</p>
+
+<p>在論文中提到，設計 AWS Firecracker 由於在權衡 Hypervisor-based 和 Linux container 虛擬化技術之間產生的相容性、安全性的優缺點，兩者取其一似乎都無法滿足 AWS 基礎建設所需滿足的工程目標。因此，Firecracker 決定打破這樣的抉擇，擔任起 VMM (Virtual Machine Monitor) 的角色，並且引入相關的各種現有功能機制的優點，以滿足運算虛擬化的設計需要。</p>
+
+<blockquote>
+  <p>Implementors of serverless and container services can choose between hypervisor-based virtualization (and the potentially unacceptable overhead related to it), and Linux containers (and the related compatibility vs. security tradeoffs). <strong>We built Firecracker because we didn’t want to choose.</strong></p>
+</blockquote>
+
+<p>目前 AWS 已經將 Firecracker 導入至兩個公開的無伺服器 (Serverless) 服務：<a href="https://aws.amazon.com/lambda/">AWS Lambda</a> 及 <a href="https://aws.amazon.com/fargate/">AWS Fargate</a>，並且支援數百萬的用戶和單月萬億級別 (trillions) 的請求，以下將具體描述更多 Firecracker 相關的細節。</p>
+
+<p>(相關的 Paper 原文和我自己畫的重點請參考<sup id="fnref:firecracker-paper-note" role="doc-noteref"><a href="#fn:firecracker-paper-note" class="footnote" rel="footnote">1</a></sup>)</p>
+
+<h2 id="基本名詞釋義-terminology">基本名詞釋義 (Terminology)</h2>
+
+<p>由於 Firecracker 屬於一種作業系統虛擬化技術的延伸，其中涉及 Linux 作業系統虛擬化的諸多細節。因此，首先在閱讀這篇內容之前，必須先了解基本的一些概念和名詞釋義：</p>
+
+<h3 id="hypervisor">Hypervisor</h3>
+
+<p>Hypervisor 可以視為用於管理虛擬機器 (Virtual Machine) 的軟體、系統或是韌體。使用虛擬化技術允許我們在單一個電腦上運行多個不同的系統、甚至是可能不同的作業系統 Kernel，並且將其放置於一個虛擬的運行環境中 (Virtual Machine)。因此，Hypervisor 的目的就是用來管理這些虛擬機器，通常，用來執行一個或多個虛擬機器的電腦稱為宿主機 (Host)，這些虛擬機器則稱為客戶機 (Guest)。</p>
+
+<p>Gerald J. Popek 及 Robert P. Goldberg 在 1974 提出了兩種類型的 Hypervisor <sup id="fnref:virtualization-architectures" role="doc-noteref"><a href="#fn:virtualization-architectures" class="footnote" rel="footnote">2</a></sup>，分別為 Type 1 和 Type 2：</p>
+
+<figure class="">
+  <img src="/assets/images/posts/2022/02/firecracker-paper-reading/hypervisor-types.png" alt="Hypervisor 類型" />
+  
+    <figcaption>
+      Hypervisor 類型 (<a href="https://en.wikipedia.org/wiki/Hypervisor">source</a>)
+
+    </figcaption>
+  
+</figure>
+
+<p>因為在虛擬機器中，安裝了一個 Guest OS 並不意味著就能直接使用 Host OS 的所有資源 (例如：磁碟寫入、CPU 時間、I/O 等操作)。通常，Hypervisor 會實作「模擬」這些裝置讓 Guest OS 以為能夠使用，但實際上仍交由虛擬化技術實際將這些操作轉譯、排程交給 Host OS 處理。</p>
+
+<ul>
+  <li><strong>Type 1</strong> 的 Hypervisor 通常需要硬體和 Kernel 支援，因為通常能充分交付使用硬體操作，而無需透過 Hypervisor 為 Guest OS 執行作業系統各種操作的 (syscall) 轉譯。這也通常意味著，執行的效能也比較高。常見的實作如：Xen 和 Linux KVM。</li>
+  <li><strong>Type 2</strong> 軟體會運行於主要的 (Host OS) 並且可能會以一般的軟體應用形式運行，通常執行效率比 Type 1 來得低。常見作業系統層級的軟體類似於 VMWare、Vritual Box Hypervisor 軟體。</li>
+</ul>
+
+<h3 id="vmm-virtual-machine-monitor">VMM (Virtual Machine Monitor)</h3>
+
+<p>基本上與 Hypervisor 相同，如同他的名字一樣 (Virtual Machine Monitor)，VMM 設計的目的就是用於建立、監控、管理和捕捉跑在虛擬機器中的 I/O 操作 (磁碟寫入、網路吞吐等)。</p>
+
+<h3 id="qemu">QEMU</h3>
+
+<p><a href="https://www.qemu.org/">QEMU</a> 是一個開源的 VMM，由於 QEMU 的架構由純軟體實現，並且處於 Guest machine 與 Host machine 擔任中間者角色，以處理 Guest machine 的相關硬體請求，並由其轉譯給真正的硬體，使得其存在一些效能問題。</p>
+
+<h3 id="kvm">KVM</h3>
+
+<p>KVM (Kernel-based Virtual Machine) 是一種 Linux Kernel 支持的虛擬化技術，可以將 Linux Kernel 轉換成一個可用的 VMM 並將系統轉換為 Type 1 (bare-metal) 類型的 Hypervisor，使得你可以在 Linux 系統上運行多個隔離的虛擬環境 (VM)。KVM 一直是 Linux Kernel 設計的一部分，並且存在於主流的 Linux Kernel 版本中。因此，由於屬於 Linux Kernel 支持功能的一部分，通常可以使用接近原生系統的相應執行效能處理對應的 I/O 操作。</p>
+
+<h3 id="crosvm">crosvm</h3>
+
+<p><a href="https://github.com/google/crosvm">crosvm</a> 為 Google 的一項開源專案 (Chrome OS Virtual Machine Monitor)，用於 Chrome OS 執行虛擬化機制的操作，基於 Linux KVM Hypervisor 實現虛擬化技術，並且用於 Android、Chrome OS 為基礎的系統中。與 QEMU 相比，它並不直接模擬實際的硬體裝置，反之，它採用了 Linux 支持的半虛擬化的裝置標準 (<a href="https://developer.ibm.com/articles/l-virtio/">virtio</a>) 來模擬虛擬機中相關的裝置。Firecracker paper 中具體提到了實作中採用了以 crosvm 作為基礎核心背景修改。</p>
+
+<h3 id="cgroup-control-group">Cgroup (Control Group)</h3>
+
+<p>cgroup 是 Linux Kernel 一項支持的功能，主要可以用來限制運行在容器執行環境中的資源使用 (例如：CPU、Memory 和磁碟讀取寫入等)。cgroup 同時也被大量運用在 Linux container 的技術中，例如：Kubernetes、Docker 等。</p>
+
+<p>在 Firecracker 中，提及了基於不信任 Guest OS 對於資源控制的行為。這是由於 Guest OS 屬於客戶控制的一部分，並無法預期其是否能依照合理的使用行為運行，因此，Firecracker 也採用了 Linux 本身支持的功能及 cgroup 等機制，限制了 VMM 和各個虛擬機器總體可用的資源。</p>
+
+<h3 id="seccomp">Seccomp</h3>
+
+<p>seccomp 是 Linux Kernel 支持的一項功能，用來限制在容器中運行的 process 可以呼叫的系統方法 (syscall)。可以想像就像是允許使用特定 Linux function 的白名單，在 process 的直接階段僅允許特定系統呼叫操作。</p>
+
+<p>同樣的機制也被實踐在一些容器虛擬化技術中，例如 Docker 定義的預設 <a href="https://github.com/moby/moby/blob/b0806bdb03f0843267b34f50142d5f52ddd68757/profiles/seccomp/default_linux.go#L51-L390">seccomp profile</a>。</p>
+
+<h2 id="aws-firecracker-是什麼">AWS Firecracker 是什麼</h2>
+
+<p>在過去，AWS 主流的 Serverless 服務提供了 AWS 客戶另一項託管運行應用的選擇 - 用戶不需要再自行管理底層運作機器和安全性修補的工作。</p>
+
+<p>最著代表性的 AWS 服務便是 AWS Lambda，如果你不知道 AWS Lambda 是什麼，<a href="https://aws.amazon.com/lambda/">AWS Lambda</a> 是一種無伺服器 (Severless) 運算服務，使用者可以直接上傳你的程式碼並且選擇對應的規格運行，你無須在煩惱需要使用什麼樣的硬體規格以及為維護工作煩惱。</p>
+
+<p>同時，也提供在大規模的應用情境中隨著用量可以動態擴展的優勢。然而，在 AWS Lambda 服務剛釋出時，其採用了 Linux Container 用以隔離不同客戶的執行環境 (類似於 Docker 相應的技術)，然而，這樣的機制除了可能在客戶使用運行執行環境存在限制 (需使用依賴 Host OS 支持的 Kernel 版本指令集)，也因為同時共用相同的 Kernel，也可能存在部分安全性風險。</p>
+
+<blockquote>
+  <p>When we first built AWS Lambda, we chose to use Linux containers to isolate functions, and virtualization to isolate between customer accounts.</p>
+</blockquote>
+
+<figure class="">
+  <img src="/assets/images/posts/2022/02/firecracker-paper-reading/model-compare.png" alt="虛擬化架構" />
+  
+    <figcaption>
+      AWS Lambda 虛擬化架構 (左) 為之前的設計 (右) 為採用 KVM &amp; VMM 技術的設計
+
+    </figcaption>
+  
+</figure>
+
+<p>因此，在這篇 Paper 中，主要提到了 firecracker 評估使用虛擬化技術設計時存在六項重點考量：</p>
+
+<ul>
+  <li><strong>Isolation</strong>: 需要具備安全的隔離環境使用戶在運行應用時，能避免資料洩漏、非法提權等安全性問題</li>
+  <li><strong>Overhead and Density</strong>: 為了盡可能使單一機器的硬體資源應用最大化，該技術需要能夠提供運行至少數千個 microVM 執行環境 (Lambda function)</li>
+  <li><strong>Performance</strong>: 執行效能要能貼近使用原生實體機器 (Bare-metal) 的執行效能，換句話說能降低因為硬體指令轉譯的執行時間</li>
+  <li><strong>Compatibility</strong>: 需要能夠讓用戶執行應用時運行 Linux 支持的函式庫和執行檔，以客戶無需進行程式碼修改或是重新編譯</li>
+  <li><strong>Fast Switching</strong>: 能夠盡可能快速的啟動執行環境 (microVM) 和清除執行環境</li>
+  <li><strong>Soft Allocation</strong>: 存在資源動態調整機制，能夠允許虛擬執行環境分配額外的 CPU、Memory 等資源。讓每個應用僅可使用消耗他所需要的資源，而不是有權使用的系統資源</li>
+</ul>
+
+<p>在這樣的條件下，論文 2.1 中的細節便是在具體討論和評估數項現有的虛擬化技術，包含：</p>
+
+<ul>
+  <li>Linux container: Linux Kernel 本身支持的容器化技術，使 Linux process 存在於獨立的執行環境 (namespaces)，並達到 process-level 的隔離，包含 user IDs (uids), process IDs (pids) 及 network interface，並且能夠利用 chroot 機制隔離執行的檔案系統。同時，利用 seccomp-bpf 更可以達到 process 執行系統呼叫的限制 (syscall)。在相關的研究中，一般啟動 Ubuntu Linux (15.04) 版本的安裝需要 224 syscalls 及 52 個獨立的 ioctl 操作。</li>
+  <li>Language-Specific Isolation：例如 JVM 透過劃分 Heap size 和虛擬執行環境，於記憶體空間分配支持的虛擬執行環境</li>
+  <li>硬體和 Kernel 支持的主流虛擬化技術：Intel VT-x、KVM、QEMU。在論文中提到常見的 KVM 和 QEMU 組合通常增加了執行虛擬化上的複雜度，由於 QEMU 專案本身包含了大於 140 萬 (1.4 million) 的程式碼，並且至少需要 270 個系統呼叫操作 (syscall)，若使用這項基礎再疊加使用 KVM，則會再另外增加了 120,000 行程式碼。</li>
+</ul>
+
+<p>因此，在評估和主流虛擬化技術比較這樣的背景下，AWS Firecracker 借鑒了許多解決方案而在眾多項目中選擇一個適當的平和。同時，基於 AWS 內部許多團隊，維運基礎架構都採用 Linux 系統，促使 Firecracker 在設計的哲學上的這項決定。更重要的是，Firecracker 更之所以遵循沿用 Linux Kernel 本身就支持的技術，而不是重新實作替代它，正是因為這些功能行之有年，並且具備高質量、成熟的設計 (例如：scheduler、TUN/TAP network interface)，也能讓 AWS 原本的團隊使用熟悉的 Linux 工具和維運流程執行除錯。例如：採用 <code class="language-plaintext highlighter-rouge">ps</code> 即可列舉機器上運行的 microVM，其他 Linux 本身支持的工具 (<code class="language-plaintext highlighter-rouge">top</code>、<code class="language-plaintext highlighter-rouge">vmstat</code> 甚至是 <code class="language-plaintext highlighter-rouge">kill</code>) 均可以在預期的操作下管理 Firecracker。</p>
+
+<p>基於這項原因，Firecracker 使用了 KVM 作為主要的虛擬化執行基礎，並且實作 VMM (Virtual Machine Monitor) 元件以滿足管理 KVM 執行環境的需要。</p>
+
+<blockquote>
+  <p>Our other philosophy in implementing Firecracker was to rely on components built into Linux rather than re-implementing our own, where the Linux components offer the right features, performance, and design</p>
+</blockquote>
+
+<h3 id="kvm-在這樣的基礎下做了哪些事">KVM 在這樣的基礎下做了哪些事？</h3>
+
+<p>執行硬體層級的虛擬化 (HVM) 及資源分配，例如：CPU、處理記憶體管理、分頁 (Paging) 等。</p>
+
+<h2 id="aws-firecracker-實作">AWS Firecracker 實作</h2>
+
+<p>在 Firecracker 的實作中，以 Google crosvm 作為基礎，移除了大量不必要的裝置，例如：USB、GPU 以及 9p 檔案系統協議 (Plan 9 Filesystem Protocol)。在這樣的基礎下，Firecracker 以 Rust 語言為主增加了額外約 2 萬行的程式碼；同時修改了約 3 萬行的程式碼並且開源公開。</p>
+
+<figure class="">
+  <img src="/assets/images/posts/2022/02/firecracker-paper-reading/firecracker-layers.png" alt="Firecracker 架構" />
+  
+    <figcaption>
+      Firecracker 架構
+
+    </figcaption>
+  
+</figure>
+
+<p>Firecracker 同時模擬了有限的一些 I/O 裝置，例如：網路卡、磁碟、序列端口 (serial ports)、i8042 支持 (PS/2 鍵盤的控制器)；與 QEMU 相比，QEMU 相對複雜許多，其支持多餘 40 種不同的裝置，包含 USB、影像和音訊裝置。</p>
+
+<p>更細部的設計架構如下：</p>
+
+<figure class="">
+  <img src="/assets/images/posts/2022/02/firecracker-paper-reading/firecracker-design.png" alt="Firecracker 細部設計架構" />
+  
+    <figcaption>
+      Firecracker 細部設計架構 (<a href="https://github.com/firecracker-microvm/firecracker/blob/main/docs/design.md">source</a>)
+
+    </figcaption>
+  
+</figure>
+
+<p>在 Firecracker 中採用了 virtio 作為網路和磁碟裝置的模擬，其中大約佔 Firecracker 1, 400 行 Rust 程式碼。同時 Firecracker 也提供了 REST API 設計，使其能夠使用 HTTP 的用戶端直接與其互動 (例如：<code class="language-plaintext highlighter-rouge">curl</code>)。</p>
+
+<p>總結來說，Firecracker 旨在提供以下機制 <sup id="fnref:how-firecracker-work" role="doc-noteref"><a href="#fn:how-firecracker-work" class="footnote" rel="footnote">3</a></sup> <sup id="fnref:firecracker-open-source-innovation" role="doc-noteref"><a href="#fn:firecracker-open-source-innovation" class="footnote" rel="footnote">4</a></sup>:</p>
+
+<ul>
+  <li>設定 KVM</li>
+  <li>提供裝置模擬，包含模擬 SSD、NIC (網卡) 等，即使沒有那麼多裝置在實際的硬體 (AWS Lambda Host) 上，使用 virtio 使得其可以虛擬化這些裝置</li>
+  <li>執行環境效能的隔離 (採用 cgroup)</li>
+  <li>為 Serverless 提供優化的效能 (5-8 Mb 的 Linux 啟動時間可以縮短為 100ms 以內、更微小的 Kernel 更可以縮短為 5ms)</li>
+</ul>
+
+<h3 id="資源限制-rate-limiter">資源限制 (Rate Limiter)</h3>
+
+<p>在 Firecracker 中的硬體裝置涵括了限制配額的機制，包含可以限制 Disk IOPS (I/O Per Second)、PPS (Packets Per Second for network)。在 Firecracker 提供了使用 API 設定 microVM 可用的資源請求，包含 CPU、磁碟 I/O、網路吞吐等。</p>
+
+<p>其資源限制機制採用 <code class="language-plaintext highlighter-rouge">virtio</code> 本身支持的資源限制功能，以網路裝置來說，可以是以下的配置機制 (<a href="https://github.com/firecracker-microvm/firecracker/blob/f35f324b84ce5c78dcf706cd97117bca41485b34/src/vmm/src/vmm_config/net.rs#L30"><code class="language-plaintext highlighter-rouge">rx_rate_limiter</code></a>)：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PATCH /network-interfaces/iface_1 HTTP/1.1
+Host: localhost
+Content-Type: application/json
+Accept: application/json
+
+<span class="o">{</span>
+    <span class="s2">"iface_id"</span>: <span class="s2">"iface_1"</span>,
+    <span class="s2">"rx_rate_limiter"</span>: <span class="o">{</span>
+        <span class="s2">"bandwidth"</span>: <span class="o">{</span>
+            <span class="s2">"size"</span>: 1048576,
+            <span class="s2">"refill_time"</span>: 1000
+        <span class="o">}</span>,
+        <span class="s2">"ops"</span>: <span class="o">{</span>
+            <span class="s2">"size"</span>: 2000,
+            <span class="s2">"refill_time"</span>: 1000
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h3 id="安全性-security">安全性 (Security)</h3>
+
+<p>為了實踐安全性的最佳化，Firecracker 在部署階段需要充分避免一些因為 Linux kernel 或虛擬化技術可能帶來潛在的安全性問題，例如：Intel Meltdown、Spectre、Zombieload 等安全性漏洞。因此，在生產環境中，為了解決這項顧慮，Firecracker 實踐了幾項部署重點：</p>
+
+<ul>
+  <li>關閉 Symmetric MultiThreading (SMT, aka HyperThreading)</li>
+  <li>Kernel Page-Table Isolation, Indirect Branch Prediction Barriers, Indirect Branch Restricted Speculation and cache flush mitigations against L1 Terminal Fault</li>
+  <li>啟動部分 Kernel 參數包含 Speculative Store Bypass mitigations</li>
+  <li>關閉 swap 和 samepage merging</li>
+  <li>避免共享檔案 (解決 timing attacks like Flush+Reload and Prime+Probe)</li>
+  <li>以及使用建議的硬體設備以解決 RowHammer 攻擊技術</li>
+</ul>
+
+<p>相關的 Firecracker 生產環境部署建議同時列舉於以下文件中：</p>
+
+<ul>
+  <li><a href="https://github.com/firecracker-microvm/firecracker/blob/cd29c64b35f694a5a442a7778b7c1463551bc1e2/docs/prod-host-setup.md">Production Host Setup Recommendations</a></li>
+</ul>
+
+<p>同時為了避免 Firecracker VMM 執行操作的過程出現任何非預期行為 (例如：安全性漏洞允許植入惡意代碼)，在 Firecracker 中實現了使用另一層沙箱 (Sandbox) 提供額外隔離的保護。在 Firecracker 的設計稱之為 <strong>Jailer</strong>。</p>
+
+<p>雖然是這樣說，但在 Paper 中提到的具體實作，仍為使用 Linux container 提供的技術執行，包含：</p>
+
+<ul>
+  <li>以 chroot 機制隔離執行的檔案系統</li>
+  <li>以 namepsace 隔離執行環境、pid、network namespaces</li>
+  <li>移除 System privilege (基於 Linux Capabilities 功能 <sup id="fnref:linux-capabilities" role="doc-noteref"><a href="#fn:linux-capabilities" class="footnote" rel="footnote">5</a></sup>)</li>
+  <li>以 seccomp-bpf profile 設定允許呼叫的 syscall</li>
+</ul>
+
+<figure class="">
+  <img src="/assets/images/posts/2022/02/firecracker-paper-reading/firecracker-jailer.png" alt="Firecracker Jailer" />
+  
+    <figcaption>
+      Firecracker Jailer
+
+    </figcaption>
+  
+</figure>
+
+<p>在 jailer sandbox 配置的 chroot 目錄中，裡面僅包含 Firecracker 編譯的執行檔、<code class="language-plaintext highlighter-rouge">/dev/net/tun</code>、cgroup 控制檔案和 microVM 所需的資源。並且，預設情況下 seccomp-bpf profile 設定了 24 個系統呼叫操作 (syscalls) 和 30 個 ioctls 操作為白名單。</p>
+
+<p>不過就我的研究，如果我理解正確，似乎 Firecracker 在 seccomp filter 上面在最近的版本多了不少 syscalls 支援:</p>
+
+<ul>
+  <li><a href="https://github.com/firecracker-microvm/firecracker/blob/main/resources/seccomp/x86_64-unknown-linux-musl.json">Firecracker default seccomp filters (x86_64)</a></li>
+  <li><a href="https://github.com/firecracker-microvm/firecracker/blob/77fdc6ef390b5e04ae97a4c1b4bf0da541afc7bc/tests/integration_tests/security/test_seccomp.py">Firecracker seccomp integration test case</a></li>
+</ul>
+
+<h2 id="firecracker-與-aws-lambda-架構之間的關係-high-level-architecture">Firecracker 與 AWS Lambda 架構之間的關係 (High-level architecture)</h2>
+
+<p>在 Firecracker 設計出來後，AWS 便逐漸於 AWS Lambda 的底層架構中導入使用。使用 AWS Firecracker 允許 Lambda 的架構在每個執行的節點 (Lambda worker) 運行數千個 microVM。</p>
+
+<h3 id="lambda-high-level-to-low-level-architecture">Lambda High-level to low-level architecture</h3>
+
+<p>AWS Lambda 從上層到下層的架構可以由遠至近如下：</p>
+
+<p>(1) 用戶透過事件經由 Frondend service 觸發 Lambda function (可以是 API Gateway, 其他來源等)，會由 Worker Manager 定義配置部署可用的執行機器 (Lambda Worker)</p>
+
+<figure class="">
+  <img src="/assets/images/posts/2022/02/firecracker-paper-reading/lambda-invoke-flow.png" alt="AWS Lambda 觸發的架構流程" />
+  
+    <figcaption>
+      AWS Lambda 觸發的架構流程
+
+    </figcaption>
+  
+</figure>
+
+<p>(2) 一旦觸發後，Frondend service 交付由 Worker Manager 會遵循調度演算法 (sticky routing) 盡可能將觸發對象黏著在特定的 Lambda Worker 機器上，並且建議觸發的對象 (invoke service) 直接將請求的內容 (payload) 直接轉送到目標的 Lambda worker 機器上，減少觸發上的延遲和來回交互請求 (round-trip)。</p>
+
+<figure class="">
+  <img src="/assets/images/posts/2022/02/firecracker-paper-reading/lambda-event-path.png" alt="AWS Lambda 事件觸發的流程" />
+  
+    <figcaption>
+      AWS Lambda 事件觸發的流程
+
+    </figcaption>
+  
+</figure>
+
+<p>(3) 在每個 Lambda worker 提供了 <em>slot</em> 這個抽象物件，該抽象物件即客戶預先載入的 Lambda function 應用程式碼 (Lambda function code)，並且在後面每次觸發的行為上盡可能的重複使用這個執行環境 (slot)</p>
+
+<p>重點在於 Firecracker 於 Lambda Worker 中部署的機制，每個 Lambda Worker 可以視為一個 Bare-metal 的機器，上面運行著 Firecracker VMM 用於管理多個 MicroVM (Lambda function, slot)；每個 microVM 包含了客戶的執行環境 (sandbox) 和客戶的應用程式碼，以及一個 shim control process 用於採用 TCP/IP socket 和 Micro Manager 互動的元件。</p>
+
+<p>(MicroManager 可以視為 Lambda data plane 和 control plane 互動的元件)</p>
+
+<blockquote>
+  <p>MicroManager provides slot management and locking APIs to placement, and an event invoke API to the Frontend</p>
+</blockquote>
+
+<figure class="">
+  <img src="/assets/images/posts/2022/02/firecracker-paper-reading/lambda-worker-architecture.png" alt="Lambda Worker 中的細部架構" />
+  
+    <figcaption>
+      Lambda Worker 中的細部架構
+
+    </figcaption>
+  
+</figure>
+
+<p>同時 MicroManager 部分也確保存在小量預先啟動的 MicroVMs，以確保有放置請求的即時需要。這是因為即使 Firecracker 能縮短在 <strong>125ms</strong> 內啟動，這樣的啟動時間可能仍不足以滿足 AWS Lambda 客戶快速啟動擴展的需要，並且可能會部分阻塞用戶的執行請求，因此在實務中，存在類似這樣 pre-warm 的機制。</p>
+
+<h3 id="firecracker-io-path">Firecracker I/O Path</h3>
+
+<p>當 AWS Lambda 中的應用執行寫入操作時 (假設 Guest OS 中的應用希望寫入檔案到磁碟)，此時會交付由 <code class="language-plaintext highlighter-rouge">virtio</code> driver 處理該操作，並且由 <code class="language-plaintext highlighter-rouge">virtio</code> driver 將其放置到共享記憶體 (shared memory) 中，並且於系統 Ring Buffer 進行緩衝。然後，Firecracker 將被喚醒執行 I/O 操作，並且將該寫入操作真實的寫進實體磁碟當中。<sup id="fnref:deep-dive-into-aws-lambda-security" role="doc-noteref"><a href="#fn:deep-dive-into-aws-lambda-security" class="footnote" rel="footnote">6</a></sup></p>
+
+<h3 id="實際遷移到-aws-firecracker-的執行">實際遷移到 AWS Firecracker 的執行</h3>
+
+<p>論文中提到 AWS 從 2018 年開始將 AWS Lambda 的客戶從 EC2 運行容器 (per function per container) 的基礎平台轉移到 Firecracker。在遷移過程中，並無可用性中斷、延遲或其他指標層面問題。</p>
+
+<p>不過，在 AWS 內部團隊在遷移過程中，一些小問題也因為這樣的遷移暴露出來，例如前面提到為了安全性考量關閉了 Symmetric MultiThreading (SMT) 機制 (過去的部署中是開啟的)，使得使用 Apache HttpClient 應用執行的行為因為一些執行緒 (Thread) 相關的 bug 也因此暴露，並且存在於過去的 AWS SDK 版本中，需透過修補依賴函式庫解決這項問題。</p>
+
+<p>但在 AWS 內部團隊完成遷移後，便開始實際將外部客戶的相關基礎建設逐步遷移至 AWS Firecracker 為基礎的設施，並且獲得巨大的成功。</p>
+
+<p>同時，有鑒於涉及未來安全性補丁的修復和系統更新，由於傳統使用 <code class="language-plaintext highlighter-rouge">rpm</code>、<code class="language-plaintext highlighter-rouge">yum</code> 等套件管理工具進行管理的變因太多，可能導致軟體一致性問題產生，AWS 團隊採用了 immutable infrastructure 的策略來完成這項工作，即透過使用新版本的 AMI (Amazon Machine Image, 用於 EC2 的啟動鏡像) 直接啟動新的 EC2 instances，並且替換舊的 EC2 instances 來完成這項工作。</p>
+
+<h2 id="evaluation-性能評估">Evaluation (性能評估)</h2>
+
+<p>在該篇論文中，Firecracker 提供了數項不同測試數據的表現，同時，在 NSDI 2020 會議上也公開了對應的測試數據<sup id="fnref:nsdi2020-data" role="doc-noteref"><a href="#fn:nsdi2020-data" class="footnote" rel="footnote">7</a></sup>。</p>
+
+<p>下列的測試採用 EC2 <code class="language-plaintext highlighter-rouge">m5d.metal</code> instance type，其擁有 <code class="language-plaintext highlighter-rouge">Intel Xeon Platinum 8175M</code> 處理器 (48 cores, hyper-threading disabled)、<strong>384GB RAM</strong> 和 4 個 <strong>840GB 的 NVMe 磁碟</strong>。</p>
+
+<p>在這項測試中 Host OS 使用 <code class="language-plaintext highlighter-rouge">Ubuntu 18.04.2</code> 以及 Linux kernel <code class="language-plaintext highlighter-rouge">4.15.0-1044-aws</code> 版本。</p>
+
+<p>這項測試與幾個主要的虛擬化技術執行比較，包含：<code class="language-plaintext highlighter-rouge">Firecracker v0.20.0</code>、<code class="language-plaintext highlighter-rouge">Pre-configured Firecracker</code>、<code class="language-plaintext highlighter-rouge">Intel Cloud Hypervisor</code>、<code class="language-plaintext highlighter-rouge">QEMU v4.2.0</code></p>
+
+<figure class="">
+  <img src="/assets/images/posts/2022/02/firecracker-paper-reading/firecracker-evaluation-boot-time.png" alt="Firecracker 啟動時間表現" />
+  
+    <figcaption>
+      Firecracker 啟動時間表現
+
+    </figcaption>
+  
+</figure>
+
+<p>在啟動時間的定義中，啟動時間為 VMM process 執行建立 process 操作 (fork) 並且 Guest Kernel 發起第一個 <code class="language-plaintext highlighter-rouge">init</code> process 的時間。</p>
+
+<p>從數據顯示預先配置好 IO Port 的 Firecracker 和 Intel Cloud Hypervisor，<strong>兩者環境啟動時間皆優於 QEMU</strong>。然而，要注意的是，上述的測試結果中不包含設置網路裝置，一旦加入網路裝置的設置，Firecracker 和 Cloud Hypervisor 皆會在啟動時間中增加約 <strong>20ms</strong>，然而，QEMU 則是 <strong>35ms</strong>。</p>
+
+<figure class="">
+  <img src="/assets/images/posts/2022/02/firecracker-paper-reading/firecracker-memory-overhead.png" alt="Firecracker 記憶體消耗使用表現" />
+  
+    <figcaption>
+      Firecracker 記憶體消耗使用表現
+
+    </figcaption>
+  
+</figure>
+
+<p>在記憶體的消耗表現上 (Figure 7)，可以觀察到 QEMU 本身需要 128MB 的記憶體、Cloud Hypervisor 則約為 13 MB，然而，Firecracker 僅需約為 3MB 的記憶體消耗。</p>
+
+<figure class="">
+  <img src="/assets/images/posts/2022/02/firecracker-paper-reading/firecracker-io-performance.png" alt="Firecracker 磁碟 I/O 操作效能評估" />
+  
+    <figcaption>
+      Firecracker 磁碟 I/O 操作效能評估 (使用 fio)
+
+    </figcaption>
+  
+</figure>
+
+<p>值得一提的是，在檔案 I/O 操作的表現上 (Figure 8 &amp; Figure 9)，該研究使用 <code class="language-plaintext highlighter-rouge">fio</code> 執行測試，<strong>明顯可以關注到在硬體資源能夠負荷超過 340,000 read IOPS (1GB/s at 4kB) 的情況下，Firecracker 以及 Cloud Hypervisor  僅可以被限縮使用約 13,000 IOPS (52MB/s at 4kB) 的吞吐效能</strong>。</p>
+
+<figure class="">
+  <img src="/assets/images/posts/2022/02/firecracker-paper-reading/firecracker-iperf.png" alt="Firecracker 網路吞吐效能評估" />
+  
+    <figcaption>
+      Firecracker 網路吞吐效能評估 (使用 iperf3)
+
+    </figcaption>
+  
+</figure>
+
+<p>該研究同時也採用了 <code class="language-plaintext highlighter-rouge">iperf3</code> 執行網路效能的測試 (針對虛擬的 tap 網路介面, MTU 為 <strong>1500 byte</strong>)。<strong>在機器能夠達到單一網路流 44Gb/s 及 46Gb/s (10 個並行傳輸) 的狀況下，Firecracker 僅可達到約 15Gb/s 的吞吐</strong>。然而，QEMU 獲得接近於 Cloud Hypervisor 的測試結果，均能擁有較好的網路吞吐性能，這裡部分歸納結論是由於 <code class="language-plaintext highlighter-rouge">virtio</code> 的裝置設計實作而產生的限制。</p>
+
+<h2 id="研究改進和結論">研究改進和結論</h2>
+
+<p>如同前面性能評估所提及的，基於 <code class="language-plaintext highlighter-rouge">virtio</code> 的實作因素，這使得 Firecracker 並無法取得以直接存取 PCI 裝置以接近實體機器的 I/O 吞吐性能。使得網路和磁碟 I/O 的效能存在部分限制。</p>
+
+<p>然而，就論該研究的總結，與前面提及的六項主要問題呼應，AWS Firecracker 的技術著實達到其工程上的設計目標，包含：</p>
+
+<ul>
+  <li><strong>Isolation</strong>: 以 Rust 為基礎的 VMM 允許多個用戶 (multi-tenant) 於單一機器上運行並達到執行環境隔離</li>
+  <li><strong>Overhead and Density</strong>: Firecracker 允許單一硬體資源運行數千個 MicroVMs，以達到節省硬體資源的目的，同時帶來更低的 CPU 和 Memory 資源消耗</li>
+  <li><strong>Performance</strong>: Block IO 以及網路吞吐效能著實存在改善空間，但著實已經滿足 AWS Lambda 及 AWS Fargate 兩者產品所需</li>
+  <li><strong>Compatibility</strong>: Firecracker MicroVMs 運行為修改的 Linux kernel，允許客戶運行相關的應用程式碼，目前尚未發現不允許於 MicroVM 中運行的應用程式</li>
+  <li><strong>Fast Switching</strong>: Firecracker MicroVMs 有較短的啟動時間 (150ms)，並且在多個 MicroVMs 並行啟動的狀況下保持一致的效能</li>
+  <li><strong>Soft Allocation</strong>: Firecracker 測試允許超出 20 倍的資源配置比例，在 AWS 生環境中為允許超出實際 CPU 和 Memory 10 倍的配置比例並未存在問題</li>
+</ul>
+
+<h2 id="總結">總結</h2>
+
+<p>Firecracker 除了於部分開源專案為虛擬化提供解決方案外 (例如：Kata container)，目前 AWS Firecracker 更是已經導入使用於 AWS 的基礎產品建設中，包含 <a href="https://aws.amazon.com/fargate/">AWS Fargate</a> 和 <a href="https://aws.amazon.com/lambda/">AWS Lambda</a>。</p>
+
+<p>這樣的基礎設施改進同時也為客戶帶來更大的優勢，借助 Firecracker 的設計，使得 AWS Fargate 將運算定價折扣甚至達到 50% 的成本優化 (<a href="https://aws.amazon.com/blogs/compute/aws-fargate-price-reduction-up-to-50">AWS Fargate Price Reduction – Up to 50%</a>)。</p>
+
+<p>基於對於這樣的技術感興趣，我著實閱讀了有關 Firecracker 整篇論文和參考部分 Firecracker 專案，歸納出上述的內容，並且花了一些時間整理這項導讀，更多訊息可以參考：</p>
+
+<ul>
+  <li><a href="https://github.com/0xlen/paper-reading/blob/master/firecracker-lightweight-virtualization-for-serverless-applications.pdf">Firecracker: Lightweight virtualization for serverless applications</a></li>
+  <li><a href="https://firecracker-microvm.github.io/">Firecracker project page</a></li>
+  <li><a href="https://github.com/firecracker-microvm/firecracker">Firecracker source code</a></li>
+</ul>
+
+<p>希望透過這樣的導讀，能夠有助於你更加了解 AWS Firecracker 這項技術。</p>
+
+<p>如果你覺得這樣的內容有幫助，可以在底下按個 Like / 留言讓我知道。</p>
+
+<h2 id="延伸資源">延伸資源</h2>
+
+<ul>
+  <li><a href="https://www.youtube.com/watch?v=QdzV04T_kec">AWS re:Invent 2018: REPEAT 1 A Serverless Journey: AWS Lambda Under the Hood (SRV409-R1)</a></li>
+  <li><a href="https://www.youtube.com/watch?v=xmacMfbrG28">AWS re:Invent 2019: REPEAT 1 A serverless journey: AWS Lambda under the hood (SVS405-R1)</a></li>
+  <li><a href="https://www.youtube.com/watch?v=PAEMGa-i2lU">Firecracker: A Secure and Fast microVM for Serverless Computing (Orelly)</a></li>
+  <li><a href="https://www.youtube.com/watch?v=ADOfX2LiEns">Firecracker: Lightweight Virtualization - Opportunities and Challenges (2020)</a></li>
+  <li><a href="https://www.youtube.com/watch?v=0wEiizErKZw">Deep Dive into firecracker-containerd (2019)</a></li>
+  <li><a href="https://www.youtube.com/watch?v=9avPJL9Zqso">Extending containerd - Samuel Karp &amp; Maksym Pavlenko, Amazon (2019)</a></li>
+  <li><a href="https://www.youtube.com/watch?v=2rwYZdVPN4g">Deep Dive into firecracker-containerd - Mitch Beaumont (AWS)</a></li>
+</ul>
+
+<h2 id="references">References</h2>
+
+<div class="footnotes" role="doc-endnotes">
+  <ol>
+    <li id="fn:firecracker-paper-note" role="doc-endnote">
+      <p>Alexandru Agache, Marc Brooker, Andreea Florescu, Alexandra Iordache, Anthony Liguori, Rolf Neugebauer, Phil Piwonka, Diana-Maria Popa. (2020). <a href="https://github.com/0xlen/paper-reading/blob/master/firecracker-lightweight-virtualization-for-serverless-applications.pdf">Firecracker: Lightweight virtualization for serverless applications</a> <a href="#fnref:firecracker-paper-note" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:virtualization-architectures" role="doc-endnote">
+      <p>Gerald J. Popek, Robert P. Goldberg. (1974). <a href="https://dl.acm.org/doi/10.1145/361011.361073">Formal requirements for virtualizable third generation architectures</a> <a href="#fnref:virtualization-architectures" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:how-firecracker-work" role="doc-endnote">
+      <p><a href="https://www.youtube.com/watch?v=BIRv2FnHJAg">How AWS’s Firecracker virtual machines work</a> <a href="#fnref:how-firecracker-work" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:firecracker-open-source-innovation" role="doc-endnote">
+      <p><a href="https://www.youtube.com/watch?v=yDplzXEdBTI">AWS re:Invent 2019: Firecracker open-source innovation (OPN402)</a> <a href="#fnref:firecracker-open-source-innovation" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:linux-capabilities" role="doc-endnote">
+      <p><a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux_atomic_host/7/html/container_security_guide/linux_capabilities_and_seccomp">Linux Capabilities and Seccomp</a> <a href="#fnref:linux-capabilities" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:deep-dive-into-aws-lambda-security" role="doc-endnote">
+      <p><a href="https://www.youtube.com/watch?v=FTwsMYXWGB0">AWS re:Invent 2020: Deep dive into AWS Lambda security: Function isolation</a> <a href="#fnref:deep-dive-into-aws-lambda-security" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+    <li id="fn:nsdi2020-data" role="doc-endnote">
+      <p><a href="https://github.com/firecracker-microvm/nsdi2020-data">Firecracker benchmarking code and data</a> <a href="#fnref:nsdi2020-data" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/#amazon-web-services" class="page__taxonomy-item" rel="tag">amazon web services</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#amazon" class="page__taxonomy-item" rel="tag">amazon</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#aws-fargate" class="page__taxonomy-item" rel="tag">AWS Fargate</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#aws" class="page__taxonomy-item" rel="tag">aws</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#firecracker" class="page__taxonomy-item" rel="tag">firecracker</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#lambda" class="page__taxonomy-item" rel="tag">Lambda</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#severless" class="page__taxonomy-item" rel="tag">severless</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#virtualization" class="page__taxonomy-item" rel="tag">virtualization</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2022-02-20T00:00:00-06:00">February 20, 2022</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=AWS+Firecracker+%E8%AB%96%E6%96%87%E5%B0%8E%E8%AE%80%EF%BC%9A%E4%B8%80%E5%80%8B%E5%B0%8F%E5%AD%A9%E6%89%8D%E5%81%9A%E9%81%B8%E6%93%87%EF%BC%8C%E6%88%91%E5%85%A9%E5%80%8B%E5%85%A8%E9%83%A8%E9%83%BD%E8%A6%81%E7%9A%84+VMM%20https%3A%2F%2Feasoncao.com%2Ffirecracker-paper-reading%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Feasoncao.com%2Ffirecracker-paper-reading%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Feasoncao.com%2Ffirecracker-paper-reading%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+      <iframe
+        style="width: 100%; max-width: 485px; height: 170px; margin: auto; overflow: hidden; display: block;"
+        src="https://button.like.co/in/embed/easoncao/button?referrer=https%3A%2F%2Feasoncao.com%2Ffirecracker-paper-reading%2F" frameBorder="0">
+      </iframe>
+      
+
+      <!-- Buy me a coffee -->
+      <section class="page__share">
+        <h4 class="page__share-title">Is that useful? Let me know or buy me a coffee</h4>
+        <p class="page__meta">這篇內容對你有幫助嗎？</p>
+        <a href="https://paypal.me/e4son"><img src="https://cdn.jsdelivr.net/gh/twolfson/paypal-github-button@1.0.0/dist/button.svg" alt="Support via PayPal"></a>
+        <a href="https://p.ecpay.com.tw/17C964C" class="btn btn--success">一次性支持 (ECPay)</a>
+      </section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/dopamine-detox-and-have-high-productivity/" class="pagination--pager" title="擁有高效生活：手機、社交應用軟體對於我們的影響以及應對 - 退出社交軟體 30 天 (Dopamine Fast for 30 Days)
+">Previous</a>
+    
+    
+      <a href="/nex-work/" class="pagination--pager" title="NEX WORK - 獲得國際大公司的內推機會、串連世界各地菁英：如果流浪是為了找回家的路，我們有責任把回家的路變得更美好
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+      <div class="page__comments">
+  
+  
+      <h4 class="page__comments-title">Leave a comment</h4>
+      <section id="disqus_thread"></section>
+    
+</div>
+
+    
+  </article>
+
+  
+
+  <!-- Google Adsense -->
+  <div class="page__related">
+    <h4 class="page__related-title">You May Also Have Interest</h4>
+    <div>
+        <!-- responsive ad -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-1852752964062281"
+             data-ad-slot="2849626059"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+  </div>
+
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/2023/04/five-years-at-amazon-as-cloud-support-engineer-in-aws/cover.jpg" alt="">
+      </div>
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/five-years-at-amazon-as-cloud-support-engineer-in-aws/" rel="permalink">身處 Amazon 工作 5 年學到的事：在 AWS 擔任 Cloud Support Engineer 是什麼樣的體驗
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">2023 是我在 AWS 擔任 Cloud Support Engineer 的第六年，這份工作對我來說某種程度上是又愛又恨。作為見證 AWS 中文技術支援團隊的一員，五年時間說長不長，說短也不短，卻有非常多學習和體悟。
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/2023/03/aws-cloud-support-engineer-interview-tips-and-required-skills/cover.jpg" alt="">
+      </div>
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/aws-cloud-support-engineer-interview-tips-and-required-skills/" rel="permalink">在 AWS Cloud Support Engineer 面試中脫穎而出：必備的技術能力和重要特質
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">如果你正準備面試 AWS Cloud Support Engineer 的職位，在這篇文章中，我將與你分享我對於 AWS Cloud Support Engineer 所需的必備技能和特質，幫助你更好地了解這份職位且思考自己目前所具備的能力是與該團隊所交集，讓你在面試中脫穎而出。
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/eks-aws-load-balancer-controller-v1-to-v2-migration-behavior/" rel="permalink">[AWS] 那些沒寫在文件上的事 - AWS Load Balancer Controller v1 升級至 v2
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  3 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">隨著 Amazon EKS 對於 Kubernetes 1.22 的推出，1.21 也預計於 February 15, 2023 在 Amazon EKS 終止支援 1，對於 AWS Load Balancer Controller 仍然使用舊版本的用戶來說，勢必面臨需要升級 AWS Load Balancer ...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/2020/10/zero-downtime-deployment-when-using-alb-ingress-controller/deployment-workflow-alb-ingress-controller-4-side-note-of-deregister.png" alt="">
+      </div>
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/zero-downtime-deployment-when-using-alb-ingress-controller-on-amazon-eks-and-prevent-502-error/" rel="permalink">[AWS][EKS] Zero downtime deployment(RollingUpdate) when using AWS Load Balancer Controller on Amazon EKS
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  22 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">This article is describing the thing you need to aware when using ALB Ingress Controller (AWS Load Balancer Controller) to do deployment and prevent 502 erro...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+
+
+<div id="footer-subscribe-email-list">
+    <h3>Get the updates </h3>
+    <form action="https://docs.google.com/forms/d/e/1FAIpQLSfuofCYvu2cV614aDt6SO5ua_5trT0EC5yeSJObLY0KGjFtvQ/formResponse" method="POST">
+        <div style="display: flex;">
+            <!-- input name="entry.205499253" type="text" id="Name" class="form-control" placeholder="Name" -->
+            <input name="entry.1288273007" type="email" id="email" class="form-control" placeholder="Email" required="required" style="margin-top: 2px; margin-right: 5px; width: 50%;">
+            <input class="btn btn--primary" id="subscribe" type="submit" value="訂閱 (Sign Up)" style="width: 30%;">
+        </div>
+    </form>
+</div>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8GPCXJPGFZ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-8GPCXJPGFZ');
+</script>
+<!-- end custom footer snippets -->
+
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+          <li><a href="https://facebook.com/EasonTechTalk" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i> Facebook</a></li>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    <li><a href="/sitemap.xml"><i class="fas fa-fw fa-sitemap" aria-hidden="true"></i> SiteMap</a></li>
+    <li><a href="/tags"><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags</a></li>
+    <li><a href="https://toolbox.easoncao.com/"><i class="fas fa-fw fa-toolbox" aria-hidden="true"></i> ToolBox</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2023 Continuous Improvement. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+  <script>
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-80058083-2']);
+  
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "https://easoncao.com/firecracker-paper-reading/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/firecracker-paper-reading"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://lenlabs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

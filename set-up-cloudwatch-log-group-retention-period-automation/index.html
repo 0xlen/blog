@@ -1,0 +1,929 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.19.3 by Michael Rose
+  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>[AWS] 為 CloudWatch Log Group 自動設定日誌保留期限 (Retention) - Continuous Improvement</title>
+<meta name="description" content="當使用新版本的 AWS Console 建立 CloudWatch Log Group 時，其預設允許選擇對應的保留期間 (Retention)。然而，若涉及部署和配置的自動化，我將在這篇內容與你分享可用的解決方案">
+
+
+  <meta name="author" content="Yang-Xin Cao (Eason Cao)">
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Continuous Improvement">
+<meta property="og:title" content="[AWS] 為 CloudWatch Log Group 自動設定日誌保留期限 (Retention)">
+<meta property="og:url" content="https://easoncao.com/set-up-cloudwatch-log-group-retention-period-automation/">
+
+
+  <meta property="og:description" content="當使用新版本的 AWS Console 建立 CloudWatch Log Group 時，其預設允許選擇對應的保留期間 (Retention)。然而，若涉及部署和配置的自動化，我將在這篇內容與你分享可用的解決方案">
+
+
+
+  <meta property="og:image" content="https://easoncao.com/assets/images/posts/2021/07/set-up-cloudwatch-log-group-retention-period-automation/create-cw-log-group.png">
+
+
+
+
+
+  <meta property="article:published_time" content="2021-07-31T00:00:00-05:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://easoncao.com/set-up-cloudwatch-log-group-retention-period-automation/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Continuous Improvement",
+      "url": "https://easoncao.com/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Continuous Improvement Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- Google adsense -->
+<script data-ad-client="ca-pub-1852752964062281" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<link rel="shortcut icon" type="image/jpg" href="/assets/apple-touch-icon.png"/>
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+          <a class="site-logo" href="/"><img src="/assets/apple-touch-icon.png" alt=""></a>
+        
+        <a class="site-title" href="/">
+          Continuous Improvement
+          <span class="site-subtitle"></span>
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/posts/">所有文章 All Posts</a>
+            </li><li class="masthead__menu-item">
+              <a href="/courses/">學習資源 Learning</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">關於 About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="https://www.gravatar.com/avatar/0d33994eec9eddc67415e07a7fcafc9d?s=200" alt="Yang-Xin Cao (Eason Cao)" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Yang-Xin Cao (Eason Cao)</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>Engineer@Amazon <br />- <a href="https://www.awshof.com/allstarscertifiedlist.html">AWS All-5 certified</a> / ECS &amp; EKS SME / Marathon Runner / PADI Open Water Diver</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Amazon / Dublin, Ireland</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:eason@easoncao.com" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+            <li><a href="https://linkedin.com/in/easoncao" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-id-badge" aria-hidden="true"></i><span class="label">LinkedIn</span></a></li>
+          
+        
+          
+        
+          
+            <li><a href="https://facebook.com/EasonTechTalk" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i><span class="label">Facebook</span></a></li>
+          
+        
+          
+            <li><a href="https://github.com/0xlen" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="[AWS] 為 CloudWatch Log Group 自動設定日誌保留期限 (Retention)">
+    <meta itemprop="description" content="日誌 (Log) 儲存一直是在資訊稽核中十分重要的一環，在 AWS 中，提供了 CloudWatch Logs 作為監控、存放不同 AWS 資源輸出的日誌檔案 (例如：EC2 等) [1]。">
+    <meta itemprop="datePublished" content="2021-07-31T00:00:00-05:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">[AWS] 為 CloudWatch Log Group 自動設定日誌保留期限 (Retention)
+</h1>
+          
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+
+</p>
+          
+        </header>
+      
+
+      <!-- Google ads in article -->
+      <div>
+          <ins class="adsbygoogle"
+               style="display:block; text-align:center;"
+               data-ad-layout="in-article"
+               data-ad-format="fluid"
+               data-ad-client="ca-pub-1852752964062281"
+               data-ad-slot="8435469231"></ins>
+          <script>
+               (adsbygoogle = window.adsbygoogle || []).push({});
+          </script>
+      </div>
+      <hr>
+
+      <section class="page__content" itemprop="text">
+        
+        <p>日誌 (Log) 儲存一直是在資訊稽核中十分重要的一環，在 AWS 中，提供了 CloudWatch Logs 作為監控、存放不同 AWS 資源輸出的日誌檔案 (例如：EC2 等) [1]。</p>
+
+<p>當使用新版本的 AWS Console 建立 CloudWatch Log Group 時，其預設允許選擇對應的保留期間 (Retention)。然而，若涉及部署和配置的自動化，我將在這篇內容與你分享可用的解決方案。</p>
+
+<figure class="">
+  <img src="/assets/images/posts/2021/07/set-up-cloudwatch-log-group-retention-period-automation/create-cw-log-group.png" alt="於 AWS Console 建立 CloudWatch Log Group 時選擇日誌保留時間 (Retention setting)" />
+  
+    <figcaption>
+      於 AWS Console 建立 CloudWatch Log Group 時選擇日誌保留時間 (Retention setting)
+
+    </figcaption>
+  
+</figure>
+
+<h2 id="問題描述">問題描述</h2>
+
+<p>預設情況下，若你使用的 AWS 服務資源存放日誌的行為 (例如：Amazon ECS、Amazon EKS、CodeBuild … 等)、或是採用 <code class="language-plaintext highlighter-rouge">CreateLogGroup</code> API [2] 建立 CloudWatch Log 幫助你存放日誌，很有可能建立出來的 CloudWatch Log Group 日誌的存放時間會是「永遠 (Never Expire)」。</p>
+
+<p>然而，一切事情可能都涉及到費用和運算成本的考量，即使 CloudWatch Log Group 每 GB 的「日誌儲存費用」十分便宜 [3]。但也許隨著組織規模的成長，日誌的儲存規模到達 PB 量級似乎也不是特別遙不可及的事情。伴隨著團隊的增加和規模的擴大，使用 AWS 進行產品遞交的成員也逐漸增加、使用了更多服務、開啟了更多的資源，相對的，可能間接增加了數以萬計的 CloudWatch Log Group。</p>
+
+<p>如果這個時候，當你發現 CloudWatch Log Group 已經超過 100, 000 以上，甚至已經多到 100 頁 AWS Console 都塞不下的時候，你還發現每一個 CloudWatch Log Group 都是 “Never Expire”，經年累月下，可能從公司草創到的 Application Log 都還留在 CloudWatch Log Group 裡面。直到帳單上 CloudWatch Log 的費用又成長到超出預期，勢必得在合規的要求下，為這些日誌儲存期限手動一個一個設定到合乎預期的保留範圍。</p>
+
+<p>於是你開始思考：<strong>是否能在 CloudWatch Log Group 被建立好的同時也自動設定對應的保留期限？</strong></p>
+
+<h2 id="解決方案">解決方案</h2>
+
+<p>答案是有的，即使在 <code class="language-plaintext highlighter-rouge">CreateLogGroup</code> API [2] 不支持更改保留時間 (Retention Period) 的情況下，仍有幾種方式可以在建立過程中達到類似的需求：</p>
+
+<h3 id="a-使用-aws-cloudformation">A. 使用 AWS CloudFormation</h3>
+
+<blockquote>
+  <p>什麼是 AWS CloudFormation?</p>
+
+  <p><a href="/using-aws-lambda-and-amazon-sns-to-get-file-change-notifications-from-aws-codecommit/">AWS CloudFormation 是一個管理工具並且能夠使用通用的語法幫助你描述並且部署 AWS 相關的基礎建設和資源。</a></p>
+</blockquote>
+
+<p>如果你很習慣使用 CloudFormation 建立和管理 AWS 資源，你可以選擇使用 <a href="https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-logs-loggroup.html#aws-resource-logs-loggroup-syntax.yaml">AWS::Logs::LogGroup</a>，幫助您建立和管理 CloudWatch Log Group 資源。</p>
+
+<p>該類別提供了對應的屬性 (<code class="language-plaintext highlighter-rouge">RetentionInDays</code>) 可以設置 CloudWatch Log Group 預設的日誌保留時間：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RetentionInDays
+
+The number of days to retain the log events in the specified log group. Possible values are: 1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, and 3653.
+</code></pre></div></div>
+
+<p>其 CloudFormation template 在編寫過程中，可以描述如下，以設置 CloudWatch Log Group 資源 (myLogGroup) 預設的日誌保留時間為 7 天：</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">Resources</span><span class="pi">:</span>
+  <span class="na">myLogGroup</span><span class="pi">:</span>
+    <span class="na">Type</span><span class="pi">:</span> <span class="s">AWS::Logs::LogGroup</span>
+    <span class="na">Properties</span><span class="pi">:</span>
+      <span class="na">RetentionInDays</span><span class="pi">:</span> <span class="m">7</span>
+</code></pre></div></div>
+
+<h3 id="b-選擇使用-putretentionpolicy-api-4-幫助修改其屬性">B. 選擇使用 PutRetentionPolicy API [4] 幫助修改其屬性</h3>
+
+<h4 id="aws-cli">AWS CLI</h4>
+
+<p>CloudWatch Log 同時提供了 <code class="language-plaintext highlighter-rouge">PutRetentionPolicy</code> API [4] 以幫助你修改特定 CloudWatch Log Group 的日誌保留期限 (Retention)。這意味著，您可以採用 AWS CLI 提供的對應以下命令並且設計你的自定義的腳本 (Shell Script) 定期幫助您更新 (例如使用 CronJob)。</p>
+
+<p>AWS CLI 提供了以下命令 (為 CloudWatch Log Group: <code class="language-plaintext highlighter-rouge">my-logs</code> 設定日誌保留時間為 5 天) [5]：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>aws logs put-retention-policy <span class="nt">--log-group-name</span> my-logs <span class="nt">--retention-in-days</span> 5
+</code></pre></div></div>
+
+<h4 id="cloudwatch-event-rule--lambda">CloudWatch Event Rule + Lambda</h4>
+
+<p>亦或者，你可以基於 CloudWatch Log Group 建立事件，採用 Lambda Function 實現該實作。為了監控相關的事件，通常可以採用 CloudWatch Event 規則 (CloudWatch Event Rule) [6] 以捕捉相關的事件，並且透過其觸發定義的 Lambda Function 執行自定義操作，在這樣的架構下，其可能執行流程如下：</p>
+
+<figure class="">
+  <img src="/assets/images/posts/2021/07/set-up-cloudwatch-log-group-retention-period-automation/cwe-update-cw-log-retention-diagram.png" alt="CloudWatch Event Rule + Lambda 執行流程" />
+  
+    <figcaption>
+      CloudWatch Event Rule + Lambda 執行流程
+
+    </figcaption>
+  
+</figure>
+
+<ul>
+  <li>(1) 建立 CloudWatch Log Group (使用 <code class="language-plaintext highlighter-rouge">CreateLogGroup</code> API)</li>
+  <li>(2) 觸發 CloudWatch Event Rule</li>
+  <li>(3) 觸發自定義的 Lambda Function</li>
+  <li>(4) 於 Lambda Function 中使用 <code class="language-plaintext highlighter-rouge">PutRetentionPolicy</code> API 幫助您修改 CloudWatch Log Group 對應的 Retention policy</li>
+</ul>
+
+<p>要實作上述的流程，其需要步驟如下：</p>
+
+<h5 id="1-建立-iam-role">1. 建立 IAM Role</h5>
+
+<p>不管是自行建立對應的 IAM Role 或是採用 AWS Lambda 建立過程中產生的對象，一般來說，其都需要允許操作 <code class="language-plaintext highlighter-rouge">logs:PutRetentionPolicy</code> 的權限，以確保 Lambda Function 在呼叫過程具備足夠的權限操作 CloudWatch Log Group 資源更新，例如：</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"Version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-10-17"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"Statement"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"Sid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"AllowUpdateLogRetentionPolicy"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Allow"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"logs:PutRetentionPolicy"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Resource"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<h5 id="2-建立-lambda-function">2. 建立 Lambda Function</h5>
+
+<p>建立 Lambda [7] 以確保 CloudWatch Event 在觸發時能夠執行更改對應 CloudWatch Log Group 的日誌保留時間，我使用了簡易的 Python 應用程式碼完成這項工作：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">boto3</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">boto3</span><span class="p">.</span><span class="n">client</span><span class="p">(</span><span class="s">'logs'</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">getCloudWatchLogGroupName</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
+    <span class="k">if</span> <span class="s">'logGroupName'</span> <span class="ow">in</span> <span class="n">event</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">event</span><span class="p">[</span><span class="s">'logGroupName'</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">event</span><span class="p">[</span><span class="s">'detail'</span><span class="p">][</span><span class="s">'requestParameters'</span><span class="p">][</span><span class="s">'logGroupName'</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">lambda_handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+    <span class="n">RetentionDays</span> <span class="o">=</span> <span class="mi">7</span>
+    <span class="n">CloudWatchLogGroupName</span> <span class="o">=</span> <span class="n">getCloudWatchLogGroupName</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="s">'[DEBUG] Updating Log Group {0}, retention: {1}'</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">CloudWatchLogGroupName</span><span class="p">,</span> <span class="n">RetentionDays</span><span class="p">))</span>
+
+    <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="n">put_retention_policy</span><span class="p">(</span>
+        <span class="n">logGroupName</span><span class="o">=</span><span class="n">CloudWatchLogGroupName</span><span class="p">,</span>
+        <span class="n">retentionInDays</span><span class="o">=</span><span class="n">RetentionDays</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">response</span>
+</code></pre></div></div>
+
+<h5 id="3-設定-cloudwatch-event-rule">3. 設定 CloudWatch Event Rule</h5>
+
+<ul>
+  <li>至 CloudWatch Console 並選擇對應的區域，例如: <a href="https://ap-northeast-1.console.aws.amazon.com/cloudwatch/home?region=ap-northeast-1#rules:">https://ap-northeast-1.console.aws.amazon.com/cloudwatch/home?region=ap-northeast-1#rules:</a></li>
+  <li>點擊 <code class="language-plaintext highlighter-rouge">Create rule</code></li>
+  <li>於 <code class="language-plaintext highlighter-rouge">Event Source</code> 選擇 <code class="language-plaintext highlighter-rouge">Event Pattern</code>
+    <ul>
+      <li>Service Name: <code class="language-plaintext highlighter-rouge">CloudWatch Logs</code></li>
+      <li>Event Type: <code class="language-plaintext highlighter-rouge">AWS API Call via CloudTrail</code></li>
+    </ul>
+  </li>
+  <li>選擇 <code class="language-plaintext highlighter-rouge">Specific operation(s)</code>: <code class="language-plaintext highlighter-rouge">CreateLogGroup</code></li>
+</ul>
+
+<p>例如以下的 CloudWatch Event Rule：</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+  "source": [
+    "aws.logs"
+  ],
+  "detail-type": [
+    "AWS API Call via CloudTrail"
+  ],
+  "detail": {
+    "eventSource": [
+      "logs.amazonaws.com"
+    ],
+    "eventName": [
+      "CreateLogGroup"
+    ]
+  }
+}
+</code></pre></div></div>
+
+<p>於 <code class="language-plaintext highlighter-rouge">Targets</code> 點擊 <code class="language-plaintext highlighter-rouge">Add Targets</code> 並且選擇前面 2. 建立的 Lambda Function 以確保其正確觸發。</p>
+
+<p>至此，一旦完成建立上述流程，在建立 CloudWatch Log Group 後，便能正確的觸發 Lambda Function 並且修改 CloudWatch Log Group 對應的 Retention Period。</p>
+
+<h2 id="總結">總結</h2>
+
+<p>在這篇內容中，我與你分享為 CloudWatch Log Group 自動設定日誌保留期限 (Retention)。並且進一步分享了一項自動化架構的實現流程，同時列舉了具體細節和範例設定。</p>
+
+<p>如果你覺得這樣的內容有幫助，可以在底下按個 Like / 留言讓我知道。</p>
+
+<h2 id="references">References</h2>
+
+<ul>
+  <li>[1] <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/WhatIsCloudWatchLogs.html">What is Amazon CloudWatch Logs?</a></li>
+  <li>[2] <a href="https://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_CreateLogGroup.html">CreateLogGroup API</a></li>
+  <li>[3] <a href="https://aws.amazon.com/cloudwatch/pricing/">Amazon CloudWatch pricing</a></li>
+  <li>[4] <a href="https://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_PutRetentionPolicy.html">PutRetentionPolicy</a></li>
+  <li>[5] <a href="https://docs.aws.amazon.com/cli/latest/reference/logs/put-retention-policy.html">AWS CLI - aws logs ut-retention-policy</a></li>
+  <li>[6] <a href="https://docs.aws.amazon.com/zh_tw/AmazonCloudWatch/latest/events/WhatIsCloudWatchEvents.html">什麼是 Amazon CloudWatch Events</a></li>
+  <li>[7] <a href="https://docs.aws.amazon.com/lambda/latest/dg/getting-started-create-function.html">Create a Lambda function with the console</a></li>
+</ul>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/#amazon-web-services" class="page__taxonomy-item" rel="tag">amazon web services</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#amazon" class="page__taxonomy-item" rel="tag">amazon</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#aws" class="page__taxonomy-item" rel="tag">aws</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#cloudwatch-log" class="page__taxonomy-item" rel="tag">CloudWatch Log</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#cloudwatch" class="page__taxonomy-item" rel="tag">CloudWatch</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#lambda-function" class="page__taxonomy-item" rel="tag">Lambda Function</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#lambda" class="page__taxonomy-item" rel="tag">Lambda</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2021-07-31T00:00:00-05:00">July 31, 2021</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=%5BAWS%5D+%E7%82%BA+CloudWatch+Log+Group+%E8%87%AA%E5%8B%95%E8%A8%AD%E5%AE%9A%E6%97%A5%E8%AA%8C%E4%BF%9D%E7%95%99%E6%9C%9F%E9%99%90+%28Retention%29%20https%3A%2F%2Feasoncao.com%2Fset-up-cloudwatch-log-group-retention-period-automation%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Feasoncao.com%2Fset-up-cloudwatch-log-group-retention-period-automation%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Feasoncao.com%2Fset-up-cloudwatch-log-group-retention-period-automation%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+      <iframe
+        style="width: 100%; max-width: 485px; height: 170px; margin: auto; overflow: hidden; display: block;"
+        src="https://button.like.co/in/embed/easoncao/button?referrer=https%3A%2F%2Feasoncao.com%2Fset-up-cloudwatch-log-group-retention-period-automation%2F" frameBorder="0">
+      </iframe>
+      
+
+      <!-- Buy me a coffee -->
+      <section class="page__share">
+        <h4 class="page__share-title">Is that useful? Let me know or buy me a coffee</h4>
+        <p class="page__meta">這篇內容對你有幫助嗎？</p>
+        <a href="https://paypal.me/e4son"><img src="https://cdn.jsdelivr.net/gh/twolfson/paypal-github-button@1.0.0/dist/button.svg" alt="Support via PayPal"></a>
+        <a href="https://p.ecpay.com.tw/17C964C" class="btn btn--success">一次性支持 (ECPay)</a>
+      </section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/deep-dive-into-http2-and-aws-alb/" class="pagination--pager" title="[AWS] 排除 Application Load Balancer 使用 HTTP/2 健康檢查 (Health Check) 失敗
+">Previous</a>
+    
+    
+      <a href="/cka-cncf-certified-kubernetes-administrator-study-guide/" class="pagination--pager" title="(2021 年底最新) 我是如何通過 CKA - 認證考試及準備 Certified Kubernetes Administrator
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+      <div class="page__comments">
+  
+  
+      <h4 class="page__comments-title">Leave a comment</h4>
+      <section id="disqus_thread"></section>
+    
+</div>
+
+    
+  </article>
+
+  
+
+  <!-- Google Adsense -->
+  <div class="page__related">
+    <h4 class="page__related-title">You May Also Have Interest</h4>
+    <div>
+        <!-- responsive ad -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-1852752964062281"
+             data-ad-slot="2849626059"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+  </div>
+
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/2023/04/five-years-at-amazon-as-cloud-support-engineer-in-aws/cover.jpg" alt="">
+      </div>
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/five-years-at-amazon-as-cloud-support-engineer-in-aws/" rel="permalink">身處 Amazon 工作 5 年學到的事：在 AWS 擔任 Cloud Support Engineer 是什麼樣的體驗
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">2023 是我在 AWS 擔任 Cloud Support Engineer 的第六年，這份工作對我來說某種程度上是又愛又恨。作為見證 AWS 中文技術支援團隊的一員，五年時間說長不長，說短也不短，卻有非常多學習和體悟。
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/2023/03/aws-cloud-support-engineer-interview-tips-and-required-skills/cover.jpg" alt="">
+      </div>
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/aws-cloud-support-engineer-interview-tips-and-required-skills/" rel="permalink">在 AWS Cloud Support Engineer 面試中脫穎而出：必備的技術能力和重要特質
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">如果你正準備面試 AWS Cloud Support Engineer 的職位，在這篇文章中，我將與你分享我對於 AWS Cloud Support Engineer 所需的必備技能和特質，幫助你更好地了解這份職位且思考自己目前所具備的能力是與該團隊所交集，讓你在面試中脫穎而出。
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/eks-aws-load-balancer-controller-v1-to-v2-migration-behavior/" rel="permalink">[AWS] 那些沒寫在文件上的事 - AWS Load Balancer Controller v1 升級至 v2
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  3 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">隨著 Amazon EKS 對於 Kubernetes 1.22 的推出，1.21 也預計於 February 15, 2023 在 Amazon EKS 終止支援 1，對於 AWS Load Balancer Controller 仍然使用舊版本的用戶來說，勢必面臨需要升級 AWS Load Balancer ...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/2020/10/zero-downtime-deployment-when-using-alb-ingress-controller/deployment-workflow-alb-ingress-controller-4-side-note-of-deregister.png" alt="">
+      </div>
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/zero-downtime-deployment-when-using-alb-ingress-controller-on-amazon-eks-and-prevent-502-error/" rel="permalink">[AWS][EKS] Zero downtime deployment(RollingUpdate) when using AWS Load Balancer Controller on Amazon EKS
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  22 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">This article is describing the thing you need to aware when using ALB Ingress Controller (AWS Load Balancer Controller) to do deployment and prevent 502 erro...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+
+
+<div id="footer-subscribe-email-list">
+    <h3>Get the updates </h3>
+    <form action="https://docs.google.com/forms/d/e/1FAIpQLSfuofCYvu2cV614aDt6SO5ua_5trT0EC5yeSJObLY0KGjFtvQ/formResponse" method="POST">
+        <div style="display: flex;">
+            <!-- input name="entry.205499253" type="text" id="Name" class="form-control" placeholder="Name" -->
+            <input name="entry.1288273007" type="email" id="email" class="form-control" placeholder="Email" required="required" style="margin-top: 2px; margin-right: 5px; width: 50%;">
+            <input class="btn btn--primary" id="subscribe" type="submit" value="訂閱 (Sign Up)" style="width: 30%;">
+        </div>
+    </form>
+</div>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8GPCXJPGFZ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-8GPCXJPGFZ');
+</script>
+<!-- end custom footer snippets -->
+
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+          <li><a href="https://facebook.com/EasonTechTalk" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i> Facebook</a></li>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    <li><a href="/sitemap.xml"><i class="fas fa-fw fa-sitemap" aria-hidden="true"></i> SiteMap</a></li>
+    <li><a href="/tags"><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags</a></li>
+    <li><a href="https://toolbox.easoncao.com/"><i class="fas fa-fw fa-toolbox" aria-hidden="true"></i> ToolBox</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2023 Continuous Improvement. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+  <script>
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-80058083-2']);
+  
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "https://easoncao.com/set-up-cloudwatch-log-group-retention-period-automation/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/set-up-cloudwatch-log-group-retention-period-automation"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://lenlabs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

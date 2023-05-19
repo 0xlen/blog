@@ -1,0 +1,1188 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.19.3 by Michael Rose
+  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>(2021 年底最新) 我是如何通過 CKA - 認證考試及準備 Certified Kubernetes Administrator - Continuous Improvement</title>
+<meta name="description" content="Certified Kubernetes Administrator (CKA), CNCF (Cloud Native Compute Foundation)">
+
+
+  <meta name="author" content="Yang-Xin Cao (Eason Cao)">
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Continuous Improvement">
+<meta property="og:title" content="(2021 年底最新) 我是如何通過 CKA - 認證考試及準備 Certified Kubernetes Administrator">
+<meta property="og:url" content="https://easoncao.com/cka-cncf-certified-kubernetes-administrator-study-guide/">
+
+
+  <meta property="og:description" content="Certified Kubernetes Administrator (CKA), CNCF (Cloud Native Compute Foundation)">
+
+
+
+  <meta property="og:image" content="https://easoncao.com/assets/images/posts/2021/11/cka-cncf-certified-kubernetes-administrator-study-guide/cover.jpeg">
+
+
+
+
+
+  <meta property="article:published_time" content="2021-11-15T00:00:00-06:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://easoncao.com/cka-cncf-certified-kubernetes-administrator-study-guide/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Continuous Improvement",
+      "url": "https://easoncao.com/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Continuous Improvement Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- Google adsense -->
+<script data-ad-client="ca-pub-1852752964062281" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<link rel="shortcut icon" type="image/jpg" href="/assets/apple-touch-icon.png"/>
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+          <a class="site-logo" href="/"><img src="/assets/apple-touch-icon.png" alt=""></a>
+        
+        <a class="site-title" href="/">
+          Continuous Improvement
+          <span class="site-subtitle"></span>
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/posts/">所有文章 All Posts</a>
+            </li><li class="masthead__menu-item">
+              <a href="/courses/">學習資源 Learning</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">關於 About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="https://www.gravatar.com/avatar/0d33994eec9eddc67415e07a7fcafc9d?s=200" alt="Yang-Xin Cao (Eason Cao)" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Yang-Xin Cao (Eason Cao)</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>Engineer@Amazon <br />- <a href="https://www.awshof.com/allstarscertifiedlist.html">AWS All-5 certified</a> / ECS &amp; EKS SME / Marathon Runner / PADI Open Water Diver</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Amazon / Dublin, Ireland</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:eason@easoncao.com" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+            <li><a href="https://linkedin.com/in/easoncao" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-id-badge" aria-hidden="true"></i><span class="label">LinkedIn</span></a></li>
+          
+        
+          
+        
+          
+            <li><a href="https://facebook.com/EasonTechTalk" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i><span class="label">Facebook</span></a></li>
+          
+        
+          
+            <li><a href="https://github.com/0xlen" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="(2021 年底最新) 我是如何通過 CKA - 認證考試及準備 Certified Kubernetes Administrator">
+    <meta itemprop="description" content="由於我實在是太懶了，年初嚷嚷買的考試給他一個拖到快年底，決定請了幾天特休閉關唸書準備，並且花了一個下午完成了線上考試。我在 Linkedin 分享考到 Certified Kubernetes Administrator 之後，我就收到許多私人訊息，甚至有的還問有沒有試題的 dump (真的有點太莫名其奇妙了)。因此簡單透過自己的經驗，跟有想要準備這個認證而在閱讀這篇文章的你分享一下自己的考試過程。">
+    <meta itemprop="datePublished" content="2021-11-15T00:00:00-06:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">(2021 年底最新) 我是如何通過 CKA - 認證考試及準備 Certified Kubernetes Administrator
+</h1>
+          
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  5 minute read
+
+</p>
+          
+        </header>
+      
+
+      <!-- Google ads in article -->
+      <div>
+          <ins class="adsbygoogle"
+               style="display:block; text-align:center;"
+               data-ad-layout="in-article"
+               data-ad-format="fluid"
+               data-ad-client="ca-pub-1852752964062281"
+               data-ad-slot="8435469231"></ins>
+          <script>
+               (adsbygoogle = window.adsbygoogle || []).push({});
+          </script>
+      </div>
+      <hr>
+
+      <section class="page__content" itemprop="text">
+        
+        <p>由於我實在是太懶了，年初嚷嚷買的考試給他一個拖到快年底，決定請了幾天特休閉關唸書準備，並且花了一個下午完成了線上考試。我在 Linkedin 分享考到 Certified Kubernetes Administrator 之後，我就收到許多私人訊息，甚至有的還問有沒有試題的 dump (真的有點太莫名其奇妙了)。因此簡單透過自己的經驗，跟有想要準備這個認證而在閱讀這篇文章的你分享一下自己的考試過程。</p>
+
+<figure class="">
+  <img src="/assets/images/posts/2021/11/cka-cncf-certified-kubernetes-administrator-study-guide/cover.jpeg" alt="Become a Certified Kubernetes Administrator" />
+  
+    <figcaption>
+      Become a Certified Kubernetes Administrator
+
+    </figcaption>
+  
+</figure>
+
+<p>Certified Kubernetes Administrator 是屬於上機類型的考試，也就是會有一定數量的情境題需要在時間內完成，並且需要透過操作實際的 Linux server 設定 Kubernetes Cluster 的一些細節。總結來說，我個人覺得比起工作會遇到的問題，Certified Kubernetes Administrator 上機題目不是說很難且複雜，但也不太容易。</p>
+
+<p>我的做題過程真的是令人緊張，做題階段系統還斷了幾次線，不過，所幸還是在時間內完成所有題目，並且提早十分鐘交卷。出來的成績總分是 89 分 (應該是掉了一題 7 分跟一題 4 分的題目)，因此趁現在還有一些記憶，簡短的透過一個篇幅分享有關考試的細節。</p>
+
+<h2 id="什麼是-certified-kubernetes-administrator-cka">什麼是 Certified Kubernetes Administrator (CKA)</h2>
+
+<p>Certified Kubernetes Administrator (簡稱 CKA) 是 Cloud Native Computing Foundation (CNCF) 所提供的一項 Kubernetes 技術認證，是唯一 Kubernetes 官方唯一認可的技術能力評鑑認證，CKA 認證旨在針對考核成為業界的 Kubernetes 管理員所需的技能。</p>
+
+<p>如果企業想要申請 Kubernetes Certified Service Provider (KCSP, Kubernetes 認證服務提供商)，條件之一是至少需要三名員工擁有 CKA 認證。</p>
+
+<p>考試屬於線上形式，並且全程會有監考官透過視訊鏡頭和監控螢幕進行監考，過程中需要透過命令行 (Command Line / CLI) 的形式完成。</p>
+
+<h3 id="什麼是-cloud-native-computing-foundation-cncf">什麼是 Cloud Native Computing Foundation (CNCF)</h3>
+
+<figure class="">
+  <img src="/assets/images/posts/2021/11/cka-cncf-certified-kubernetes-administrator-study-guide/cncf-logo.png" alt="Cloud Native Computing Foundation (CNCF)" />
+  
+    <figcaption>
+      Cloud Native Computing Foundation (CNCF) - <a href="https://www.cncf.io/">cncf.io</a>
+
+    </figcaption>
+  
+</figure>
+
+<p>Cloud Native Computing Foundation (CNCF, 雲原生基金會) 的誕生與 Kubernetes v1.0 版本的釋出有關 (2015 年 7 月 21 日)。在 Kubernetes 釋出的同時，Google 與 Linux Foundation 合作組建了 Cloud Native Computing Foundation (CNCF)，並將 Kubernetes 作為種子技術的一部分。</p>
+
+<p>創始過程包含 Google, CoreOS, Mesosphere, Red Hat, Twitter, Huawei, Intel, Cisco, IBM, Docker, Univa, 及 VMware 等各個廠商貢獻及草擬，至今已經有超過 450 個企業和會員支持。CNCF 旨在基於各個廠商之間成為中立的存在，協助專案開源及推廣，以打造 Cloud Native (雲原生技術) 的生態鏈。</p>
+
+<p>CNCF 至今仍致力於 Github 上的快速成長的開源技術的推廣，例如 Kubernetes、Prometheus、Envoy 等，幫助開發人員更快更好的構建出色的產品。</p>
+
+<h2 id="考試基本資料">考試基本資料</h2>
+
+<h3 id="認證有效期">認證有效期</h3>
+
+<p>3 年 (CKA and CKAD  Certifications are valid for 3 years [1])</p>
+
+<h3 id="費用">費用</h3>
+
+<p>英文考試為 <code class="language-plaintext highlighter-rouge">$375.00 USD</code>、中文版本及中文監考官的的考試是 <code class="language-plaintext highlighter-rouge">¥2088 RMB</code> (含税)。價格可能會隨著時間上漲及浮動，最新的資訊可以參考<a href="https://www.cncf.io/certification/cka/">CNCF 的考試公告頁面</a>以掌握最新動態。</p>
+
+<h3 id="考試地點和應試要求">考試地點和應試要求</h3>
+
+<p>考試採線上形式，可以是任何地點，但對於考試環境有特定的規範。通常掌握以下原則都不會有太大的問題：</p>
+
+<ul>
+  <li>通常是安靜且私人的房間，不可以有其他人於房間內走動，因此咖啡廳等公開場所是不允許的</li>
+  <li>燈光必須明亮能夠清楚提供照明、視訊監考時能看得清應試者的臉和周圍的環境</li>
+  <li>視訊鏡頭拍攝應試者背後不可以有窗戶或是強烈的光源 (避免反光)</li>
+  <li>考試桌面保持整潔，不可以有任何紙張、衛生紙、筆等雜物</li>
+  <li>乾淨的牆面，視訊鏡頭拍攝的四周牆面不可以有紙張或是海報等標記 (一般裝飾通常不是太大的問題，以監考官判定為主)</li>
+  <li><strong>考試過程可以喝水，但是水杯必須是透明的不包含任何標籤，液體也需要是透明的水</strong></li>
+  <li><strong>應試過程應試者的臉必須置於鏡頭中央，並且全程可見</strong></li>
+</ul>
+
+<p>(具體的規範可以參考 [1] - What are the Testing Environment requirements to take the exam? )</p>
+
+<h3 id="測驗語文形式題數及時間">測驗語文、形式、題數及時間</h3>
+
+<ul>
+  <li>考試語言：英文、簡體中文和日文 [1]</li>
+  <li>考試形式：上機測驗</li>
+  <li>考試題數：約 17 題 (包含 7 分和 4 分等不同級距的問題)</li>
+  <li>考試時間：120 分鐘 (Candidates are allowed 2 hours to complete the CKA, CKAD and CKS Exams)</li>
+  <li>及格分數：66% 分通過 (For the CKA Exam, a score of 66% or above must be earned to pass)</li>
+</ul>
+
+<h2 id="考試報名">考試報名</h2>
+
+<p>我是考英文並且安排英文考官，介面直接透過 The Linux Foundation 的頁面完成購買:</p>
+
+<ul>
+  <li><a href="https://training.linuxfoundation.org/certification/certified-kubernetes-administrator-cka/">The Linux Foundation - Certification / Certified Kubernetes Administrator (CKA)</a></li>
+</ul>
+
+<p>完成購買不代表預約考試，買完後還需要透過 Training Portal 並且根據指示跳轉到 PSI 安排考試：</p>
+
+<ul>
+  <li><a href="https://trainingportal.linuxfoundation.org/learn/">Training Portal</a></li>
+</ul>
+
+<p>如果是中文考官可以透過 The Linux Foundation 官方中文頁面並且根據指示進行購買：</p>
+
+<ul>
+  <li><a href="https://training.linuxfoundation.cn/certificates/1">https://training.linuxfoundation.cn/certificates/1</a></li>
+</ul>
+
+<p>購買後可以在一年內安排考試，可以在不同時區跟地區應考，如果第一次沒通過，包含考試有一次免費重考的機會 (Free re-take)。</p>
+
+<h2 id="考試實際過程及注意事項">考試實際過程及注意事項</h2>
+
+<p>在實際過程中會有幾個重要的注意事項：</p>
+
+<ul>
+  <li>不可以用手嗚住嘴巴</li>
+  <li>考試過程會開啟麥克風聆聽現場的環境聲音。因此做題過程不可以把題目唸出來、碎碎念 (避免有複誦題目獲得答案的嫌疑)</li>
+  <li>過程中只能開啟瀏覽器並且會共享螢幕、不可以使用任何軟體 (包含筆記本程式)，只能用考試系統於瀏覽器中彈出的 Notepad (用 javascript 彈出來) 進行紀錄</li>
+  <li>為了要控制作答時間，有時候掃過一遍題目覺得太耗時可以加上標記回頭作答，但標記 (Flag) 作答的功能不會保留 (這意味著在斷線之後再回來不會紀錄)。我自己在這邊有點小被雷到，建議紀錄直接透過系統的 Notepad (這個有斷線實測會保存)</li>
+  <li>考試過程必須關閉所有應用程式及瀏覽器分頁。雖然是 Open Book，但只能保留一個考試介面和一個允許頁籤用以查看手冊，包含：
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">https://kubernetes.io/docs/</code></li>
+      <li><code class="language-plaintext highlighter-rouge">https://github.com/kubernetes/</code></li>
+      <li><code class="language-plaintext highlighter-rouge">https://kubernetes.io/blog/</code></li>
+      <li>這包含不同語言的頁面，例如：<code class="language-plaintext highlighter-rouge">https://kubernetes.io/zh/docs/home/</code></li>
+      <li>參考 What resources am I allowed to access during my exam? [1]</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="考試開始前">考試開始前</h3>
+
+<p>建議在開始前至少 1-2 天請根據考試 Checklist 完成每一項檢查，包含：</p>
+<ul>
+  <li>姓名與英文 ID 文件相符 (護照)</li>
+  <li>安裝規定的 Chrome 瀏覽器插件 - Innovative Exams Screensharing (這部分根據考試 Checklist 安裝即可，用於分享電腦的所有螢幕)</li>
+  <li>確保系統合乎考試環境 (穩定的網路)</li>
+  <li>有視訊鏡頭、麥克風 (用筆電有內建的就沒什麼問題，只要注意可以在展示護照的時候可以正確對焦驗證身份)</li>
+</ul>
+
+<p>要準備的紙本材料有：</p>
+<ul>
+  <li>與你註冊英文姓名相同的護照 (Passport) 用以核對身份</li>
+  <li>可以準備有英文姓名的 Secondary ID 以備用查核身份: 信用卡 / Debit Card / 員工識別證 / 學生證 … etc.</li>
+  <li>(參考 What are the ID requirements to take the exam? [1])</li>
+</ul>
+
+<p>建議 15 分鐘前進入考試介面，這幾十分鐘是用來檢查環境的。監考官全程會透過 Chat 與你對談 (英文)，監考官可以看得見你，但是你看不見他，並且只透過 Chat 對話。</p>
+
+<p>過程中監考官會要求需要緩慢的旋轉鏡頭以環視四周環境，在我的考試中，監考官還特地我要求我拍攝桌子底下的空間，以確定沒有任何雜物和紙張。</p>
+
+<p>以下是一些工作區域的注意事項：</p>
+
+<ul>
+  <li>工作區域和工作桌下的所有物品都要清空</li>
+  <li>可以使用外接螢幕，桌上僅可以有相關的連接線等。這個在監考官透過鏡頭巡視的時候就會一併檢查。以下是一些範例幫助你了解環境的一些注意事項：</li>
+</ul>
+
+<figure class="half ">
+  
+    
+      <a href="/assets/images/posts/2021/11/cka-cncf-certified-kubernetes-administrator-study-guide/cka-invalid-environment.jpg">
+          <img src="/assets/images/posts/2021/11/cka-cncf-certified-kubernetes-administrator-study-guide/cka-invalid-environment.jpg" alt="違反考試規定的環境" />
+      </a>
+    
+  
+    
+      <a href="/assets/images/posts/2021/11/cka-cncf-certified-kubernetes-administrator-study-guide/cka-invalid-desk.jpg">
+          <img src="/assets/images/posts/2021/11/cka-cncf-certified-kubernetes-administrator-study-guide/cka-invalid-desk.jpg" alt="違反考試規定的工作桌" />
+      </a>
+    
+  
+  
+    <figcaption>違反考試規定的考試環境 (考試環境背後有會反光的窗戶, 桌上有雜物)
+</figcaption>
+  
+</figure>
+
+<figure class="">
+  <img src="/assets/images/posts/2021/11/cka-cncf-certified-kubernetes-administrator-study-guide/cka-validated-desk.jpg" alt="允許的考試環境" />
+  
+    <figcaption>
+      允許的考試環境
+
+    </figcaption>
+  
+</figure>
+
+<p>在考試檢查環境過程考官會要求你分享所有畫面 (包含外接的螢幕)，考試前記得關閉所有應用程式和清空瀏覽器頁面。</p>
+
+<p>如果是 Mac，會要求你按下 <code class="language-plaintext highlighter-rouge">Option</code> + <code class="language-plaintext highlighter-rouge">Command</code> + <code class="language-plaintext highlighter-rouge">Esc (Escape)</code> 以檢視你是不是有開啟其他程式，如果有，會要求你透過該方法關閉額外的應用程式並且只保留 Chrome。</p>
+
+<p><a href="/assets/images/posts/2021/11/cka-cncf-certified-kubernetes-administrator-study-guide/mac-force-quit.jpeg"><img src="/assets/images/posts/2021/11/cka-cncf-certified-kubernetes-administrator-study-guide/mac-force-quit.jpeg" alt="檢視 Mac 系統中開啟的應用" /></a></p>
+
+<p>在考試過程需要注意背後是不是有窗戶會影像到鏡頭反光，並且清除桌上和桌下的雜物。我個人在考試過程中把窗簾拉起來，監考官在檢視過程看過確定沒什麼問題。</p>
+
+<h3 id="考試中">考試中</h3>
+
+<p>考試過程會主要使用 Chrome 瀏覽器完成考試，會是一個線上的 Shell 介面可以輸入命令完成題目。考試的視窗會像是以下：</p>
+
+<figure class="">
+  <img src="/assets/images/posts/2021/11/cka-cncf-certified-kubernetes-administrator-study-guide/lf-exam-ui.png" alt="CKA - PSI 實際考試介面" />
+  
+    <figcaption>
+      CKA - PSI 實際考試介面 (<a href="https://docs.linuxfoundation.org/tc-docs/certification/lf-candidate-handbook/exam-user-interface">詳細訊息</a>)
+
+    </figcaption>
+  
+</figure>
+
+<p>如果中途遇到網路問題斷線了，考試介面會凍結，這時候建議嘗試透過介面的重整按鈕刷新，不行再重新整理頁面。我斷了快三次線，斷線的時候考官會保留考試時間跟 Session / VM (tmux session 也還會在)，並且等一切確認 (正確分享畫面、視訊等) 才重新釋放考試介面，所以不用太緊張。</p>
+
+<p>要注意考試的環境在不同系統中 Copy-Paste 的按鍵不太一樣 (我使用的是 Mac，所以沒什麼差異)：</p>
+
+<ul>
+  <li><strong>For Linux</strong>: select text for copy and middle button for paste (or both left and right simultaneously if you have no middle button).</li>
+  <li><strong>For Mac</strong>: ⌘+C to copy and ⌘+V to paste.</li>
+  <li><strong>For Windows</strong>: Ctrl+Insert to copy and Shift+Insert to paste.</li>
+</ul>
+
+<p>考試過程會完全分享螢幕，因此要記得只能開啟一個瀏覽器視窗檢視 Kubernetes 文件 (<strong>要注意 Kubernetes Forum 是不能瀏覽的</strong>)。因為時間有限，建議 yaml 能用 kubectl 產生就用命令產生，文件能複製貼上的就複製貼上。考試環境有提供 tmux，所以我在考試過程斷線的時候十分平滑沒什麼影響，以下是一些 VM 環境中有提供的工具：</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">kubectl</code> with kalias and Bash autocompletion</li>
+  <li><code class="language-plaintext highlighter-rouge">jq</code> for YAML/JSON processing</li>
+  <li><code class="language-plaintext highlighter-rouge">tmux</code> for terminal multiplexing</li>
+  <li><code class="language-plaintext highlighter-rouge">curl</code> and <code class="language-plaintext highlighter-rouge">wget</code> for testing web services</li>
+</ul>
+
+<p>要注意考試環境也不允許透過用 vim 等方式在終端介面瀏覽網站 (包含用 wget 獲取一些三方的資源可能也會觸及到考試規範)。</p>
+
+<p>因為全程監考官看得到你但是你看不到他，所有指示和問題都可以透過系統介面的 Chat 視窗對談 (考官不會回答任何跟考試題目相關的疑問)。</p>
+
+<p>過程中可以透過考試介面的 <code class="language-plaintext highlighter-rouge">Exam Control</code> &gt; <code class="language-plaintext highlighter-rouge">Request Break</code> (我個人是沒用到，但應該沒記錯) 請求休息去上廁所，但要注意時間會繼續計算。</p>
+
+<h3 id="完成考試">完成考試</h3>
+
+<p>考官通常會於剩下 30 分鐘左右透過 Chat 提醒你，不過，如果你跟我一樣遭遇到系統斷線，考官通常會提醒系統中的計時器截止後仍然還會有剩餘的時間。</p>
+
+<p>如果你提早做完，可以透過考試介面的 Exam Control 提早交卷。考試完成後，成績會於 24 小時內通過 Email 通知。因為是上機考試，部分可能會需要人工審核，我自己等候的時間有點長，等到隔天才有成績。這時候就放輕鬆不用傻傻的一直刷了，36 小時後如果還是沒有收到可以透過 PSI 或是發信詢問有關考試的進度。</p>
+
+<figure class="">
+  <img src="/assets/images/posts/2021/11/cka-cncf-certified-kubernetes-administrator-study-guide/cka-exam-score.png" alt="CKA - 考試結果和分數" />
+  
+    <figcaption>
+      CKA - 考試結果和分數
+
+    </figcaption>
+  
+</figure>
+
+<p>(考試結果如果有通過，會一併核發認證 ID 並且可以在 Exam Checklist 裡面看到總成績。考試結果不會告訴你錯了哪些題目，不過，我們不求 100 分，有求過就好。)</p>
+
+<h2 id="考試重點及準備">考試重點及準備</h2>
+
+<h3 id="1-掌握考試大綱">1. 掌握考試大綱</h3>
+
+<p>如果你正在準備 Certified Kubernetes Administrator (CKA) 考試，那 Exam Curriculum 絕對是不可以錯過的一項環節。在裡面會定義 CKA 考試於不同 Kubernetes 版本考試項目的權重，並且會隨著時間更新。所以千萬別忘記考前花點時間了解一下考試項目的大綱：</p>
+
+<ul>
+  <li><a href="https://github.com/cncf/curriculum">CKA Curriculum</a></li>
+</ul>
+
+<p>我在 Kubernetes v1.22 開始 troubleshooting 問題的佔比達到 30%，不過對於每天都在做 troubleshooting 工作的我來說，這並不是一個太難的項目 (e.g. <a href="/coredns-resolution-truncation-issue-on-kubernetes-kube-dns">CoreDNS(kube-dns) resolution truncation issue on Kubernetes (Amazon EKS)</a>)。</p>
+
+<p>但如果你不是擅長 troubleshooting 的問題，推薦必須要試著完成一次 etcd backup 及復原的操作、修復 Node 沒辦法加入 Kubernetes cluster 的問題等，因為我在我的考試中還真的遇到了。</p>
+
+<h3 id="2-熟悉基本命令">2. 熟悉基本命令</h3>
+
+<p>考試過程中不會有 Racher 之類的 UI 介面可以讓你懶人操作，所以推薦熟悉 kubectl 的操作以及 cheat sheet 上一些有趣的用法：</p>
+
+<ul>
+  <li><a href="https://kubernetes.io/docs/reference/kubectl/cheatsheet/">kubectl Cheat Sheet</a></li>
+</ul>
+
+<p>通常也會需要熟悉一些基本的命令：</p>
+
+<ul>
+  <li>Create Pod / Service / PV / PVC / ConfigMap / Secret / deployment … etc</li>
+  <li>Create service account / RBAC (Role-Based Access Control)</li>
+  <li>知道怎麼設定 Port / 暴露服務</li>
+  <li>知道 Kubernetes DNS 解析機制</li>
+  <li>知道怎麼擴展 Pod 數量 (<code class="language-plaintext highlighter-rouge">kubectl scale</code>) / Rolling update</li>
+  <li>知道怎麼替換、升級和更新節點 (<a href="https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/"><code class="language-plaintext highlighter-rouge">kubectl drain</code></a>)</li>
+  <li>查看 container / Pod logs</li>
+</ul>
+
+<p>考試的時候你也可以開啟 kubectl cheat sheet 輔助，就不需要全部記憶。但由於考試過程分秒必爭，我個人覺得 kubectl 工具的 help 輸出說明十分詳細，如果可以的話推薦可以習慣使用 <code class="language-plaintext highlighter-rouge">-h/--help</code> 直接拉出具體的用例：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl &lt;ACTION&gt; <span class="nt">-h</span>
+</code></pre></div></div>
+
+<p>如果你想了解更多，網路上也有 CKA 相關的資源，這是我覺得不錯的文件：</p>
+
+<ul>
+  <li><a href="https://github.com/chadmcrowell/CKA-Exercises/blob/master/core_concepts.md">Core Concepts</a></li>
+</ul>
+
+<p>網路上也有人推薦說要用 <code class="language-plaintext highlighter-rouge">kubectl explain</code> 來檢視用法，說實話我個人完全沒有用到，如果你習慣怎麼在 Kubernetes docs 上查文件，我覺得這個不是必須的項目：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl explain &lt;resource&gt;.&lt;key&gt;
+</code></pre></div></div>
+
+<p>在檢查 service account 類型的問題，另一個額外的技巧是用 <code class="language-plaintext highlighter-rouge">kubectl auth can-i</code> 檢查權限：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl auth can-i create deployments <span class="nt">--namespace</span> dev
+</code></pre></div></div>
+
+<ul>
+  <li><a href="https://kubernetes.io/docs/reference/access-authn-authz/authorization/#checking-api-access">Checking API Access</a></li>
+</ul>
+
+<p>但如果你喜歡硬派一點也覺得時間很多的話，你可以額外學習 Kubernetes API 的操作和用 curl 直接模擬：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Point to the internal API server hostname</span>
+<span class="nv">APISERVER</span><span class="o">=</span>https://kubernetes.default.svc
+
+<span class="c"># Path to ServiceAccount token</span>
+<span class="nv">SERVICEACCOUNT</span><span class="o">=</span>/var/run/secrets/kubernetes.io/serviceaccount
+
+<span class="c"># Read this Pod's namespace</span>
+<span class="nv">NAMESPACE</span><span class="o">=</span><span class="si">$(</span><span class="nb">cat</span> <span class="k">${</span><span class="nv">SERVICEACCOUNT</span><span class="k">}</span>/namespace<span class="si">)</span>
+
+<span class="c"># Read the ServiceAccount bearer token</span>
+<span class="nv">TOKEN</span><span class="o">=</span><span class="si">$(</span><span class="nb">cat</span> <span class="k">${</span><span class="nv">SERVICEACCOUNT</span><span class="k">}</span>/token<span class="si">)</span>
+
+<span class="c"># Reference the internal certificate authority (CA)</span>
+<span class="nv">CACERT</span><span class="o">=</span><span class="k">${</span><span class="nv">SERVICEACCOUNT</span><span class="k">}</span>/ca.crt
+
+<span class="c"># Explore the API with TOKEN</span>
+curl <span class="nt">--cacert</span> <span class="k">${</span><span class="nv">CACERT</span><span class="k">}</span> <span class="nt">--header</span> <span class="s2">"Authorization: Bearer </span><span class="k">${</span><span class="nv">TOKEN</span><span class="k">}</span><span class="s2">"</span> <span class="nt">-X</span> GET <span class="k">${</span><span class="nv">APISERVER</span><span class="k">}</span>/api
+</code></pre></div></div>
+
+<ul>
+  <li><a href="https://kubernetes.io/docs/tasks/run-application/access-api-from-pod/#without-using-a-proxy">Accessing the Kubernetes API from a Pod</a></li>
+  <li><a href="https://kubernetes.io/docs/tasks/administer-cluster/access-cluster-api/">Access Clusters Using the Kubernetes API</a></li>
+</ul>
+
+<h3 id="3-熟悉使用的技術">3. 熟悉使用的技術</h3>
+
+<p>我在準備階段花了約 2-3 週看完 A cloud guru 的 CKA 課程並且完成所有的練習題目 (有的比較不熟的完成 2-3 次)：</p>
+
+<ul>
+  <li><a href="https://acloudguru.com/course/certified-kubernetes-administrator-cka">Certified Kubernetes Administrator (CKA)</a></li>
+</ul>
+
+<p>基本上題目的範圍都不會偏離考試範圍太遠，只需要熟習及練習做題的速度就可以了，避免在考試答題過程花太多時間一直閱讀文件。很多人都說有空的話可以刷 <a href="https://github.com/kelseyhightower/kubernetes-the-hard-way">Kubernetes the hard way</a>，但說實話我自己在準備的過程沒有那麼多時間安排真的去一個一個練習、完成這個額外的工作。考下來我也覺得這也不是一個必須的項目，但如果你熟悉的話，會對 Kubernetes 底層的運作有更深層次的理解。</p>
+
+<p>我個人覺得 killer.sh 的題目特別有用，難度特別高，貼近我自己日常工作會遇到的部分問題，做起來特別有感覺。如果你可以熟悉 killer.sh 的問題並且了解、檢討怎麼作答的話，我認為考試不會有太大的問題，因為考試的難度比這個簡單許多：</p>
+
+<ul>
+  <li><a href="https://killer.sh/">killer.sh - Kubernetes Exam Simulator</a></li>
+</ul>
+
+<p>在 Exam Checklist 上會提供兩次免費的 killer.sh (Kubernetes Exam Simulator) 模擬環境的訪問，所以可以不用先購買。我個人考前 3-4 天才打開來做一次，如果你時間充裕，推薦可以在考前 1-2 週左右打開來練習用好用滿。</p>
+
+<h3 id="4-熟讀文件">4. 熟讀文件</h3>
+
+<p>我會推薦除了練習命令和做題，剩下的時間就是熟讀 Kubernetes 官方文件 (<a href="https://kubernetes.io/docs">https://kubernetes.io/docs</a>)。熟悉文件提供的搜尋功能，可以仔細的閱讀常見的問題並且參考相關的 yaml 文件、描述，並且知道可以用哪些關鍵字把文件調閱出來。</p>
+
+<p>我自己的經驗是這是一個很有效的一個準備方式，在考試過程中可以很快速的透過關鍵字搜尋直接找到我要的答案。如果你習慣透過書籤 (Bookmark) 儲存紀錄，也可以在考試前建立對應的書籤資料夾，在考試過程中於另開的一個分頁中直接從書籤中調閱。</p>
+
+<p>一些基本的使用相關的文件我這邊就不贅述，以下是幾個我在考完後認為值得花點時間閱讀跟時間操作的文件：</p>
+
+<ul>
+  <li><a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-persistent-volume-storage/">Configure a Pod to Use a PersistentVolume for Storage</a></li>
+  <li><a href="https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade/">Upgrading kubeadm clusters</a></li>
+  <li><a href="https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/#backing-up-an-etcd-cluster">Operating etcd clusters for Kubernetes</a></li>
+  <li><a href="https://kubernetes.io/docs/concepts/services-networking/ingress/">Ingress</a></li>
+  <li><a href="https://kubernetes.io/docs/concepts/services-networking/network-policies/">Network Policies</a></li>
+</ul>
+
+<h3 id="5-了解-json-path--yaml">5. 了解 JSON Path &amp; yaml</h3>
+
+<p>kubectl 的 selector 通常可以善用 json path 完成許多工作跟篩選，如果你熟悉這個技巧，在考試的時候，遇到要做排序、或是根據題目要求輸出格式，會非常有幫助。如果有時間，我會推薦可以上完在 kodekloud 上約幾十分鐘的免費課程幫助你建立相關的知識：</p>
+
+<ul>
+  <li><a href="https://kodekloud.com/courses/json-path-quiz/">JSON PATH Quiz- FREE COURSE</a></li>
+</ul>
+
+<h3 id="6-其他">6. 其他</h3>
+
+<p>基本上以上幾點如果有過一遍我想要及格不會是太大的問題，剩下的就是平常心及多熟悉 CLI 操作了。</p>
+
+<p>以下是一些我在考試過程中的懶人技巧 (我的考試環境是 Kubernetes v1.22，就我的認知下列的技巧於各個版本中不會有太大的差異，但還是可能要注意是否於後續的版本中仍適用)：</p>
+
+<h4 id="在考試過程設定命令快捷-用-k-取代-kubectl">在考試過程設定命令快捷 (用 <code class="language-plaintext highlighter-rouge">k</code> 取代 <code class="language-plaintext highlighter-rouge">kubectl</code>)</h4>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">alias </span><span class="nv">k</span><span class="o">=</span><span class="s1">'kubectl'</span>
+<span class="nb">alias </span><span class="nv">kn</span><span class="o">=</span><span class="s1">'kubectl -n kube-system'</span>
+</code></pre></div></div>
+
+<p>列出所有 namespaces 底下的所有資源</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">alias </span><span class="nv">ka</span><span class="o">=</span><span class="s1">'kubectl get all --all-namespaces'</span>
+
+<span class="c"># 或使用 -A 是一樣的效果</span>
+k get all <span class="nt">-A</span>
+</code></pre></div></div>
+
+<h4 id="善用-kubectl-產生-yaml-文件建立資源">善用 kubectl 產生 yaml 文件、建立資源</h4>
+
+<p>考試的作答時間非常緊湊，推薦可以在練習過程熟悉用 <code class="language-plaintext highlighter-rouge">--dry-run</code> 直接產生許多不同種類物件的 yaml 描述文件，可以節省許多找文件和複製貼上的時間：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl run &lt;POD_NAME&gt; <span class="nt">--image</span><span class="o">=</span>&lt;IMAGE_NAME&gt; <span class="nt">--restart</span><span class="o">=</span>Never <span class="nt">-n</span> &lt;NAMESPACE&gt;
+kubectl expose &lt;deploymentname&gt; <span class="nt">--port</span><span class="o">=</span>&lt;PORT&gt; <span class="nt">--name</span><span class="o">=</span>&lt;SVC_NAME&gt;
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl create &lt;....&gt; <span class="nt">--dry-run</span><span class="o">=</span>client <span class="nt">-o</span> yaml
+</code></pre></div></div>
+
+<p>產生 DaemonSet 可以用 Deployment 修改即可：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl create deployment <span class="nt">--dry-run</span><span class="o">=</span>client <span class="nt">-o</span> yaml
+</code></pre></div></div>
+
+<h4 id="熟悉基本的-shell-script-和複製貼上-yaml-的技巧">熟悉基本的 shell script 和複製貼上 yaml 的技巧</h4>
+
+<p>我個人覺得善用 cat 讀取標準輸入 (stdin) 的方式非常有用，我在考試的時候用這個方式無痛複製貼上許多 yaml 文件，例如：</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cat</span> <span class="o">&lt;&lt;</span> <span class="no">EOF</span><span class="sh"> &gt; pod.yml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.14.2
+    ports:
+    - containerPort: 80
+</span><span class="no">EOF
+</span></code></pre></div></div>
+
+<p>如果會一些 shell script 可以在一些設計執行 command 的階段輕鬆的完成任務，但如果會忘記，推薦可以詳細閱讀 Kubernetes 相關的文件並且知道哪裡可以在考試過程中參考，例如：</p>
+
+<ul>
+  <li><a href="https://kubernetes.io/docs/concepts/workloads/pods/init-containers/">Init Containers</a></li>
+</ul>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="na">initContainers</span><span class="pi">:</span>
+  <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">init-myservice</span>
+    <span class="na">image</span><span class="pi">:</span> <span class="s">busybox:1.28</span>
+    <span class="na">command</span><span class="pi">:</span> <span class="pi">[</span><span class="s1">'</span><span class="s">sh'</span><span class="pi">,</span> <span class="s1">'</span><span class="s">-c'</span><span class="pi">,</span> <span class="s2">"</span><span class="s">until</span><span class="nv"> </span><span class="s">nslookup</span><span class="nv"> </span><span class="s">myservice.$(cat</span><span class="nv"> </span><span class="s">/var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local;</span><span class="nv"> </span><span class="s">do</span><span class="nv"> </span><span class="s">echo</span><span class="nv"> </span><span class="s">waiting</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">myservice;</span><span class="nv"> </span><span class="s">sleep</span><span class="nv"> </span><span class="s">2;</span><span class="nv"> </span><span class="s">done"</span><span class="pi">]</span>
+</code></pre></div></div>
+
+<h2 id="總結">總結</h2>
+
+<p>以上就是有關我個人準備 Certified Kubernetes Administrator 考試的簡略分享。在這篇內容中，我與你分享了有關 Certified Kubernetes Administrator 具體的考試注意事項、考試內容和相關的應試細節。並且具體提出幾個考試重點準備相關的 tips，同時列舉了數項實際學習的建議。</p>
+
+<p>希望在閱讀這篇內容的你可以順利完成認證，並且拿到屬於你的電子證書。如果你覺得這樣的內容有幫助，也別忘了在底下按個 Like / 留言讓我知道。</p>
+
+<figure class="">
+  <img src="/assets/images/posts/2021/11/cka-cncf-certified-kubernetes-administrator-study-guide/cka-cert.jpeg" alt="Certified Kubernetes Administrator - Eason" />
+  
+    <figcaption>
+      Certified Kubernetes Administrator
+
+    </figcaption>
+  
+</figure>
+
+<h2 id="references">References</h2>
+<ul>
+  <li>[1] <a href="https://docs.linuxfoundation.org/tc-docs/certification/faq-cka-ckad-cks">Frequently Asked Questions: CKA and CKAD &amp; CKS</a></li>
+  <li>[2] <a href="https://docs.linuxfoundation.org/tc-docs/certification/tips-cka-and-ckad">Important Instructions: CKA and CKAD</a></li>
+</ul>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/#certificate" class="page__taxonomy-item" rel="tag">certificate</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#cka" class="page__taxonomy-item" rel="tag">cka</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#cloud-native" class="page__taxonomy-item" rel="tag">cloud native</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#cncf" class="page__taxonomy-item" rel="tag">cncf</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#kubernetes" class="page__taxonomy-item" rel="tag">Kubernetes</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2021-11-15T00:00:00-06:00">November 15, 2021</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=%282021+%E5%B9%B4%E5%BA%95%E6%9C%80%E6%96%B0%29+%E6%88%91%E6%98%AF%E5%A6%82%E4%BD%95%E9%80%9A%E9%81%8E+CKA+-+%E8%AA%8D%E8%AD%89%E8%80%83%E8%A9%A6%E5%8F%8A%E6%BA%96%E5%82%99+Certified+Kubernetes+Administrator%20https%3A%2F%2Feasoncao.com%2Fcka-cncf-certified-kubernetes-administrator-study-guide%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Feasoncao.com%2Fcka-cncf-certified-kubernetes-administrator-study-guide%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Feasoncao.com%2Fcka-cncf-certified-kubernetes-administrator-study-guide%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+      <iframe
+        style="width: 100%; max-width: 485px; height: 170px; margin: auto; overflow: hidden; display: block;"
+        src="https://button.like.co/in/embed/easoncao/button?referrer=https%3A%2F%2Feasoncao.com%2Fcka-cncf-certified-kubernetes-administrator-study-guide%2F" frameBorder="0">
+      </iframe>
+      
+
+      <!-- Buy me a coffee -->
+      <section class="page__share">
+        <h4 class="page__share-title">Is that useful? Let me know or buy me a coffee</h4>
+        <p class="page__meta">這篇內容對你有幫助嗎？</p>
+        <a href="https://paypal.me/e4son"><img src="https://cdn.jsdelivr.net/gh/twolfson/paypal-github-button@1.0.0/dist/button.svg" alt="Support via PayPal"></a>
+        <a href="https://p.ecpay.com.tw/17C964C" class="btn btn--success">一次性支持 (ECPay)</a>
+      </section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/set-up-cloudwatch-log-group-retention-period-automation/" class="pagination--pager" title="[AWS] 為 CloudWatch Log Group 自動設定日誌保留期限 (Retention)
+">Previous</a>
+    
+    
+      <a href="/money-management-automation/" class="pagination--pager" title="我常用的自動化理財工具及策略 - 適合理財新手的操作手冊
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+      <div class="page__comments">
+  
+  
+      <h4 class="page__comments-title">Leave a comment</h4>
+      <section id="disqus_thread"></section>
+    
+</div>
+
+    
+  </article>
+
+  
+
+  <!-- Google Adsense -->
+  <div class="page__related">
+    <h4 class="page__related-title">You May Also Have Interest</h4>
+    <div>
+        <!-- responsive ad -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-1852752964062281"
+             data-ad-slot="2849626059"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+  </div>
+
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/2023/04/five-years-at-amazon-as-cloud-support-engineer-in-aws/cover.jpg" alt="">
+      </div>
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/five-years-at-amazon-as-cloud-support-engineer-in-aws/" rel="permalink">身處 Amazon 工作 5 年學到的事：在 AWS 擔任 Cloud Support Engineer 是什麼樣的體驗
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">2023 是我在 AWS 擔任 Cloud Support Engineer 的第六年，這份工作對我來說某種程度上是又愛又恨。作為見證 AWS 中文技術支援團隊的一員，五年時間說長不長，說短也不短，卻有非常多學習和體悟。
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/2023/03/aws-cloud-support-engineer-interview-tips-and-required-skills/cover.jpg" alt="">
+      </div>
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/aws-cloud-support-engineer-interview-tips-and-required-skills/" rel="permalink">在 AWS Cloud Support Engineer 面試中脫穎而出：必備的技術能力和重要特質
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">如果你正準備面試 AWS Cloud Support Engineer 的職位，在這篇文章中，我將與你分享我對於 AWS Cloud Support Engineer 所需的必備技能和特質，幫助你更好地了解這份職位且思考自己目前所具備的能力是與該團隊所交集，讓你在面試中脫穎而出。
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/eks-aws-load-balancer-controller-v1-to-v2-migration-behavior/" rel="permalink">[AWS] 那些沒寫在文件上的事 - AWS Load Balancer Controller v1 升級至 v2
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  3 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">隨著 Amazon EKS 對於 Kubernetes 1.22 的推出，1.21 也預計於 February 15, 2023 在 Amazon EKS 終止支援 1，對於 AWS Load Balancer Controller 仍然使用舊版本的用戶來說，勢必面臨需要升級 AWS Load Balancer ...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/2020/10/zero-downtime-deployment-when-using-alb-ingress-controller/deployment-workflow-alb-ingress-controller-4-side-note-of-deregister.png" alt="">
+      </div>
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/zero-downtime-deployment-when-using-alb-ingress-controller-on-amazon-eks-and-prevent-502-error/" rel="permalink">[AWS][EKS] Zero downtime deployment(RollingUpdate) when using AWS Load Balancer Controller on Amazon EKS
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  22 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">This article is describing the thing you need to aware when using ALB Ingress Controller (AWS Load Balancer Controller) to do deployment and prevent 502 erro...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+
+
+<div id="footer-subscribe-email-list">
+    <h3>Get the updates </h3>
+    <form action="https://docs.google.com/forms/d/e/1FAIpQLSfuofCYvu2cV614aDt6SO5ua_5trT0EC5yeSJObLY0KGjFtvQ/formResponse" method="POST">
+        <div style="display: flex;">
+            <!-- input name="entry.205499253" type="text" id="Name" class="form-control" placeholder="Name" -->
+            <input name="entry.1288273007" type="email" id="email" class="form-control" placeholder="Email" required="required" style="margin-top: 2px; margin-right: 5px; width: 50%;">
+            <input class="btn btn--primary" id="subscribe" type="submit" value="訂閱 (Sign Up)" style="width: 30%;">
+        </div>
+    </form>
+</div>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8GPCXJPGFZ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-8GPCXJPGFZ');
+</script>
+<!-- end custom footer snippets -->
+
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+          <li><a href="https://facebook.com/EasonTechTalk" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i> Facebook</a></li>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    <li><a href="/sitemap.xml"><i class="fas fa-fw fa-sitemap" aria-hidden="true"></i> SiteMap</a></li>
+    <li><a href="/tags"><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags</a></li>
+    <li><a href="https://toolbox.easoncao.com/"><i class="fas fa-fw fa-toolbox" aria-hidden="true"></i> ToolBox</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2023 Continuous Improvement. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+  <script>
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-80058083-2']);
+  
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "https://easoncao.com/cka-cncf-certified-kubernetes-administrator-study-guide/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/cka-cncf-certified-kubernetes-administrator-study-guide"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://lenlabs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>

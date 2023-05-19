@@ -1,0 +1,943 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.19.3 by Michael Rose
+  Copyright 2013-2019 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
+-->
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin _includes/seo.html --><title>[Alexa] 靠一張嘴巴維運，我是如何成為出一張嘴的雲端工程師 - 使用 Alexa skill 管理 AWS EC2 防火牆 (Security Group) 規則 - Continuous Improvement</title>
+<meta name="description" content="Using Alexa Skill to help you manage website firewall (Security group of EC2 instance)">
+
+
+  <meta name="author" content="Yang-Xin Cao (Eason Cao)">
+
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_US">
+<meta property="og:site_name" content="Continuous Improvement">
+<meta property="og:title" content="[Alexa] 靠一張嘴巴維運，我是如何成為出一張嘴的雲端工程師 - 使用 Alexa skill 管理 AWS EC2 防火牆 (Security Group) 規則">
+<meta property="og:url" content="https://easoncao.com/security-group-manager-alexa-skill/">
+
+
+  <meta property="og:description" content="Using Alexa Skill to help you manage website firewall (Security group of EC2 instance)">
+
+
+
+  <meta property="og:image" content="https://easoncao.com/assets/images/posts/2020/08/security-group-manager-alexa-skill/security-group-manager-alexa-skill-architecture.png">
+
+
+
+
+
+  <meta property="article:published_time" content="2020-08-30T00:00:00-05:00">
+
+
+
+
+
+  
+
+  
+
+
+<link rel="canonical" href="https://easoncao.com/security-group-manager-alexa-skill/">
+
+
+
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    
+      "@type": "Person",
+      "name": "Continuous Improvement",
+      "url": "https://easoncao.com/"
+    
+  }
+</script>
+
+
+
+
+
+
+<!-- end _includes/seo.html -->
+
+
+<link href="/feed.xml" type="application/atom+xml" rel="alternate" title="Continuous Improvement Feed">
+
+<!-- https://t.co/dKP3o1e -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- Google adsense -->
+<script data-ad-client="ca-pub-1852752964062281" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+
+<!--[if IE]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use https://realfavicongenerator.net/ -->
+
+<link rel="shortcut icon" type="image/jpg" href="/assets/apple-touch-icon.png"/>
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body class="layout--single wide">
+    <nav class="skip-links">
+  <h2 class="screen-reader-text">Skip links</h2>
+  <ul>
+    <li><a href="#site-nav" class="screen-reader-shortcut">Skip to primary navigation</a></li>
+    <li><a href="#main" class="screen-reader-shortcut">Skip to content</a></li>
+    <li><a href="#footer" class="screen-reader-shortcut">Skip to footer</a></li>
+  </ul>
+</nav>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        
+          <a class="site-logo" href="/"><img src="/assets/apple-touch-icon.png" alt=""></a>
+        
+        <a class="site-title" href="/">
+          Continuous Improvement
+          <span class="site-subtitle"></span>
+        </a>
+        <ul class="visible-links"><li class="masthead__menu-item">
+              <a href="/posts/">所有文章 All Posts</a>
+            </li><li class="masthead__menu-item">
+              <a href="/courses/">學習資源 Learning</a>
+            </li><li class="masthead__menu-item">
+              <a href="/about/">關於 About</a>
+            </li></ul>
+        
+        <button class="search__toggle" type="button">
+          <span class="visually-hidden">Toggle search</span>
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle hidden" type="button">
+          <span class="visually-hidden">Toggle menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+
+<div itemscope itemtype="https://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+        <img src="https://www.gravatar.com/avatar/0d33994eec9eddc67415e07a7fcafc9d?s=200" alt="Yang-Xin Cao (Eason Cao)" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Yang-Xin Cao (Eason Cao)</h3>
+    
+    
+      <div class="author__bio" itemprop="description">
+        <p>Engineer@Amazon <br />- <a href="https://www.awshof.com/allstarscertifiedlist.html">AWS All-5 certified</a> / ECS &amp; EKS SME / Marathon Runner / PADI Open Water Diver</p>
+
+      </div>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="https://schema.org/Place">
+          <i class="fas fa-fw fa-map-marker-alt" aria-hidden="true"></i> <span itemprop="name">Amazon / Dublin, Ireland</span>
+        </li>
+      
+
+      
+        
+          
+            <li><a href="mailto:eason@easoncao.com" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-envelope-square" aria-hidden="true"></i><span class="label">Email</span></a></li>
+          
+        
+          
+            <li><a href="https://linkedin.com/in/easoncao" rel="nofollow noopener noreferrer"><i class="fas fa-fw fa-id-badge" aria-hidden="true"></i><span class="label">LinkedIn</span></a></li>
+          
+        
+          
+        
+          
+            <li><a href="https://facebook.com/EasonTechTalk" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i><span class="label">Facebook</span></a></li>
+          
+        
+          
+            <li><a href="https://github.com/0xlen" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-github" aria-hidden="true"></i><span class="label">GitHub</span></a></li>
+          
+        
+          
+        
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs" rel="nofollow noopener noreferrer">
+      <i class="fas fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+
+  <article class="page" itemscope itemtype="https://schema.org/CreativeWork">
+    <meta itemprop="headline" content="[Alexa] 靠一張嘴巴維運，我是如何成為出一張嘴的雲端工程師 - 使用 Alexa skill 管理 AWS EC2 防火牆 (Security Group) 規則">
+    <meta itemprop="description" content="隨著 COVID-19 疫情大爆發，科技圈再次掀起了一股遠端辦公的趨勢，遠距工作的形式也逐漸改變許多人的工作型態。身為一名工程師，因應疫情，今年也頻繁的在家辦公也好幾個月了 (還好台灣還很安全)，仍有很多與傳統地域限制型態的工作模式有很多不同的地方。">
+    <meta itemprop="datePublished" content="2020-08-30T00:00:00-05:00">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 id="page-title" class="page__title" itemprop="headline">[Alexa] 靠一張嘴巴維運，我是如何成為出一張嘴的雲端工程師 - 使用 Alexa skill 管理 AWS EC2 防火牆 (Security Group) 規則
+</h1>
+          
+            <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+
+</p>
+          
+        </header>
+      
+
+      <!-- Google ads in article -->
+      <div>
+          <ins class="adsbygoogle"
+               style="display:block; text-align:center;"
+               data-ad-layout="in-article"
+               data-ad-format="fluid"
+               data-ad-client="ca-pub-1852752964062281"
+               data-ad-slot="8435469231"></ins>
+          <script>
+               (adsbygoogle = window.adsbygoogle || []).push({});
+          </script>
+      </div>
+      <hr>
+
+      <section class="page__content" itemprop="text">
+        
+        <p>隨著 COVID-19 疫情大爆發，科技圈再次掀起了一股遠端辦公的趨勢，遠距工作的形式也逐漸改變許多人的工作型態。身為一名工程師，因應疫情，今年也頻繁的在家辦公也好幾個月了 (還好台灣還很安全)，仍有很多與傳統地域限制型態的工作模式有很多不同的地方。</p>
+
+<p>平常在辦公室，由於直接連接公司內部網路，通常都有特定的 IP 區段可以很簡單的掌握白名單，防火牆規則都非常好設置。但是自從開始遠端工作後，家裡的網路都是使用浮動 IP，有時候工程師的惰性驅使，又很懶得連上 VPN 在那邊拿 MFA Key  驗證身份，光是要設定自己 EC2 資源的白名單常常都要改來改去的。與此同時，在日常工作中也偶爾跟同事屁來屁去講一些垃圾話，注意到一些覺得可以進行自動化、增加生產力的一些想法及提案，秉持著發明家的精神，於是以下我就來說說我是如何靠一張嘴巴滿足我的懶惰的。</p>
+
+<h2 id="簡介">簡介</h2>
+
+<p>在沒有靠嘴巴維運之前，為了要正確的更改防火牆規則讓我能夠在家中工作時能夠連上跳板機器操作，我是這麼做的：</p>
+
+<ul>
+  <li>打開 AWS Management Console</li>
+  <li>輸入帳號密碼</li>
+  <li>彈出 MFA (Multi-Factor Authentication) 認證 -&gt; 打開手機 App 確認現在的動態碼 -&gt; 輸入動態碼</li>
+  <li>打開 EC2 Console</li>
+  <li>選擇 EC2 / Security Group</li>
+  <li>更新 EC2 規則 (獲取自己的外部 IP 地址更新上去)</li>
+</ul>
+
+<p>上述的動作常常都要花我 3-5 分鐘，有時候手機丟在臥室不在身邊又要走超遠！為了滿足我的懶惰，以下是我目前的工作流程，先來看一段示範影片</p>
+
+<!-- Courtesy of embedresponsively.com //-->
+
+<div class="responsive-video-container">
+    <iframe src="https://www.youtube-nocookie.com/embed/3AFGvt1Ck5c" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe>
+  </div>
+
+<p>上面的動作，只要正確的發出聲音指令後，Alexa Skill 便可以正確地更新相應的 Security Group 規則 (並且需要符合自己定義的 PIN Code，避免所有人都可以任意的發出命令更改)，並且只開放我家中正確對外的特定 IP 地址。如此一來，我就能直接地在家透過 SSH 連接上對應的 EC2 Instance 進行工作。</p>
+
+<h2 id="什麼是-amazon-alexa-">什麼是 Amazon Alexa ?</h2>
+
+<p>大概就像是 Apple 的 Siri、Google 推出的 Google Home …</p>
+
+<blockquote>
+  <p>Amazon Alexa，簡稱 Alexa，是亞馬遜公司推出的一款智能助理，最初用於 Amazon Echo 智能音箱。它具有語音交互、音樂播放、待辦事項列表、鬧鐘、流播播客、播放有聲讀物以及提供天氣，交通，體育和其他實時信息（如新聞）的功能[3]。Alexa還可以將自身用作智慧家庭系統來控制多個智能設備。該產品由Amazon Lab126開發，是一名女性語音助手。用戶可以通過安裝插件（由第三方供應商開發的其他功能）來擴展Alexa功能。</p>
+</blockquote>
+
+<blockquote>
+  <p>Alexa的大多數設備允許用戶通過一個特定的詞語（如「Alexa」或「Amazon」）來喚醒，剩下的（如IOS和Andriod上的Amazon移動應用與Amazon Dash Wand）則需用戶通過按按鈕來使之進入聆聽模式。一些其他廠商的手機也同樣支持用戶發出一些指令來喚醒屏幕，如「Alexa」或「Alexa wake」。到目前為止，Alexa的交流和應答僅可用英語、德語、法語、義大利語、西班牙語、葡萄牙語、日語和印地語。Alexa在加拿大可用於英語和法語（包括魁北克法語）。</p>
+</blockquote>
+
+<p>來源: <a href="https://zh.wikipedia.org/wiki/Amazon_Alexa">Wikipedia</a></p>
+
+<h2 id="架構概覽-architecture-overview">架構概覽 (Architecture Overview)</h2>
+
+<figure class="">
+  <img src="/assets/images/posts/2020/08/security-group-manager-alexa-skill/security-group-manager-alexa-skill-architecture.png" alt="Alexa Skill - Security Group Manager 架構概覽" />
+  
+    <figcaption>
+      Alexa Skill - Security Group Manager 架構概覽
+
+    </figcaption>
+  
+</figure>
+
+<p>上述的架構在我看完 Alexa Skills Kit SDK for Python 的範例後，整體的實作到部署我大概花了 3 - 5 小時實作出來。目前含註解整個代碼不超過 300 行，難度並不會太高，以下具體描述一些實作細節。</p>
+
+<h2 id="實作細節">實作細節</h2>
+
+<h3 id="怎麼開發">怎麼開發？</h3>
+
+<p>照著 <a href="https://github.com/alexa/alexa-skills-kit-sdk-for-python">Alexa Skills Kit SDK for Python</a> 快速實作了一個可以動的版本。如果你是第一次玩 Alexa Skill，<a href="https://github.com/alexa/skill-sample-python-colorpicker/blob/master/instructions/1-voice-user-interface.md">Color Picker</a> 是一個不錯的範例，你可以找到很多不同語言的相應實做。</p>
+
+<h3 id="怎麼上傳到-aws-lambda">怎麼上傳到 AWS Lambda</h3>
+
+<p>建立完 AWS Lambda Function 後，便可以打包你的程式碼上傳到 Lambda 執行。</p>
+
+<p>一般來說，AWS 文件可能會建議你使用 VirtualEnv 在本機建立 (如同在之前 <a href="https://easoncao.com/create-a-line-bot/">使用 AWS Lambda 建立 Line bot</a> 中提到的)，但我其實偷了一些懶，直接用 Docker image 加上一行 Docker 命令打包 deployment package (python):</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-v</span> <span class="s2">"</span><span class="nv">$PWD</span><span class="s2">"</span>:/var/task <span class="s2">"lambci/lambda:build-python3.6"</span> /bin/sh <span class="nt">-c</span> <span class="s2">"pip install -r requirements.txt -t package/; cp lambda_function.py package/; cd package; zip -r9 lambda.zip ."</span>
+</code></pre></div></div>
+
+<p>過程中會生成 <code class="language-plaintext highlighter-rouge">package/</code> 目錄，上傳該目錄底下壓縮完的 <code class="language-plaintext highlighter-rouge">lambda.zip</code> 即可。</p>
+
+<h3 id="安全性設置---iam-policy">安全性設置 - IAM Policy</h3>
+
+<p>我在 Lambda Function 使用的 Execution Role 中定義了下列規則：</p>
+
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">{</span><span class="w">
+    </span><span class="nl">"Version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-10-17"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"Statement"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"Sid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UpdateSG"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Allow"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Action"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="s2">"ec2:RevokeSecurityGroupIngress"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"ec2:AuthorizeSecurityGroupEgress"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"ec2:AuthorizeSecurityGroupIngress"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"ec2:RevokeSecurityGroupEgress"</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="nl">"Resource"</span><span class="p">:</span><span class="w"> </span><span class="s2">"arn:aws:ec2:&lt;REGION&gt;:&lt;ACCOUNT_ID&gt;:security-group/sg-XXXXXXXX"</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"Sid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DescribeSG"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Allow"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ec2:DescribeSecurityGroups"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"Resource"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
+
+<p>如此一來可以避免我的應用程式未經授權操作其他的 Security Group 資源，並且只允許更改特定 Security Group ID 的相關 入站(Ingres) / 出站(Egress) 規則。</p>
+
+<h3 id="alexa-如何接受指令">Alexa 如何接受指令？</h3>
+
+<p>在 <a href="https://developer.amazon.com/alexa/console/ask">Amazon Alexa Developer Console</a> 中建立完 Alexa Skill 後，可以進行相關的定義。 Alexa 會根據 Interaction Model 設定很多不同的 Intent，每個 Intent 能夠對應的相應操作行為，以下是一個當我想要輸入 PIN code 各種不同的命令範例：</p>
+
+<figure class="">
+  <img src="/assets/images/posts/2020/08/security-group-manager-alexa-skill/alexa-skill-intents-enter-pin-example.png" alt="Alexa Skill - Security Group Manager 設置 Intent" />
+  
+    <figcaption>
+      Alexa Skill - Intent 設置
+
+    </figcaption>
+  
+</figure>
+
+<p>如此一來，在應用程式中便可以使用動態的名稱 <code class="language-plaintext highlighter-rouge">EnterPINCodeIntent</code> 和變數 <code class="language-plaintext highlighter-rouge">PIN_CODE</code> 來執行並且獲取一些邏輯。</p>
+
+<h3 id="lambda-如何更新-security-group">Lambda 如何更新 Security Group?</h3>
+
+<p>當 Alexa 根據觸發 Lambda 的時候，例如：<code class="language-plaintext highlighter-rouge">Alexa, update my security group!</code>，根據我的設置，便觸發 “UpdateMySGIntent”，於是在相關的執行邏輯在包含 PIN Code 驗證的情況，可以是以下：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">@</span><span class="n">sb</span><span class="p">.</span><span class="n">request_handler</span><span class="p">(</span><span class="n">can_handle_func</span><span class="o">=</span><span class="n">is_intent_name</span><span class="p">(</span><span class="s">"UpdateMySGIntent"</span><span class="p">))</span>
+<span class="k">def</span> <span class="nf">update_my_sg_handler</span><span class="p">(</span><span class="n">handler_input</span><span class="p">):</span>
+    <span class="s">"""Check if PIN code is provided in session attributes alues. If provided, then
+    update security group with invoking source IP address.
+    If not, then it asks user to provide the PIN code.
+    """</span>
+    <span class="c1"># type: (HandlerInput) -&gt; Response
+</span>    <span class="n">slots</span> <span class="o">=</span> <span class="n">handler_input</span><span class="p">.</span><span class="n">request_envelope</span><span class="p">.</span><span class="n">request</span><span class="p">.</span><span class="n">intent</span><span class="p">.</span><span class="n">slots</span>
+
+    <span class="k">if</span> <span class="n">PIN_CODE_SLOT_KEY</span> <span class="ow">in</span> <span class="n">handler_input</span><span class="p">.</span><span class="n">attributes_manager</span><span class="p">.</span><span class="n">session_attributes</span> <span class="ow">and</span> <span class="n">handler_input</span><span class="p">.</span><span class="n">attributes_manager</span><span class="p">.</span><span class="n">session_attributes</span><span class="p">[</span><span class="n">PIN_CODE_SLOT_KEY</span><span class="p">]</span> <span class="o">==</span> <span class="n">pre_defined_pin_code</span><span class="p">:</span>
+        <span class="n">speech</span> <span class="o">=</span> <span class="p">(</span><span class="s">"PIN code matches, I am updating the security group."</span><span class="p">)</span>
+        <span class="n">handler_input</span><span class="p">.</span><span class="n">response_builder</span><span class="p">.</span><span class="n">speak</span><span class="p">(</span><span class="n">speech</span><span class="p">)</span>
+
+        <span class="n">update_response</span> <span class="o">=</span> <span class="n">update_security_group</span><span class="p">()</span>
+
+        <span class="n">speech</span> <span class="o">=</span> <span class="p">(</span><span class="s">"Security group has been updated. {}"</span><span class="p">).</span><span class="nb">format</span><span class="p">(</span><span class="n">update_response</span><span class="p">)</span>
+        <span class="n">reprompt</span> <span class="o">=</span> <span class="p">(</span><span class="s">"You can ask me your security group setting by saying, "</span>
+                    <span class="s">"what's my security group ?"</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">speech</span> <span class="o">=</span> <span class="s">"You did not correctly specify the PIN code or the PIN code doesn't match"</span>
+        <span class="n">reprompt</span> <span class="o">=</span> <span class="p">(</span><span class="s">"I'm not sure what your PIN code is, "</span>
+                    <span class="s">"You can say, "</span>
+                    <span class="s">"my PIN code is blah blah blah...."</span><span class="p">)</span>
+
+    <span class="n">handler_input</span><span class="p">.</span><span class="n">response_builder</span><span class="p">.</span><span class="n">speak</span><span class="p">(</span><span class="n">speech</span><span class="p">).</span><span class="n">ask</span><span class="p">(</span><span class="n">reprompt</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">handler_input</span><span class="p">.</span><span class="n">response_builder</span><span class="p">.</span><span class="n">response</span>
+</code></pre></div></div>
+
+<p>在 Python 應用程式中，使用 DDNS 解析獲取目前外部 IP 後，更新 Security Group 的行為主要使用了 EC2 - <a href="https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_AuthorizeSecurityGroupIngress.html">AuthorizeSecurityGroupIngress API</a> 執行了這項操作：</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">update_security_group</span><span class="p">():</span>
+    <span class="n">ec2</span> <span class="o">=</span> <span class="n">boto3</span><span class="p">.</span><span class="n">resource</span><span class="p">(</span><span class="s">'ec2'</span><span class="p">,</span> <span class="n">region_name</span><span class="o">=</span><span class="n">security_group_region</span><span class="p">)</span>
+    <span class="n">security_group</span> <span class="o">=</span> <span class="n">ec2</span><span class="p">.</span><span class="n">SecurityGroup</span><span class="p">(</span><span class="n">security_group_id</span><span class="p">)</span>
+    <span class="n">source_ip</span> <span class="o">=</span> <span class="n">get_source_ip</span><span class="p">()</span>
+    <span class="n">cidr_ip</span> <span class="o">=</span> <span class="n">source_ip</span> <span class="o">+</span> <span class="s">'/32'</span>
+
+    <span class="n">security_group</span><span class="p">.</span><span class="n">authorize_ingress</span><span class="p">(</span><span class="n">IpProtocol</span><span class="o">=</span><span class="s">"tcp"</span><span class="p">,</span><span class="n">CidrIp</span><span class="o">=</span><span class="n">cidr_ip</span><span class="p">,</span><span class="n">FromPort</span><span class="o">=</span><span class="mi">22</span><span class="p">,</span><span class="n">ToPort</span><span class="o">=</span><span class="mi">22</span><span class="p">)</span>
+
+    <span class="n">response</span> <span class="o">=</span> <span class="p">(</span><span class="s">"The address {} has been added to the security group {} in region {}"</span><span class="p">).</span><span class="nb">format</span><span class="p">(</span><span class="n">source_ip</span><span class="p">,</span> <span class="n">security_group_id</span><span class="p">,</span> <span class="n">security_group_region</span><span class="p">)</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">response</span>
+</code></pre></div></div>
+
+<h3 id="alexa-skill-如何觸發-lambda">Alexa Skill 如何觸發 Lambda?</h3>
+
+<p>在 <a href="https://developer.amazon.com/alexa/console/ask">Amazon Alexa Developer Console</a> 中可以設置自定義的 Lambda function endpoint：</p>
+
+<figure class="">
+  <img src="/assets/images/posts/2020/08/security-group-manager-alexa-skill/alexa-skill-setup-lambda-endpoint.png" alt="Alexa Skill - Security Group Manager 設置 Lambda endpoint" />
+  
+    <figcaption>
+      Alexa Skill - 設置 Lambda endpoint
+
+    </figcaption>
+  
+</figure>
+
+<h3 id="lambda-如何知道目前的使用者外部來源-ip">Lambda 如何知道目前的使用者外部來源 IP</h3>
+
+<p>根據我的觀察，由於 Alexa 觸發 Lambda Function 時，是由 Voice Server 去戳 Lambda，並且也沒有附帶相關的 IP 訊息。因此，為了達成我的目的，我主要使用了如同架構中描述的方式獲取 DDNS 中的紀錄取得真實外部 IP 地址後，進行更改。</p>
+
+<p>透過路由器韌體通常都支援更改 DDNS 的設定，通常好一點的路由器都支持一些很奇耙的功能，如果你會設定的話可以完成蠻多有趣的事情 (例如：<a href="https://easoncao.com/enable-snmp-agent-on-dlink-dsl-7740c/">在中華電信提供的 D-Link DSL-7740C 啟用 SNMP</a>)。我的網路環境使用了 D-Link DSL-7740C，透過 D-Link 韌體提供的功能，能夠輕鬆的設定並且直接幫助更新我的 Dynamic DNS record，再由 Lambda Function 邏輯中主動解析獲取。</p>
+
+<p>同理，另一種方式是你可以在你的環境中運行一隻小程式 (agent) 或是透過 Cronjob 定義的 Shell Script，幫助你更新 DNS 紀錄，也是一樣的方法。</p>
+
+<p>若你知道 <a href="https://aws.amazon.com/tw/api-gateway/">API Gateway</a> 是什麼的話，也許可以利用 API Gateway 搭建 endpoint 並且在上個動作的階段改用 Custom HTTPS endpoint 觸發，或許在交付客戶端的 Alexa device (比如 Echo dot) 觸發時，是由客戶端主動進行訪問，這種情況下，在附帶的請求訊息中也許能知道相關的 IP，但是我沒試過，如果你試了，也歡迎在底下分享你的發現。</p>
+
+<h2 id="總結">總結</h2>
+
+<p>本篇內容簡介了一項使用 Alexa Skill 進行系統維運的實作方法，展示了工程師的懶惰成性，並且分享一項參考架構，提及如何靠一張嘴巴更改防火牆規則，同時提及相關的實作細節。透過聲音命令簡化並且自動化繁瑣的更新步驟，減少了每次花費 3-5 分鐘的操作時間 (操作 10 次省下 30 分鐘、100次省下 300 分鐘 … 請自行誇飾及想像)，幫助提升日常工作中的相應生產力。</p>
+
+<p>若你對於這項實作感到興趣或是有其他建議，也歡迎在底下留言與我分享！</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="/tags/#alexa-skill" class="page__taxonomy-item" rel="tag">alexa skill</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#alexa" class="page__taxonomy-item" rel="tag">alexa</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#amazon-web-services" class="page__taxonomy-item" rel="tag">amazon web services</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#amazon" class="page__taxonomy-item" rel="tag">amazon</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#aws" class="page__taxonomy-item" rel="tag">aws</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#ec2" class="page__taxonomy-item" rel="tag">EC2</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#echo-dot" class="page__taxonomy-item" rel="tag">echo dot</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#echo" class="page__taxonomy-item" rel="tag">echo</a><span class="sep">, </span>
+    
+      
+      
+      <a href="/tags/#elastic-compute-cloud" class="page__taxonomy-item" rel="tag">Elastic Compute Cloud</a>
+    
+    </span>
+  </p>
+
+
+
+
+        
+  <p class="page__date"><strong><i class="fas fa-fw fa-calendar-alt" aria-hidden="true"></i> Updated:</strong> <time datetime="2020-08-30T00:00:00-05:00">August 30, 2020</time></p>
+
+
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=%5BAlexa%5D+%E9%9D%A0%E4%B8%80%E5%BC%B5%E5%98%B4%E5%B7%B4%E7%B6%AD%E9%81%8B%EF%BC%8C%E6%88%91%E6%98%AF%E5%A6%82%E4%BD%95%E6%88%90%E7%82%BA%E5%87%BA%E4%B8%80%E5%BC%B5%E5%98%B4%E7%9A%84%E9%9B%B2%E7%AB%AF%E5%B7%A5%E7%A8%8B%E5%B8%AB+-+%E4%BD%BF%E7%94%A8+Alexa+skill+%E7%AE%A1%E7%90%86+AWS+EC2+%E9%98%B2%E7%81%AB%E7%89%86+%28Security+Group%29+%E8%A6%8F%E5%89%87%20https%3A%2F%2Feasoncao.com%2Fsecurity-group-manager-alexa-skill%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fab fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Feasoncao.com%2Fsecurity-group-manager-alexa-skill%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fab fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Feasoncao.com%2Fsecurity-group-manager-alexa-skill%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+      <iframe
+        style="width: 100%; max-width: 485px; height: 170px; margin: auto; overflow: hidden; display: block;"
+        src="https://button.like.co/in/embed/easoncao/button?referrer=https%3A%2F%2Feasoncao.com%2Fsecurity-group-manager-alexa-skill%2F" frameBorder="0">
+      </iframe>
+      
+
+      <!-- Buy me a coffee -->
+      <section class="page__share">
+        <h4 class="page__share-title">Is that useful? Let me know or buy me a coffee</h4>
+        <p class="page__meta">這篇內容對你有幫助嗎？</p>
+        <a href="https://paypal.me/e4son"><img src="https://cdn.jsdelivr.net/gh/twolfson/paypal-github-button@1.0.0/dist/button.svg" alt="Support via PayPal"></a>
+        <a href="https://p.ecpay.com.tw/17C964C" class="btn btn--success">一次性支持 (ECPay)</a>
+      </section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="/atomic-habits-reading-feedback/" class="pagination--pager" title="[Book] 原子習慣：細微改變帶來巨大成就的實證法則 - 我的心得及實作
+">Previous</a>
+    
+    
+      <a href="/coredns-resolution-truncation-issue-on-kubernetes-kube-dns/" class="pagination--pager" title="CoreDNS(kube-dns) resolution truncation issue on Kubernetes (Amazon EKS)
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+      <div class="page__comments">
+  
+  
+      <h4 class="page__comments-title">Leave a comment</h4>
+      <section id="disqus_thread"></section>
+    
+</div>
+
+    
+  </article>
+
+  
+
+  <!-- Google Adsense -->
+  <div class="page__related">
+    <h4 class="page__related-title">You May Also Have Interest</h4>
+    <div>
+        <!-- responsive ad -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-1852752964062281"
+             data-ad-slot="2849626059"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+  </div>
+
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You may also enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/2023/04/five-years-at-amazon-as-cloud-support-engineer-in-aws/cover.jpg" alt="">
+      </div>
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/five-years-at-amazon-as-cloud-support-engineer-in-aws/" rel="permalink">身處 Amazon 工作 5 年學到的事：在 AWS 擔任 Cloud Support Engineer 是什麼樣的體驗
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">2023 是我在 AWS 擔任 Cloud Support Engineer 的第六年，這份工作對我來說某種程度上是又愛又恨。作為見證 AWS 中文技術支援團隊的一員，五年時間說長不長，說短也不短，卻有非常多學習和體悟。
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/2023/03/aws-cloud-support-engineer-interview-tips-and-required-skills/cover.jpg" alt="">
+      </div>
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/aws-cloud-support-engineer-interview-tips-and-required-skills/" rel="permalink">在 AWS Cloud Support Engineer 面試中脫穎而出：必備的技術能力和重要特質
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">如果你正準備面試 AWS Cloud Support Engineer 的職位，在這篇文章中，我將與你分享我對於 AWS Cloud Support Engineer 所需的必備技能和特質，幫助你更好地了解這份職位且思考自己目前所具備的能力是與該團隊所交集，讓你在面試中脫穎而出。
+</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/eks-aws-load-balancer-controller-v1-to-v2-migration-behavior/" rel="permalink">[AWS] 那些沒寫在文件上的事 - AWS Load Balancer Controller v1 升級至 v2
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  3 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">隨著 Amazon EKS 對於 Kubernetes 1.22 的推出，1.21 也預計於 February 15, 2023 在 Amazon EKS 終止支援 1，對於 AWS Load Balancer Controller 仍然使用舊版本的用戶來說，勢必面臨需要升級 AWS Load Balancer ...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="https://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src="/assets/images/posts/2020/10/zero-downtime-deployment-when-using-alb-ingress-controller/deployment-workflow-alb-ingress-controller-4-side-note-of-deregister.png" alt="">
+      </div>
+    
+    <h2 class="archive__item-title no_toc" itemprop="headline">
+      
+        <a href="/zero-downtime-deployment-when-using-alb-ingress-controller-on-amazon-eks-and-prevent-502-error/" rel="permalink">[AWS][EKS] Zero downtime deployment(RollingUpdate) when using AWS Load Balancer Controller on Amazon EKS
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> 
+
+
+
+
+  22 minute read
+
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">This article is describing the thing you need to aware when using ALB Ingress Controller (AWS Load Balancer Controller) to do deployment and prevent 502 erro...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap"><form class="search-content__form" onkeydown="return event.key != 'Enter';">
+    <label class="sr-only" for="search">
+      Enter your search term...
+    </label>
+    <input type="search" id="search" class="search-input" tabindex="-1" placeholder="Enter your search term..." />
+  </form>
+  <div id="results" class="results"></div></div>
+
+      </div>
+    
+
+    <div id="footer" class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+
+
+<div id="footer-subscribe-email-list">
+    <h3>Get the updates </h3>
+    <form action="https://docs.google.com/forms/d/e/1FAIpQLSfuofCYvu2cV614aDt6SO5ua_5trT0EC5yeSJObLY0KGjFtvQ/formResponse" method="POST">
+        <div style="display: flex;">
+            <!-- input name="entry.205499253" type="text" id="Name" class="form-control" placeholder="Name" -->
+            <input name="entry.1288273007" type="email" id="email" class="form-control" placeholder="Email" required="required" style="margin-top: 2px; margin-right: 5px; width: 50%;">
+            <input class="btn btn--primary" id="subscribe" type="submit" value="訂閱 (Sign Up)" style="width: 30%;">
+        </div>
+    </form>
+</div>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-8GPCXJPGFZ"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-8GPCXJPGFZ');
+</script>
+<!-- end custom footer snippets -->
+
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+
+    
+      
+        
+      
+        
+          <li><a href="https://facebook.com/EasonTechTalk" rel="nofollow noopener noreferrer"><i class="fab fa-fw fa-facebook-square" aria-hidden="true"></i> Facebook</a></li>
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+
+    <li><a href="/feed.xml"><i class="fas fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+    <li><a href="/sitemap.xml"><i class="fas fa-fw fa-sitemap" aria-hidden="true"></i> SiteMap</a></li>
+    <li><a href="/tags"><i class="fas fa-fw fa-tags" aria-hidden="true"></i> Tags</a></li>
+    <li><a href="https://toolbox.easoncao.com/"><i class="fas fa-fw fa-toolbox" aria-hidden="true"></i> ToolBox</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2023 Continuous Improvement. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="/assets/js/main.min.js"></script>
+
+
+
+
+<script src="/assets/js/lunr/lunr.min.js"></script>
+<script src="/assets/js/lunr/lunr-store.js"></script>
+<script src="/assets/js/lunr/lunr-en.js"></script>
+
+
+
+
+  <script>
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-80058083-2']);
+  
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+
+
+
+    
+  <script>
+    var disqus_config = function () {
+      this.page.url = "https://easoncao.com/security-group-manager-alexa-skill/";  /* Replace PAGE_URL with your page's canonical URL variable */
+      this.page.identifier = "/security-group-manager-alexa-skill"; /* Replace PAGE_IDENTIFIER with your page's unique identifier variable */
+    };
+    (function() { /* DON'T EDIT BELOW THIS LINE */
+      var d = document, s = d.createElement('script');
+      s.src = 'https://lenlabs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+
+  
+
+
+
+
+
+  </body>
+</html>
