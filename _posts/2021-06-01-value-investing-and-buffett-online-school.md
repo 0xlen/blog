@@ -44,7 +44,7 @@ performance:
 {% capture CallToAction %}
 **在這篇文章中你將知道**
 
-- BOS 巴菲特線上學院是什麼 ([點擊這裡免費獲取 3 小時的價值投資課程](http://bit.ly/EasonStockClass))
+- BOS 巴菲特線上學院是什麼 ([點擊這裡免費獲取 3 小時的價值投資課程](https://bit.ly/StockClassEason))
 - 帶你揭開幾種常見的投資騙局
 - 我在 BOS 巴菲特線上學院學到什麼？以及我學以致用後的投資績效表現
 {% endcapture %}
@@ -274,7 +274,7 @@ performance:
 
 (每個月還有免費的小課程陪著你繼續學習)
 
-<a href="http://bit.ly/EasonStockClass" class="btn btn--inverse btn--x-large">點我免費獲取價值投資課程</a>
+<a href="https://bit.ly/StockClassEason" class="btn btn--inverse btn--x-large">點我免費獲取價值投資課程</a>
 {% endcapture %}
 
 <div class="notice--warning">{{ JoinBOS | markdownify }}</div>
