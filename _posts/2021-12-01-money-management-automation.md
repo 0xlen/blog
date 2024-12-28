@@ -202,7 +202,7 @@ Rakuten (樂天) 也是十分老牌的平台，類似於 ShopBack，上面支持
 
 (每個月還有免費的小課程陪著你繼續學習)
 
-<a href="http://bit.ly/EasonStockClass" class="btn btn--inverse btn--x-large">點我免費獲取價值投資課程</a>
+<a href="https://bit.ly/StockClassEason" class="btn btn--inverse btn--x-large">點我免費獲取價值投資課程</a>
 <a href="/value-investing-and-buffett-online-school" class="btn btn--x-large">課程簡介</a>
 {% endcapture %}
 
