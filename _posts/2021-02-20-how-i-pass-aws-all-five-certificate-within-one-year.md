@@ -115,7 +115,7 @@ header:
 
 在這篇內容中，我分享了我自身在過去如何於一年內獲得五張 AWS 核心認證的經驗，並且與你分享一些實際上可以參考的應用方式。如果你正在準備 AWS 認證，希望這樣的內容對你有幫助。
 
-如果你覺得這篇內容不錯，可以分享或是按個 Like / Clap。
+{% include_relative related-post/easontechtalk-community-tw-ad.md %}
 
 ## 看更多系列文章
 

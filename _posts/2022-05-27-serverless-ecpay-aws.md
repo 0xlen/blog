@@ -61,7 +61,7 @@ Serverless Application Model (SAM) 提供了一系列以簡易描述的方法，
 
 從 Zero 到 Hero，學習 AWS 入門知識並深入了解、應用 Serverless 相關的服務及架構，同時學會在 AWS 上使用不同的解決方案實踐無伺服器技術 (Serverless)，運行屬於你的雲端金流系統
 
-<a href="https://bit.ly/ECPaySAM?utm_source=easoncao.com&utm_medium=courses-page&utm_campaign=course_sale" class="btn btn--inverse btn--x-large">點擊獲取更多資訊</a>
+<a href="https://academy.easontechtalk.com/aws-serverless-ecpay" class="btn btn--inverse btn--x-large">點擊獲取更多資訊</a>
 <a href="/courses" class="btn btn--x-large">延伸學習</a>
 {% endcapture %}
 
@@ -71,6 +71,6 @@ Serverless Application Model (SAM) 提供了一系列以簡易描述的方法，
 
 本篇內容簡介了以 AWS Serverless 為基礎架構設計金流應用程式的實作流程，以及提及部分在 AWS 上實現串接綠界支付科技的對應機制，並且分享一項參考架構。如果你對於本篇具體的實作內容有興趣，可以利用以下連結獲取完整的內容：
 
-- [打造 Serverless (無伺服器) 雲端金流](https://bit.ly/ECPaySAM?utm_source=easoncao.com&utm_medium=courses-page&utm_campaign=course_sale)
+- [打造 Serverless (無伺服器) 雲端金流](https://academy.easontechtalk.com/aws-serverless-ecpay)
 
 如果你覺得這樣的內容有幫助，可以在底下按個 Like / 留言讓我知道。

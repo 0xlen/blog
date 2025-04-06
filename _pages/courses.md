@@ -14,31 +14,31 @@ header:
 
 feature_row:
   - image_path: "https://img-c.udemycdn.com/course/240x135/3841082_1f87.jpg"
-    alt: "Docker 全方位入門指南：一天成為容器大師"
-    title: "Docker 全方位入門指南：一天成為容器大師"
-    excerpt: "學習 Docker 入門知識並深入了解底層核心運作原理，並瞭解設計應用於 Docker 的程式設計最佳實務，同時學會最佳化運行於 Docker 環境的設計，並且，在深入學習完成課程後，具備基礎 Troubleshooting (除錯)能力。"
-    url: "https://bit.ly/DockerMaster?utm_source=easoncao.com&utm_medium=courses-page&utm_campaign=course_sale"
+    alt: "Python 容器化實戰課程"
+    title: "Python 容器化實戰課程"
+    excerpt: "本課程專為想要掌握容器技術的 Python 開發者設計。採用實務導向的教學方式，讓您在動手實作中深入理解容器化的精髓。透過這堂課程，你將深入了解容器技術的核心概念，學習如何在 Python 開發中有效運用容器化技術、雲端服務整合與部署，並掌握現代化應用程式開發的最佳實踐。"
+    url: "https://academy.easontechtalk.com/python-container"
     btn_label: "開始學習"
     btn_class: "btn--danger"
   - image_path: "https://img-c.udemycdn.com/course/240x135/3574087_0be7.jpg"
     alt: "入門 Amazon EKS：在一天內開啟你的 Kubernetes on AWS 旅程"
     title: "入門 Amazon EKS：在一天內開啟你的 Kubernetes on AWS 旅程"
     excerpt: "學習 EKS 入門知識並深入了解其運作原理，學習如何運行應用、瞭解應用於 EKS 中的部署最佳實務，同時學會在 Amazon EKS 上使用 AWS Fargate 無伺服器技術 (Serverless) 運行你的容器化應用程式。"
-    url: "https://eason.teachable.com/p/amazon-eks-kubernetes-on-aws"
+    url: "https://academy.easontechtalk.com/amazon-eks-kubernetes-on-aws"
     btn_label: "開始學習"
     btn_class: "btn--danger"
-  - image_path: "https://img-c.udemycdn.com/course/240x135/3845844_4d0b.jpg"
-    alt: "Learn Amazon Prometheus in 1 day"
-    title: "(英文) Learn Amazon Prometheus in 1 day"
-    excerpt: "Start to learn Amazon Managed Services for Prometheus (AMP) through real hands-on alone with practical AWS skills."
-    url: "https://bit.ly/LearnAMP?utm_source=easoncao.com&utm_medium=courses-page&utm_campaign=course_sale"
+  - image_path: "https://img-c.udemycdn.com/course/240x135/5018982_f98f_3.jpg"
+    alt: "入門 Amazon ECS：學習如何使用並快速上手 AWS 容器化服務"
+    title: "入門 Amazon ECS：學習如何使用並快速上手 AWS 容器化服務"
+    excerpt: "學習 ECS 入門知識並了解如何運行應用，讓你學會如何使用 ECS 運行你的容器服務，同時學會在 Amazon ECS 上使用 AWS Fargate 無伺服器技術 (Serverless) 運行你的容器化應用程式。"
+    url: "https://academy.easontechtalk.com/amazon-ecs"
     btn_label: "開始學習"
     btn_class: "btn--danger"
   - image_path: "https://img-c.udemycdn.com/course/240x135/4707014_1190.jpg"
     alt: "打造 Serverless (無伺服器) 雲端金流"
     title: "打造 Serverless (無伺服器) 雲端金流"
     excerpt: "學習在一天內於 AWS 雲端搭建 Serverless 架構的金流服務，以綠界支付為例 (ECPay)"
-    url: "https://bit.ly/ECPaySAM?utm_source=easoncao.com&utm_medium=courses-page&utm_campaign=course_sale"
+    url: "https://academy.easontechtalk.com/aws-serverless-ecpay"
     btn_label: "開始學習"
     btn_class: "btn--danger"
 ---
@@ -56,14 +56,12 @@ feature_row:
 
 <a href="https://app.simplymeet.me/eason/45min" class="btn btn--x-large btn--inverse">預約一對一線上諮詢</a>
 
-由於我也會收到來自各個不同背景的學生寫信諮詢我有關職涯發展、旅居歐洲或是人生價值或是其他相關的議題，若您為在學學生，我很樂於與學生們分享我的個人經驗，並且建立深度的對話。若你對以下的機會感興趣，**我十分樂意與您進行無償的一對一線上 30 分鐘左右的談話**。請準備好相關的問題，也很歡迎透過我的 Email 與我分享更多有關你的疑問，並透過以下的連結預約相關的時段 (由於我人位在歐洲時區，若於時間上有其他建議，也請不吝透過 Email 聯繫交流)：
+我同時建立了一個技術討論社群，歡迎您加入學習社群提問和分享！
 
-- [Conversation (Student and NEX) - Free 1:1](https://app.simplymeet.me/eason/free)
+在這裡，可以與其他志同道合的專業人士交流，分享面試經驗、職涯發展心得，以及探討各種技術問題。
 
-**請注意，這個 1:1 僅供在學學生以及 NEX 相應平台的台灣人才預約，以為串連台灣人才於國際舞台上的職涯發展貢獻己力。**由於其屬於公益性質，為個人自發性的項目，於預約時請提供使用學校 edu 信箱 (e.g. XXXX@ntu.edu.tw) 或是在 NEX 對應系統中存在的相關資料以利驗證 (e.g. NEX Work)，非學校信箱或查核到非上述身份濫用，將直接取消會議，不另行通知。
+<a href="https://academy.easontechtalk.com/community-zh" class="btn btn--primary btn--x-large btn--inverse">EasonTechTalk: 中文技術討論社群</a>
 
-如果你對於上述內容需要進一步的了解，請透過以下方式與我聯繫：
-- Email: eason@easoncao.com
 {% endcapture %}
 
 <div class="notice--info">{{ contact | markdownify }}</div>

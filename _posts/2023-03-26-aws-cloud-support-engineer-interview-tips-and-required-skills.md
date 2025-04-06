@@ -180,6 +180,8 @@ CI/CD
 
 這篇內容也更像是我自己對於 AWS Cloud Support Engineer 技術職位所具備的長遠學習路徑有個基本的指南，並且幫助你思考如何在你的問題中使用具體的案例正確的展現這些能力。
 
+{% include_relative related-post/easontechtalk-community-tw-ad.md %}
+
 ## 看更多系列文章
 
 {% include_relative related-post/aws-career.md %}

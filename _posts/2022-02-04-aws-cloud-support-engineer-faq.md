@@ -114,11 +114,7 @@ AWS 也提供了很多免費的學習資源可以參考 (e.g. [AWS Training](htt
 
 希望這篇內容能夠對你有所幫助，並且有助於你解答可能對於職缺的相關疑問。
 
-若你對於這樣的工作環境及內容有所興趣並躍躍欲試，我們仍在持續招聘優秀的人才加入我們。我同時也在 NEX Foundation 為串連台灣人才於國際舞台上的職涯發展貢獻己力，你可以透過 NEX Work 附上 CV 提交內推申請 (需註冊登入) 以引薦更多像你這樣的優秀人才，或是透過我的 LinkedIn 與我聯繫。
-
-- [NEX Work：申請內推 (需登入)](https://work.nexf.org/companies/Amazon/referrers/tdG7zR9knf8XnpHzrpTw)
-
-如果你覺得這樣的內容有幫助，可以在底下按個 Like / 留言讓我知道。
+{% include_relative related-post/easontechtalk-community-tw-ad.md %}
 
 ## 看更多系列文章
 

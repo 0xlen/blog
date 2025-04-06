@@ -157,6 +157,8 @@ AWS Support 除了是一個跨國組成的團隊外，AWS 本身就提供了一�
 
 如果你正對 AWS Cloud Support Engineer 職位感興趣，希望以上的內容對您有所幫助，也可以透過參考其他系列文章以幫助你了解更多資訊。
 
+{% include_relative related-post/easontechtalk-community-tw-ad.md %}
+
 ## 看更多系列文章
 
 {% include_relative related-post/aws-career.md %}
